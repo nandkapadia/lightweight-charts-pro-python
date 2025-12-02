@@ -69,6 +69,22 @@ from lightweight_charts_pro.utils import (
     validated_field,
 )
 
+# Series classes
+from lightweight_charts_pro.charts.series import (
+    AreaSeries,
+    BandSeries,
+    BarSeries,
+    BaselineSeries,
+    CandlestickSeries,
+    GradientRibbonSeries,
+    HistogramSeries,
+    LineSeries,
+    RibbonSeries,
+    Series,
+    SignalSeries,
+    TrendFillSeries,
+)
+
 __version__ = "0.1.0"
 
 
@@ -128,4 +144,17 @@ __all__ = [
     "normalize_time",
     "snake_to_camel",
     "validated_field",
+    # Series classes
+    "AreaSeries",
+    "BandSeries",
+    "BarSeries",
+    "BaselineSeries",
+    "CandlestickSeries",
+    "GradientRibbonSeries",
+    "HistogramSeries",
+    "LineSeries",
+    "RibbonSeries",
+    "Series",
+    "SignalSeries",
+    "TrendFillSeries",
 ]
