@@ -1,6 +1,6 @@
-# Lightweight Charts Core (Python)
+# Lightweight Charts Pro (Python)
 
-Framework-agnostic Python core library for TradingView Lightweight Charts.
+Framework-agnostic Python core library for TradingView Lightweight Charts Pro.
 
 ## Overview
 
@@ -18,15 +18,15 @@ This package provides the foundational Python classes and utilities used by all 
 ## Installation
 
 ```bash
-pip install lightweight-charts-core
+pip install lightweight-charts-pro
 ```
 
 ## Usage
 
 ```python
-from lightweight_charts_core.charts import BaseChart
-from lightweight_charts_core.charts.options import ChartOptions, LineOptions
-from lightweight_charts_core.data import LineData
+from lightweight_charts_pro.charts import BaseChart
+from lightweight_charts_pro.charts.options import ChartOptions, LineOptions
+from lightweight_charts_pro.data import LineData
 
 # Use in your framework wrapper
 class MyFrameworkChart(BaseChart):
@@ -45,7 +45,7 @@ pip install -e .
 pytest
 
 # Type checking
-mypy lightweight_charts_core
+mypy lightweight_charts_pro
 ```
 
 ## License

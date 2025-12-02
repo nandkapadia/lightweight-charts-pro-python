@@ -35,12 +35,12 @@ jobs:
 
     - name: Type checking with mypy
       run: |
-        mypy lightweight_charts_core --ignore-missing-imports
+        mypy lightweight_charts_pro --ignore-missing-imports
       continue-on-error: true
 
     - name: Linting with ruff
       run: |
-        ruff check lightweight_charts_core
+        ruff check lightweight_charts_pro
       continue-on-error: true
 
   publish:

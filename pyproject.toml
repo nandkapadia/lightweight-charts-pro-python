@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "lightweight-charts-core"
+name = "lightweight-charts-pro"
 version = "0.1.0"
-description = "Framework-agnostic Python core library for TradingView Lightweight Charts"
+description = "Framework-agnostic Python core library for TradingView Lightweight Charts Pro"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
@@ -50,7 +50,7 @@ Repository = "https://github.com/nandkapadia/streamlit-lightweight-charts-pro.gi
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["lightweight_charts_core*"]
+include = ["lightweight_charts_pro*"]
 
 [tool.mypy]
 python_version = "3.10"
