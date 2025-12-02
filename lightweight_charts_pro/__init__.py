@@ -69,6 +69,55 @@ from lightweight_charts_pro.utils import (
     validated_field,
 )
 
+# Chart base classes
+from lightweight_charts_pro.charts import (
+    BaseChart,
+    BaseChartManager,
+)
+
+# Chart options
+from lightweight_charts_pro.charts.options import (
+    ChartOptions,
+    CrosshairLineOptions,
+    CrosshairOptions,
+    CrosshairSyncOptions,
+    GridLineOptions,
+    GridOptions,
+    KineticScrollOptions,
+    LayoutOptions,
+    LegendOptions,
+    LineOptions,
+    LocalizationOptions,
+    PaneHeightOptions,
+    PriceFormatOptions,
+    PriceLineOptions,
+    PriceScaleMargins,
+    PriceScaleOptions,
+    RangeConfig,
+    RangeSwitcherOptions,
+    SyncOptions,
+    TimeScaleOptions,
+    TrackingModeOptions,
+    TradeVisualizationOptions,
+    WatermarkOptions,
+)
+
+# Series classes
+from lightweight_charts_pro.charts.series import (
+    AreaSeries,
+    BandSeries,
+    BarSeries,
+    BaselineSeries,
+    CandlestickSeries,
+    GradientRibbonSeries,
+    HistogramSeries,
+    LineSeries,
+    RibbonSeries,
+    Series,
+    SignalSeries,
+    TrendFillSeries,
+)
+
 __version__ = "0.1.0"
 
 
@@ -128,4 +177,44 @@ __all__ = [
     "normalize_time",
     "snake_to_camel",
     "validated_field",
+    # Chart base classes
+    "BaseChart",
+    "BaseChartManager",
+    # Chart options
+    "ChartOptions",
+    "CrosshairLineOptions",
+    "CrosshairOptions",
+    "CrosshairSyncOptions",
+    "GridLineOptions",
+    "GridOptions",
+    "KineticScrollOptions",
+    "LayoutOptions",
+    "LegendOptions",
+    "LineOptions",
+    "LocalizationOptions",
+    "PaneHeightOptions",
+    "PriceFormatOptions",
+    "PriceLineOptions",
+    "PriceScaleMargins",
+    "PriceScaleOptions",
+    "RangeConfig",
+    "RangeSwitcherOptions",
+    "SyncOptions",
+    "TimeScaleOptions",
+    "TrackingModeOptions",
+    "TradeVisualizationOptions",
+    "WatermarkOptions",
+    # Series classes
+    "AreaSeries",
+    "BandSeries",
+    "BarSeries",
+    "BaselineSeries",
+    "CandlestickSeries",
+    "GradientRibbonSeries",
+    "HistogramSeries",
+    "LineSeries",
+    "RibbonSeries",
+    "Series",
+    "SignalSeries",
+    "TrendFillSeries",
 ]
