@@ -7,8 +7,8 @@ management used in the frontend-backend communication.
 from dataclasses import dataclass, field
 from typing import Any, Literal, Union
 
-from lightweight_charts_core.types.options import Options
-from lightweight_charts_core.utils.chainable import chainable_field
+from lightweight_charts_pro.types.options import Options
+from lightweight_charts_pro.utils.chainable import chainable_field
 
 # Type aliases
 SeriesType = Literal[

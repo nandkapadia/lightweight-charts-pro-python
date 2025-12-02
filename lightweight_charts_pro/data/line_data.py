@@ -18,7 +18,7 @@ Key Features:
 
 Example Usage:
     ```python
-    from lightweight_charts_core.data import LineData
+    from lightweight_charts_pro.data import LineData
 
     # Create line data point with color
     data = LineData(time="2024-01-01T00:00:00", value=100.0, color="#2196F3")
@@ -39,8 +39,8 @@ from typing import ClassVar
 # Third Party Imports
 # (None in this module)
 # Local Imports
-from lightweight_charts_core.data.single_value_data import SingleValueData
-from lightweight_charts_core.utils import validated_field
+from lightweight_charts_pro.data.single_value_data import SingleValueData
+from lightweight_charts_pro.utils import validated_field
 
 
 @dataclass
@@ -73,7 +73,7 @@ class LineData(SingleValueData):
 
     Example:
         ```python
-        from lightweight_charts_core.data import LineData
+        from lightweight_charts_pro.data import LineData
 
         # Create line data point with color
         data = LineData(time="2024-01-01T00:00:00", value=100.0, color="#2196F3")

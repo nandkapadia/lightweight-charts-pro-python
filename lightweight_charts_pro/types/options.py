@@ -7,8 +7,8 @@ from abc import ABC
 from dataclasses import dataclass, fields
 from typing import Any
 
-from lightweight_charts_core.utils.case_converter import CaseConverter
-from lightweight_charts_core.utils.serialization import SerializableMixin
+from lightweight_charts_pro.utils.case_converter import CaseConverter
+from lightweight_charts_pro.utils.serialization import SerializableMixin
 
 
 @dataclass

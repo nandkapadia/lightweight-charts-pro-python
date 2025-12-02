@@ -15,7 +15,7 @@ Key Features:
 
 Example:
     ```python
-    from lightweight_charts_core.charts.options import TimeScaleOptions
+    from lightweight_charts_pro.charts.options import TimeScaleOptions
 
     # Create time scale options
     time_scale = TimeScaleOptions(
@@ -34,8 +34,8 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 # Local Imports
-from lightweight_charts_core.charts.options.base_options import Options
-from lightweight_charts_core.utils import chainable_field
+from lightweight_charts_pro.charts.options.base_options import Options
+from lightweight_charts_pro.utils import chainable_field
 
 
 @dataclass
@@ -89,7 +89,7 @@ class TimeScaleOptions(Options):
 
     Example:
         ```python
-        from lightweight_charts_core.charts.options import TimeScaleOptions
+        from lightweight_charts_pro.charts.options import TimeScaleOptions
 
         # Create time scale with custom spacing and visibility
         time_scale = TimeScaleOptions(

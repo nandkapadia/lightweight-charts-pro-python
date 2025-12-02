@@ -23,7 +23,7 @@ The exception hierarchy:
 Example:
     Catching validation errors::
 
-        from lightweight_charts_core.exceptions import ValidationError, ValueValidationError
+        from lightweight_charts_pro.exceptions import ValidationError, ValueValidationError
 
         try:
             # Some validation logic

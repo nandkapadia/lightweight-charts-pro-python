@@ -21,7 +21,7 @@ Key Features:
 
 Example Usage:
     ```python
-    from lightweight_charts_core.data import TradeData
+    from lightweight_charts_pro.data import TradeData
 
     # Create a long trade
     trade = TradeData(
@@ -57,12 +57,12 @@ from typing import Any
 import pandas as pd
 
 # Local Imports
-from lightweight_charts_core.exceptions import (
+from lightweight_charts_pro.exceptions import (
     ExitTimeAfterEntryTimeError,
     ValueValidationError,
 )
-from lightweight_charts_core.utils.data_utils import to_utc_timestamp
-from lightweight_charts_core.utils.serialization import SerializableMixin
+from lightweight_charts_pro.utils.data_utils import to_utc_timestamp
+from lightweight_charts_pro.utils.serialization import SerializableMixin
 
 
 @dataclass

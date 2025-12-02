@@ -19,8 +19,8 @@ Key Features:
 
 Example:
     ```python
-    from lightweight_charts_core.charts.options import TradeVisualizationOptions
-    from lightweight_charts_core.type_definitions.enums import TradeVisualization
+    from lightweight_charts_pro.charts.options import TradeVisualizationOptions
+    from lightweight_charts_pro.type_definitions.enums import TradeVisualization
 
     # Create options with method chaining
     options = (
@@ -38,9 +38,9 @@ Example:
 from dataclasses import dataclass
 
 # Local Imports
-from lightweight_charts_core.charts.options.base_options import Options
-from lightweight_charts_core.type_definitions.enums import TradeVisualization
-from lightweight_charts_core.utils import chainable_field
+from lightweight_charts_pro.charts.options.base_options import Options
+from lightweight_charts_pro.type_definitions.enums import TradeVisualization
+from lightweight_charts_pro.utils import chainable_field
 
 
 @dataclass

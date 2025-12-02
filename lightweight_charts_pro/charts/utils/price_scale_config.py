@@ -4,11 +4,11 @@ This module provides fluent builder patterns for common price scale configuratio
 making it easier to create properly configured price scales for various use cases.
 """
 
-from lightweight_charts_core.charts.options.price_scale_options import (
+from lightweight_charts_pro.charts.options.price_scale_options import (
     PriceScaleMargins,
     PriceScaleOptions,
 )
-from lightweight_charts_core.type_definitions.enums import PriceScaleMode
+from lightweight_charts_pro.type_definitions.enums import PriceScaleMode
 
 
 class PriceScaleConfig:

@@ -4,10 +4,10 @@ This module provides validation and helpful error messages for price scale
 configurations, helping developers catch common mistakes early.
 """
 
-from lightweight_charts_core.charts.options.price_scale_options import (
+from lightweight_charts_pro.charts.options.price_scale_options import (
     PriceScaleOptions,
 )
-from lightweight_charts_core.charts.series.base import Series
+from lightweight_charts_pro.charts.series.base import Series
 
 
 class PriceScaleValidationError(Exception):
@@ -86,7 +86,7 @@ Recommended configuration:
     chart.add_series(series)  # Price scale auto-created
 
     # Option 2: Manual configuration
-    from lightweight_charts_core import PriceScaleConfig
+    from lightweight_charts_pro import PriceScaleConfig
     scale = PriceScaleConfig.for_overlay("custom_id")
     chart.add_overlay_price_scale("custom_id", scale)
     series.price_scale_id = "custom_id"
@@ -105,7 +105,7 @@ Recommended configuration:
     )
 
     # Option 3: Manual configuration
-    from lightweight_charts_core import PriceScaleConfig
+    from lightweight_charts_pro import PriceScaleConfig
     scale = PriceScaleConfig.for_separate_pane("pane_{pane_id}")
     chart.add_overlay_price_scale("pane_{pane_id}", scale)
 """

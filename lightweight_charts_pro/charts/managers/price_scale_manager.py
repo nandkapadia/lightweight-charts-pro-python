@@ -6,16 +6,16 @@ for chart series.
 
 from typing import Any
 
-from lightweight_charts_core.charts.options.price_scale_options import (
+from lightweight_charts_pro.charts.options.price_scale_options import (
     PriceScaleMargins,
     PriceScaleOptions,
 )
-from lightweight_charts_core.exceptions import (
+from lightweight_charts_pro.exceptions import (
     PriceScaleOptionsTypeError,
     TypeValidationError,
     ValueValidationError,
 )
-from lightweight_charts_core.logging_config import get_logger
+from lightweight_charts_pro.logging_config import get_logger
 
 # Initialize logger
 logger = get_logger(__name__)

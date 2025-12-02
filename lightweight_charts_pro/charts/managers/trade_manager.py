@@ -6,12 +6,12 @@ for chart trades.
 
 from typing import Any
 
-from lightweight_charts_core.data.trade import TradeData
-from lightweight_charts_core.exceptions import (
+from lightweight_charts_pro.data.trade import TradeData
+from lightweight_charts_pro.exceptions import (
     TypeValidationError,
     ValueValidationError,
 )
-from lightweight_charts_core.logging_config import get_logger
+from lightweight_charts_pro.logging_config import get_logger
 
 # Initialize logger
 logger = get_logger(__name__)

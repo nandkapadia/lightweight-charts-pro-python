@@ -25,8 +25,8 @@ Key Features:
 
 Example:
     ```python
-    from lightweight_charts_core.charts.series import CandlestickSeries
-    from lightweight_charts_core.data import CandlestickData
+    from lightweight_charts_pro.charts.series import CandlestickSeries
+    from lightweight_charts_pro.data import CandlestickData
 
     # Create candlestick data
     data = [
@@ -55,12 +55,12 @@ License: MIT
 import pandas as pd
 
 # Local Imports
-from lightweight_charts_core.charts.series.base import Series
-from lightweight_charts_core.data.candlestick_data import CandlestickData
-from lightweight_charts_core.exceptions import ColorValidationError
-from lightweight_charts_core.type_definitions import ChartType
-from lightweight_charts_core.utils import chainable_property
-from lightweight_charts_core.utils.data_utils import is_valid_color
+from lightweight_charts_pro.charts.series.base import Series
+from lightweight_charts_pro.data.candlestick_data import CandlestickData
+from lightweight_charts_pro.exceptions import ColorValidationError
+from lightweight_charts_pro.type_definitions import ChartType
+from lightweight_charts_pro.utils import chainable_property
+from lightweight_charts_pro.utils.data_utils import is_valid_color
 
 
 @chainable_property("up_color", str, validator="color")
@@ -112,8 +112,8 @@ class CandlestickSeries(Series):
 
     Example:
         ```python
-        from lightweight_charts_core.charts.series import CandlestickSeries
-        from lightweight_charts_core.data import CandlestickData
+        from lightweight_charts_pro.charts.series import CandlestickSeries
+        from lightweight_charts_pro.data import CandlestickData
 
         # Create candlestick data
         data = [

@@ -20,7 +20,7 @@ Key Features:
 Example:
     Convert hex colors to rgba with opacity::
 
-        from lightweight_charts_core.utils.color_utils import add_opacity
+        from lightweight_charts_pro.utils.color_utils import add_opacity
 
         # Add 30% opacity to green color
         rgba_color = add_opacity("#4CAF50", 0.3)
@@ -28,7 +28,7 @@ Example:
 
     Validate hex colors::
 
-        from lightweight_charts_core.utils.color_utils import is_hex_color
+        from lightweight_charts_pro.utils.color_utils import is_hex_color
 
         is_valid = is_hex_color("#FF0000")  # True
         is_valid = is_hex_color("red")  # False

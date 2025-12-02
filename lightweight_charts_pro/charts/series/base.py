@@ -6,8 +6,8 @@ data handling, configuration, and frontend integration.
 
 Example:
     ```python
-    from lightweight_charts_core.charts.series.base import Series
-    from lightweight_charts_core.data import SingleValueData
+    from lightweight_charts_pro.charts.series.base import Series
+    from lightweight_charts_pro.data import SingleValueData
 
 
     class MyCustomSeries(Series):
@@ -33,11 +33,11 @@ from typing import Any, Union, get_type_hints
 import pandas as pd
 
 # Local Imports
-from lightweight_charts_core.charts.options import PriceLineOptions
-from lightweight_charts_core.data import Data
-from lightweight_charts_core.data.data import classproperty
-from lightweight_charts_core.data.marker import MarkerBase
-from lightweight_charts_core.exceptions import (
+from lightweight_charts_pro.charts.options import PriceLineOptions
+from lightweight_charts_pro.data import Data
+from lightweight_charts_pro.data.data import classproperty
+from lightweight_charts_pro.data.marker import MarkerBase
+from lightweight_charts_pro.exceptions import (
     ColumnMappingRequiredError,
     DataFrameValidationError,
     DataItemsTypeError,
@@ -45,10 +45,10 @@ from lightweight_charts_core.exceptions import (
     NotFoundError,
     ValueValidationError,
 )
-from lightweight_charts_core.logging_config import get_logger
-from lightweight_charts_core.type_definitions.enums import LineStyle, PriceLineSource
-from lightweight_charts_core.utils import chainable_property
-from lightweight_charts_core.utils.data_utils import snake_to_camel
+from lightweight_charts_pro.logging_config import get_logger
+from lightweight_charts_pro.type_definitions.enums import LineStyle, PriceLineSource
+from lightweight_charts_pro.utils import chainable_property
+from lightweight_charts_pro.utils.data_utils import snake_to_camel
 
 # Initialize logger
 logger = get_logger(__name__)
@@ -125,8 +125,8 @@ class Series(ABC):  # noqa: B024
 
     Example:
         ```python
-        from lightweight_charts_core.charts.series import LineSeries
-        from lightweight_charts_core.data import SingleValueData
+        from lightweight_charts_pro.charts.series import LineSeries
+        from lightweight_charts_pro.data import SingleValueData
 
         # Create series with list of data objects
         data = [SingleValueData("2024-01-01", 100)]
@@ -532,8 +532,8 @@ class Series(ABC):  # noqa: B024
 
         Example:
             ```python
-            from lightweight_charts_core.data.marker import BarMarker, PriceMarker
-             from lightweight_charts_core.type_definitions.enums import (
+            from lightweight_charts_pro.data.marker import BarMarker, PriceMarker
+             from lightweight_charts_pro.type_definitions.enums import (
                  MarkerPosition, MarkerShape
              )
 
@@ -886,7 +886,7 @@ class Series(ABC):  # noqa: B024
                 # This ensures all LineOptions are serialized the same way:
                 # upper_line -> upperLineColor, upperLineWidth, upperLineStyle
                 # line_options -> color, lineWidth, lineStyle (backward compatible)
-                from lightweight_charts_core.charts.options.line_options import LineOptions
+                from lightweight_charts_pro.charts.options.line_options import LineOptions
 
                 if isinstance(attr_value, LineOptions):
                     line_dict = attr_value.asdict()

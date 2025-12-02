@@ -14,8 +14,8 @@ import math
 from dataclasses import dataclass
 from typing import ClassVar
 
-from lightweight_charts_core.data.data import Data
-from lightweight_charts_core.exceptions import (
+from lightweight_charts_pro.data.data import Data
+from lightweight_charts_pro.exceptions import (
     TrendDirectionIntegerError,
     TypeValidationError,
     ValueValidationError,

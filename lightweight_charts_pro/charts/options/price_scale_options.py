@@ -14,8 +14,8 @@ Key Features:
 
 Example:
     ```python
-    from lightweight_charts_core.charts.options import PriceScaleOptions
-    from lightweight_charts_core.type_definitions.enums import PriceScaleMode
+    from lightweight_charts_pro.charts.options import PriceScaleOptions
+    from lightweight_charts_pro.type_definitions.enums import PriceScaleMode
 
     # Create price scale options
     price_scale = PriceScaleOptions(
@@ -37,9 +37,9 @@ License: MIT
 from dataclasses import dataclass, field
 
 # Local Imports
-from lightweight_charts_core.charts.options.base_options import Options
-from lightweight_charts_core.type_definitions.enums import PriceScaleMode
-from lightweight_charts_core.utils import chainable_field
+from lightweight_charts_pro.charts.options.base_options import Options
+from lightweight_charts_pro.type_definitions.enums import PriceScaleMode
+from lightweight_charts_pro.utils import chainable_field
 
 
 @dataclass
@@ -60,7 +60,7 @@ class PriceScaleMargins(Options):
 
     Example:
         ```python
-        from lightweight_charts_core.charts.options import PriceScaleMargins
+        from lightweight_charts_pro.charts.options import PriceScaleMargins
 
         # Create margins with custom spacing
         margins = PriceScaleMargins(top=0.05, bottom=0.05)  # 5% margins
@@ -124,8 +124,8 @@ class PriceScaleOptions(Options):
 
     Example:
         ```python
-        from lightweight_charts_core.charts.options import PriceScaleOptions
-        from lightweight_charts_core.type_definitions.enums import PriceScaleMode
+        from lightweight_charts_pro.charts.options import PriceScaleOptions
+        from lightweight_charts_pro.type_definitions.enums import PriceScaleMode
 
         # Create left price scale with custom styling
         left_scale = PriceScaleOptions(

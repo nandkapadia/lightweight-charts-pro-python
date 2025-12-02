@@ -8,9 +8,9 @@ import math
 from dataclasses import dataclass
 from typing import ClassVar
 
-from lightweight_charts_core.data.data import Data
-from lightweight_charts_core.exceptions import ValueValidationError
-from lightweight_charts_core.utils import validated_field
+from lightweight_charts_pro.data.data import Data
+from lightweight_charts_pro.exceptions import ValueValidationError
+from lightweight_charts_pro.utils import validated_field
 
 
 @dataclass
@@ -39,7 +39,7 @@ class BandData(Data):
 
     Example:
         ```python
-        from lightweight_charts_core.data import BandData
+        from lightweight_charts_pro.data import BandData
 
         # Basic data point
         data = BandData(time="2024-01-01", upper=110, middle=105, lower=100)

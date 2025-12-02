@@ -6,9 +6,9 @@ how price values are displayed on charts.
 
 from dataclasses import dataclass
 
-from lightweight_charts_core.charts.options.base_options import Options
-from lightweight_charts_core.exceptions import ValueValidationError
-from lightweight_charts_core.utils import chainable_field
+from lightweight_charts_pro.charts.options.base_options import Options
+from lightweight_charts_pro.exceptions import ValueValidationError
+from lightweight_charts_pro.utils import chainable_field
 
 
 @dataclass

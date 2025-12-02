@@ -6,9 +6,9 @@ crosshair behavior, kinetic scrolling, and tracking modes.
 
 from dataclasses import dataclass, field
 
-from lightweight_charts_core.charts.options.base_options import Options
-from lightweight_charts_core.type_definitions.enums import CrosshairMode, LineStyle
-from lightweight_charts_core.utils import chainable_field
+from lightweight_charts_pro.charts.options.base_options import Options
+from lightweight_charts_pro.type_definitions.enums import CrosshairMode, LineStyle
+from lightweight_charts_pro.utils import chainable_field
 
 
 @dataclass

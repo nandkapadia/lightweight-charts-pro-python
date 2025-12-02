@@ -24,10 +24,10 @@ Each series type supports:
 
 Example Usage:
     ```python
-    from lightweight_charts_core.charts.series import LineSeries,
+    from lightweight_charts_pro.charts.series import LineSeries,
         AreaSeries,
         CandlestickSeries
-    from lightweight_charts_core.data import SingleValueData, CandlestickData
+    from lightweight_charts_pro.data import SingleValueData, CandlestickData
 
     # Create line series
     line_data = [SingleValueData("2024-01-01", 100), SingleValueData("2024-01-02", 105)]
@@ -57,18 +57,18 @@ Author: Streamlit Lightweight Charts Contributors
 License: MIT
 """
 
-from lightweight_charts_core.charts.series.area import AreaSeries
-from lightweight_charts_core.charts.series.band import BandSeries
-from lightweight_charts_core.charts.series.bar_series import BarSeries
-from lightweight_charts_core.charts.series.base import Series
-from lightweight_charts_core.charts.series.baseline import BaselineSeries
-from lightweight_charts_core.charts.series.candlestick import CandlestickSeries
-from lightweight_charts_core.charts.series.gradient_ribbon import GradientRibbonSeries
-from lightweight_charts_core.charts.series.histogram import HistogramSeries
-from lightweight_charts_core.charts.series.line import LineSeries
-from lightweight_charts_core.charts.series.ribbon import RibbonSeries
-from lightweight_charts_core.charts.series.signal_series import SignalSeries
-from lightweight_charts_core.charts.series.trend_fill import TrendFillSeries
+from lightweight_charts_pro.charts.series.area import AreaSeries
+from lightweight_charts_pro.charts.series.band import BandSeries
+from lightweight_charts_pro.charts.series.bar_series import BarSeries
+from lightweight_charts_pro.charts.series.base import Series
+from lightweight_charts_pro.charts.series.baseline import BaselineSeries
+from lightweight_charts_pro.charts.series.candlestick import CandlestickSeries
+from lightweight_charts_pro.charts.series.gradient_ribbon import GradientRibbonSeries
+from lightweight_charts_pro.charts.series.histogram import HistogramSeries
+from lightweight_charts_pro.charts.series.line import LineSeries
+from lightweight_charts_pro.charts.series.ribbon import RibbonSeries
+from lightweight_charts_pro.charts.series.signal_series import SignalSeries
+from lightweight_charts_pro.charts.series.trend_fill import TrendFillSeries
 
 __all__ = [
     "AreaSeries",

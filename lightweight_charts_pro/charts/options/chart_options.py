@@ -17,8 +17,8 @@ Key Features:
 
 Example:
     ```python
-    from lightweight_charts_core.charts.options import ChartOptions
-    from lightweight_charts_core.charts.options.layout_options import LayoutOptions
+    from lightweight_charts_pro.charts.options import ChartOptions
+    from lightweight_charts_pro.charts.options.layout_options import LayoutOptions
 
     # Create custom chart options
     options = ChartOptions(
@@ -36,25 +36,25 @@ License: MIT
 from dataclasses import dataclass, field
 
 # Local Imports
-from lightweight_charts_core.charts.options.base_options import Options
-from lightweight_charts_core.charts.options.interaction_options import (
+from lightweight_charts_pro.charts.options.base_options import Options
+from lightweight_charts_pro.charts.options.interaction_options import (
     CrosshairOptions,
     KineticScrollOptions,
     TrackingModeOptions,
 )
-from lightweight_charts_core.charts.options.layout_options import (
+from lightweight_charts_pro.charts.options.layout_options import (
     GridOptions,
     LayoutOptions,
 )
-from lightweight_charts_core.charts.options.localization_options import LocalizationOptions
-from lightweight_charts_core.charts.options.price_scale_options import PriceScaleOptions
-from lightweight_charts_core.charts.options.time_scale_options import TimeScaleOptions
-from lightweight_charts_core.charts.options.trade_visualization_options import (
+from lightweight_charts_pro.charts.options.localization_options import LocalizationOptions
+from lightweight_charts_pro.charts.options.price_scale_options import PriceScaleOptions
+from lightweight_charts_pro.charts.options.time_scale_options import TimeScaleOptions
+from lightweight_charts_pro.charts.options.trade_visualization_options import (
     TradeVisualizationOptions,
 )
-from lightweight_charts_core.charts.options.ui_options import RangeSwitcherOptions
-from lightweight_charts_core.exceptions import PriceScaleOptionsTypeError
-from lightweight_charts_core.utils import chainable_field
+from lightweight_charts_pro.charts.options.ui_options import RangeSwitcherOptions
+from lightweight_charts_pro.exceptions import PriceScaleOptionsTypeError
+from lightweight_charts_pro.utils import chainable_field
 
 
 @dataclass
@@ -131,8 +131,8 @@ class ChartOptions(Options):
 
     Example:
         ```python
-        from lightweight_charts_core.charts.options import ChartOptions
-        from lightweight_charts_core.charts.options.layout_options import LayoutOptions
+        from lightweight_charts_pro.charts.options import ChartOptions
+        from lightweight_charts_pro.charts.options.layout_options import LayoutOptions
 
         # Create custom chart options
         options = ChartOptions(

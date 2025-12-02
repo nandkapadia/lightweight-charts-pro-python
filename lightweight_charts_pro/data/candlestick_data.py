@@ -20,7 +20,7 @@ Key Features:
 
 Example Usage:
     ```python
-    from lightweight_charts_core.data import CandlestickData
+    from lightweight_charts_pro.data import CandlestickData
 
     # Create candlestick data point with colors
     data = CandlestickData(
@@ -47,8 +47,8 @@ from typing import ClassVar
 # Third Party Imports
 # (None in this module)
 # Local Imports
-from lightweight_charts_core.data.ohlc_data import OhlcData
-from lightweight_charts_core.utils import validated_field
+from lightweight_charts_pro.data.ohlc_data import OhlcData
+from lightweight_charts_pro.utils import validated_field
 
 
 @dataclass
@@ -88,7 +88,7 @@ class CandlestickData(OhlcData):
 
     Example:
         ```python
-        from lightweight_charts_core.data import CandlestickData
+        from lightweight_charts_pro.data import CandlestickData
 
         # Create candlestick data point with colors
         data = CandlestickData(

@@ -18,7 +18,7 @@ Key Features:
 
 Example Usage:
     ```python
-    from lightweight_charts_core.data import HistogramData
+    from lightweight_charts_pro.data import HistogramData
 
     # Create histogram data point with color
     data = HistogramData(time="2024-01-01T00:00:00", value=100.0, color="#FF5722")
@@ -39,8 +39,8 @@ from typing import ClassVar
 # Third Party Imports
 # (None in this module)
 # Local Imports
-from lightweight_charts_core.data.single_value_data import SingleValueData
-from lightweight_charts_core.utils import validated_field
+from lightweight_charts_pro.data.single_value_data import SingleValueData
+from lightweight_charts_pro.utils import validated_field
 
 
 @dataclass
@@ -74,7 +74,7 @@ class HistogramData(SingleValueData):
 
     Example:
         ```python
-        from lightweight_charts_core.data import HistogramData
+        from lightweight_charts_pro.data import HistogramData
 
         # Create histogram data point with color
         data = HistogramData(time="2024-01-01T00:00:00", value=100.0, color="#FF5722")

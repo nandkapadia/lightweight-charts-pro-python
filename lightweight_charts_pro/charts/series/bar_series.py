@@ -7,8 +7,8 @@ The BarSeries class supports various styling options including bar color, base v
 and animation effects. It also supports markers and price line configurations.
 
 Example:
-    from lightweight_charts_core.charts.series import BarSeries
-    from lightweight_charts_core.data import SingleValueData
+    from lightweight_charts_pro.charts.series import BarSeries
+    from lightweight_charts_pro.data import SingleValueData
 
     # Create bar data
     data = [
@@ -24,10 +24,10 @@ Example:
 """
 
 import pandas as pd
-from lightweight_charts_core.charts.series.base import Series
-from lightweight_charts_core.data import BarData
-from lightweight_charts_core.type_definitions import ChartType
-from lightweight_charts_core.utils import chainable_property
+from lightweight_charts_pro.charts.series.base import Series
+from lightweight_charts_pro.data import BarData
+from lightweight_charts_pro.type_definitions import ChartType
+from lightweight_charts_pro.utils import chainable_property
 
 
 @chainable_property("up_color", str, validator="color")

@@ -15,8 +15,8 @@ Key Features:
 
 Example:
     ```python
-    from lightweight_charts_core.charts.options import LineOptions
-    from lightweight_charts_core.type_definitions.enums import LineStyle, LineType
+    from lightweight_charts_pro.charts.options import LineOptions
+    from lightweight_charts_pro.type_definitions.enums import LineStyle, LineType
 
     # Create line options with custom styling
     line_opts = LineOptions(
@@ -34,15 +34,15 @@ License: MIT
 from dataclasses import dataclass
 
 # Local Imports
-from lightweight_charts_core.charts.options.base_options import Options
-from lightweight_charts_core.exceptions import ColorValidationError
-from lightweight_charts_core.type_definitions.enums import (
+from lightweight_charts_pro.charts.options.base_options import Options
+from lightweight_charts_pro.exceptions import ColorValidationError
+from lightweight_charts_pro.type_definitions.enums import (
     LastPriceAnimationMode,
     LineStyle,
     LineType,
 )
-from lightweight_charts_core.utils import chainable_field
-from lightweight_charts_core.utils.data_utils import is_valid_color
+from lightweight_charts_pro.utils import chainable_field
+from lightweight_charts_pro.utils.data_utils import is_valid_color
 
 
 @dataclass
@@ -103,8 +103,8 @@ class LineOptions(Options):
 
     Example:
         ```python
-        from lightweight_charts_core.charts.options import LineOptions
-        from lightweight_charts_core.type_definitions.enums import (
+        from lightweight_charts_pro.charts.options import LineOptions
+        from lightweight_charts_pro.type_definitions.enums import (
             LineStyle,
             LineType,
             LastPriceAnimationMode,

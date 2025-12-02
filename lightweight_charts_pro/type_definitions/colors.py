@@ -26,7 +26,7 @@ Key Features:
 
 Example Usage:
     ```python
-    from lightweight_charts_core.type_definitions.colors import (
+    from lightweight_charts_pro.type_definitions.colors import (
         BackgroundSolid,
         BackgroundGradient,
         Background,
@@ -58,12 +58,12 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import Union
 
-from lightweight_charts_core.exceptions import ColorValidationError
-from lightweight_charts_core.type_definitions.enums import BackgroundStyle
+from lightweight_charts_pro.exceptions import ColorValidationError
+from lightweight_charts_pro.type_definitions.enums import BackgroundStyle
 
 # Local Imports
-from lightweight_charts_core.types.options import Options
-from lightweight_charts_core.utils.data_utils import is_valid_color
+from lightweight_charts_pro.types.options import Options
+from lightweight_charts_pro.utils.data_utils import is_valid_color
 
 
 @dataclass

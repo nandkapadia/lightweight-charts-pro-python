@@ -20,7 +20,7 @@ Key Features:
 
 Example Usage:
     ```python
-    from lightweight_charts_core.data import OhlcvData
+    from lightweight_charts_pro.data import OhlcvData
 
     # Create OHLCV data point with volume
     data = OhlcvData(
@@ -44,8 +44,8 @@ from typing import ClassVar
 # Third Party Imports
 # (None in this module)
 # Local Imports
-from lightweight_charts_core.data.ohlc_data import OhlcData
-from lightweight_charts_core.exceptions import RequiredFieldError, ValueValidationError
+from lightweight_charts_pro.data.ohlc_data import OhlcData
+from lightweight_charts_pro.exceptions import RequiredFieldError, ValueValidationError
 
 
 @dataclass
@@ -76,7 +76,7 @@ class OhlcvData(OhlcData):
 
     Example:
         ```python
-        from lightweight_charts_core.data import OhlcvData
+        from lightweight_charts_pro.data import OhlcvData
 
         # Create OHLCV data point with volume
         data = OhlcvData(

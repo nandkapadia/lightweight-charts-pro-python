@@ -7,10 +7,10 @@ time points.
 """
 
 import pandas as pd
-from lightweight_charts_core.charts.series.base import Series
-from lightweight_charts_core.data.signal_data import SignalData
-from lightweight_charts_core.type_definitions import ChartType
-from lightweight_charts_core.utils import chainable_property
+from lightweight_charts_pro.charts.series.base import Series
+from lightweight_charts_pro.data.signal_data import SignalData
+from lightweight_charts_pro.type_definitions import ChartType
+from lightweight_charts_pro.utils import chainable_property
 
 
 @chainable_property("neutral_color", str, validator="color")

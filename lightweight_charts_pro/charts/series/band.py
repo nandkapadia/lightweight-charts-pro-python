@@ -8,8 +8,8 @@ The BandSeries class supports various styling options for each band, fill colors
 animation effects. It also supports markers and price line configurations.
 
 Example:
-    from lightweight_charts_core.charts.series import BandSeries
-    from lightweight_charts_core.data import BandData
+    from lightweight_charts_pro.charts.series import BandSeries
+    from lightweight_charts_pro.data import BandData
 
     # Create band data
     data = [
@@ -27,20 +27,20 @@ Example:
 """
 
 import pandas as pd
-from lightweight_charts_core.charts.options.line_options import LineOptions
-from lightweight_charts_core.charts.series.base import Series
-from lightweight_charts_core.charts.series.defaults import (
+from lightweight_charts_pro.charts.options.line_options import LineOptions
+from lightweight_charts_pro.charts.series.base import Series
+from lightweight_charts_pro.charts.series.defaults import (
     create_lower_line,
     create_middle_line,
     create_upper_line,
 )
-from lightweight_charts_core.constants import (
+from lightweight_charts_pro.constants import (
     BAND_LOWER_FILL_COLOR,
     BAND_UPPER_FILL_COLOR,
 )
-from lightweight_charts_core.data.band import BandData
-from lightweight_charts_core.type_definitions import ChartType
-from lightweight_charts_core.utils import chainable_property
+from lightweight_charts_pro.data.band import BandData
+from lightweight_charts_pro.type_definitions import ChartType
+from lightweight_charts_pro.utils import chainable_property
 
 
 @chainable_property("upper_line", LineOptions, allow_none=True)

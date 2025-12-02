@@ -8,9 +8,9 @@ Framework-specific implementations (Streamlit, FastAPI, etc.) should extend
 these base classes and add their rendering capabilities.
 """
 
-from lightweight_charts_core.charts.base_chart import BaseChart
-from lightweight_charts_core.charts.base_chart_manager import BaseChartManager
-from lightweight_charts_core.charts.options import (
+from lightweight_charts_pro.charts.base_chart import BaseChart
+from lightweight_charts_pro.charts.base_chart_manager import BaseChartManager
+from lightweight_charts_pro.charts.options import (
     ChartOptions,
     CrosshairLineOptions,
     CrosshairOptions,
@@ -36,7 +36,7 @@ from lightweight_charts_core.charts.options import (
     TradeVisualizationOptions,
     WatermarkOptions,
 )
-from lightweight_charts_core.charts.series import (
+from lightweight_charts_pro.charts.series import (
     AreaSeries,
     BandSeries,
     BarSeries,

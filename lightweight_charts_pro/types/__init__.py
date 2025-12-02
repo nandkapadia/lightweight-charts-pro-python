@@ -3,8 +3,8 @@
 This module provides type definitions and configuration classes.
 """
 
-from lightweight_charts_core.types.options import Options
-from lightweight_charts_core.types.series_config_types import (
+from lightweight_charts_pro.types.options import Options
+from lightweight_charts_pro.types.series_config_types import (
     ChartSeriesConfigs,
     CompleteSeriesConfigState,
     ConfigDict,

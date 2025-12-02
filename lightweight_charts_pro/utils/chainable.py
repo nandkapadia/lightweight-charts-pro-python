@@ -21,7 +21,7 @@ Key Features:
 
 Example Usage:
     ```python
-    from lightweight_charts_core.utils import chainable_property, chainable_field
+    from lightweight_charts_pro.utils import chainable_property, chainable_field
     from dataclasses import dataclass
 
 
@@ -106,7 +106,7 @@ def _is_list_of_markers(value_type) -> bool:
             try:
                 # Lazy load MarkerBase to avoid circular imports
                 # pylint: disable=import-outside-toplevel
-                from lightweight_charts_core.data.marker import MarkerBase
+                from lightweight_charts_pro.data.marker import MarkerBase
 
                 return issubclass(arg_type, MarkerBase) if hasattr(arg_type, "__mro__") else False
             except ImportError:
@@ -143,7 +143,7 @@ def _validate_list_of_markers(value, attr_name: str) -> bool:
     try:
         # Lazy load MarkerBase to avoid circular imports
         # pylint: disable=import-outside-toplevel
-        from lightweight_charts_core.data.marker import MarkerBase
+        from lightweight_charts_pro.data.marker import MarkerBase
 
         if MarkerBase is not None:
             for item in value:
@@ -498,7 +498,7 @@ def chainable_field(
     Example:
         ```python
         from dataclasses import dataclass
-        from lightweight_charts_core.utils import chainable_field
+        from lightweight_charts_pro.utils import chainable_field
 
 
         @dataclass
@@ -693,7 +693,7 @@ def validated_field(
     Example:
         ```python
         from dataclasses import dataclass
-        from lightweight_charts_core.utils import validated_field
+        from lightweight_charts_pro.utils import validated_field
 
 
         @dataclass

@@ -13,8 +13,8 @@ These defaults follow a color-coded semantic scheme:
 Google-style docstrings are used throughout.
 """
 
-from lightweight_charts_core.charts.options.line_options import LineOptions
-from lightweight_charts_core.type_definitions.enums import LineStyle
+from lightweight_charts_pro.charts.options.line_options import LineOptions
+from lightweight_charts_pro.type_definitions.enums import LineStyle
 
 # Default color constants for semantic meaning
 COLOR_UPPER_GREEN = "#4CAF50"  # Material Design Green 500

@@ -15,7 +15,7 @@ providing clear interfaces for chart configuration and data handling.
 
 Example Usage:
     ```python
-    from lightweight_charts_core.type_definitions import (
+    from lightweight_charts_pro.type_definitions import (
         ChartType,
         LineStyle,
         MarkerShape,
@@ -37,12 +37,12 @@ Author: Streamlit Lightweight Charts Contributors
 License: MIT
 """
 
-from lightweight_charts_core.type_definitions.colors import (
+from lightweight_charts_pro.type_definitions.colors import (
     Background,
     BackgroundGradient,
     BackgroundSolid,
 )
-from lightweight_charts_core.type_definitions.enums import (
+from lightweight_charts_pro.type_definitions.enums import (
     AnnotationPosition,
     AnnotationType,
     BackgroundStyle,

@@ -8,8 +8,8 @@ The BaselineSeries class supports various styling options for the baseline, fill
 and animation effects. It also supports markers and price line configurations.
 
 Example:
-    from lightweight_charts_core.charts.series import BaselineSeries
-    from lightweight_charts_core.data.baseline_data import BaselineData
+    from lightweight_charts_pro.charts.series import BaselineSeries
+    from lightweight_charts_pro.data.baseline_data import BaselineData
 
     # Create baseline data
     data = [
@@ -28,9 +28,9 @@ Example:
 from typing import Any
 
 import pandas as pd
-from lightweight_charts_core.charts.options.line_options import LineOptions
-from lightweight_charts_core.charts.series.base import Series
-from lightweight_charts_core.constants import (
+from lightweight_charts_pro.charts.options.line_options import LineOptions
+from lightweight_charts_pro.charts.series.base import Series
+from lightweight_charts_pro.constants import (
     BASELINE_BOTTOM_FILL_COLOR1,
     BASELINE_BOTTOM_FILL_COLOR2,
     BASELINE_BOTTOM_LINE_COLOR,
@@ -38,11 +38,11 @@ from lightweight_charts_core.constants import (
     BASELINE_TOP_FILL_COLOR2,
     BASELINE_TOP_LINE_COLOR,
 )
-from lightweight_charts_core.data.baseline_data import BaselineData
-from lightweight_charts_core.exceptions import BaseValueFormatError, ColorValidationError
-from lightweight_charts_core.type_definitions import ChartType
-from lightweight_charts_core.utils import chainable_property
-from lightweight_charts_core.utils.data_utils import is_valid_color
+from lightweight_charts_pro.data.baseline_data import BaselineData
+from lightweight_charts_pro.exceptions import BaseValueFormatError, ColorValidationError
+from lightweight_charts_pro.type_definitions import ChartType
+from lightweight_charts_pro.utils import chainable_property
+from lightweight_charts_pro.utils.data_utils import is_valid_color
 
 
 def _validate_base_value_static(base_value) -> dict[str, Any]:

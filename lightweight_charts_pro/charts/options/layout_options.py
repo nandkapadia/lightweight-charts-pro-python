@@ -6,15 +6,15 @@ chart appearance, grid settings, panes, and watermarks.
 
 from dataclasses import dataclass, field
 
-from lightweight_charts_core.charts.options.base_options import Options
-from lightweight_charts_core.exceptions import ValueValidationError
-from lightweight_charts_core.type_definitions.colors import (
+from lightweight_charts_pro.charts.options.base_options import Options
+from lightweight_charts_pro.exceptions import ValueValidationError
+from lightweight_charts_pro.type_definitions.colors import (
     BackgroundGradient,
     BackgroundSolid,
 )
-from lightweight_charts_core.type_definitions.enums import HorzAlign, LineStyle, VertAlign
-from lightweight_charts_core.utils import chainable_field
-from lightweight_charts_core.utils.data_utils import is_valid_color
+from lightweight_charts_pro.type_definitions.enums import HorzAlign, LineStyle, VertAlign
+from lightweight_charts_pro.utils import chainable_field
+from lightweight_charts_pro.utils.data_utils import is_valid_color
 
 
 @dataclass

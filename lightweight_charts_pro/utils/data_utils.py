@@ -28,7 +28,7 @@ Key Features:
 Example:
     Time normalization::
 
-        from lightweight_charts_core.utils.data_utils import normalize_time
+        from lightweight_charts_pro.utils.data_utils import normalize_time
 
         # Convert various time formats to UNIX timestamp
         timestamp = normalize_time("2024-01-01T00:00:00")
@@ -36,7 +36,7 @@ Example:
 
     Color validation::
 
-        from lightweight_charts_core.utils.data_utils import is_valid_color
+        from lightweight_charts_pro.utils.data_utils import is_valid_color
 
         # Validate different color formats
         is_valid = is_valid_color("#FF0000")  # True (hex)
@@ -45,7 +45,7 @@ Example:
 
     Format conversion for frontend::
 
-        from lightweight_charts_core.utils.data_utils import snake_to_camel
+        from lightweight_charts_pro.utils.data_utils import snake_to_camel
 
         # Convert Python naming to JavaScript naming
         camel = snake_to_camel("price_scale_id")
@@ -66,12 +66,12 @@ from typing import Any
 import pandas as pd
 
 # Local Imports
-from lightweight_charts_core.exceptions import (
+from lightweight_charts_pro.exceptions import (
     TimeValidationError,
     UnsupportedTimeTypeError,
     ValueValidationError,
 )
-from lightweight_charts_core.utils.case_converter import CaseConverter
+from lightweight_charts_pro.utils.case_converter import CaseConverter
 
 
 def normalize_time(time_value: Any) -> int:

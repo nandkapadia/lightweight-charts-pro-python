@@ -14,7 +14,7 @@ The annotation system supports:
 
 Example:
     ```python
-    from lightweight_charts_core.data.annotation import (
+    from lightweight_charts_pro.data.annotation import (
         create_text_annotation,
         create_arrow_annotation,
         AnnotationManager,
@@ -41,16 +41,16 @@ from datetime import datetime
 from typing import Any, Optional
 
 import pandas as pd
-from lightweight_charts_core.exceptions import (
+from lightweight_charts_pro.exceptions import (
     TypeValidationError,
     ValueValidationError,
 )
-from lightweight_charts_core.type_definitions import ColumnNames
-from lightweight_charts_core.type_definitions.enums import (
+from lightweight_charts_pro.type_definitions import ColumnNames
+from lightweight_charts_pro.type_definitions.enums import (
     AnnotationPosition,
     AnnotationType,
 )
-from lightweight_charts_core.utils.data_utils import from_utc_timestamp, to_utc_timestamp
+from lightweight_charts_pro.utils.data_utils import from_utc_timestamp, to_utc_timestamp
 
 # Use a null logger by default - can be configured by the consuming package
 logger = logging.getLogger(__name__)

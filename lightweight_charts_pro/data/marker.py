@@ -20,8 +20,8 @@ Key Features:
 
 Example Usage:
     ```python
-    from lightweight_charts_core.data import Marker, PriceMarker
-    from lightweight_charts_core.type_definitions.enums import MarkerPosition, MarkerShape
+    from lightweight_charts_pro.data import Marker, PriceMarker
+    from lightweight_charts_pro.type_definitions.enums import MarkerPosition, MarkerShape
 
     # Create bar marker
     bar_marker = Marker(
@@ -52,9 +52,9 @@ from dataclasses import dataclass
 from typing import ClassVar
 
 # Local Imports
-from lightweight_charts_core.data.data import Data
-from lightweight_charts_core.exceptions import RequiredFieldError
-from lightweight_charts_core.type_definitions.enums import MarkerPosition, MarkerShape
+from lightweight_charts_pro.data.data import Data
+from lightweight_charts_pro.exceptions import RequiredFieldError
+from lightweight_charts_pro.type_definitions.enums import MarkerPosition, MarkerShape
 
 
 @dataclass

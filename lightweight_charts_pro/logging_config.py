@@ -23,7 +23,7 @@ Key Features:
 Example:
     Basic logging setup::
 
-        from lightweight_charts_core.logging_config import setup_logging, get_logger
+        from lightweight_charts_pro.logging_config import setup_logging, get_logger
         import logging
 
         # Set up logging with INFO level
@@ -64,7 +64,7 @@ def setup_logging(
     and prevents duplicate handlers from being added on repeated calls.
 
     The function creates a logger hierarchy under the package name
-    "lightweight_charts_core", allowing for fine-grained
+    "lightweight_charts_pro", allowing for fine-grained
     control over logging for different components.
 
     Args:
@@ -85,7 +85,7 @@ def setup_logging(
 
     Returns:
         logging.Logger: The configured root logger instance for the
-            package with the name "lightweight_charts_core".
+            package with the name "lightweight_charts_pro".
 
     Example:
         Basic setup::
@@ -111,7 +111,7 @@ def setup_logging(
     # Create or retrieve the root logger for this package
     # Using a specific package name creates a logger hierarchy
     # This allows filtering logs by package if needed
-    logger = logging.getLogger("lightweight_charts_core")
+    logger = logging.getLogger("lightweight_charts_pro")
 
     # Set the logging level for this logger
     # This controls which messages are processed by this logger
@@ -170,7 +170,7 @@ def get_logger(name: str | None = None, level: int = logging.DEBUG) -> logging.L
     the package name to maintain logger hierarchy and enable filtering.
 
     Logger names follow the pattern:
-    "lightweight_charts_core.{component_name}"
+    "lightweight_charts_pro.{component_name}"
 
     This hierarchical naming allows:
         - Filtering logs by component
@@ -180,7 +180,7 @@ def get_logger(name: str | None = None, level: int = logging.DEBUG) -> logging.L
     Args:
         name (Optional[str]): Component name to append to package name.
             If None, returns the root package logger. The full logger
-            name will be "lightweight_charts_core.{name}".
+            name will be "lightweight_charts_pro.{name}".
             Examples: "chart_rendering", "data_processing", "validation"
         level (int, optional): Logging level for this specific logger.
             Defaults to logging.DEBUG for detailed logging. This level
@@ -216,10 +216,10 @@ def get_logger(name: str | None = None, level: int = logging.DEBUG) -> logging.L
     """
     # Create hierarchical logger name by combining package name with
     # component name. Example:
-    # - "lightweight_charts_core.None" becomes root logger
-    # - "lightweight_charts_core.charts" for chart component
-    # - "lightweight_charts_core.data" for data component
-    logger = logging.getLogger(f"lightweight_charts_core.{name}")
+    # - "lightweight_charts_pro.None" becomes root logger
+    # - "lightweight_charts_pro.charts" for chart component
+    # - "lightweight_charts_pro.data" for data component
+    logger = logging.getLogger(f"lightweight_charts_pro.{name}")
 
     # Set the logging level for this specific logger
     # This level filters messages before they reach the handlers

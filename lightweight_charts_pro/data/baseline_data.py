@@ -7,8 +7,8 @@ that support both top and bottom area styling with individual color controls.
 from dataclasses import dataclass
 from typing import ClassVar
 
-from lightweight_charts_core.data.single_value_data import SingleValueData
-from lightweight_charts_core.utils import validated_field
+from lightweight_charts_pro.data.single_value_data import SingleValueData
+from lightweight_charts_pro.utils import validated_field
 
 
 @dataclass

@@ -3,7 +3,7 @@
 This package provides validation utilities for chart configurations.
 """
 
-from lightweight_charts_core.charts.validators.price_scale_validator import (
+from lightweight_charts_pro.charts.validators.price_scale_validator import (
     PriceScaleValidationError,
     PriceScaleValidator,
 )

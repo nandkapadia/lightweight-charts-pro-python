@@ -52,7 +52,7 @@ Architecture:
 Example Usage:
     Basic string conversion::
 
-        from lightweight_charts_core.utils.case_converter import CaseConverter
+        from lightweight_charts_pro.utils.case_converter import CaseConverter
 
         # Convert Python naming to JavaScript naming
         js_name = CaseConverter.snake_to_camel("price_scale_id")
@@ -108,7 +108,7 @@ Example Usage:
 
     Using convenience functions::
 
-        from lightweight_charts_core.utils.case_converter import snake_to_camel, camel_to_snake
+        from lightweight_charts_pro.utils.case_converter import snake_to_camel, camel_to_snake
 
         # These wrap CaseConverter methods for backward compatibility
         js_name = snake_to_camel("price_scale_id")  # "priceScaleId"

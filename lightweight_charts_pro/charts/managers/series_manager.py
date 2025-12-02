@@ -8,28 +8,28 @@ from collections.abc import Sequence
 from typing import Any
 
 import pandas as pd
-from lightweight_charts_core.charts.options.price_scale_options import (
+from lightweight_charts_pro.charts.options.price_scale_options import (
     PriceScaleMargins,
     PriceScaleOptions,
 )
-from lightweight_charts_core.charts.series import (
+from lightweight_charts_pro.charts.series import (
     CandlestickSeries,
     HistogramSeries,
     LineSeries,
     Series,
 )
-from lightweight_charts_core.constants import (
+from lightweight_charts_pro.constants import (
     HISTOGRAM_DOWN_COLOR_DEFAULT,
     HISTOGRAM_UP_COLOR_DEFAULT,
 )
-from lightweight_charts_core.data.ohlcv_data import OhlcvData
-from lightweight_charts_core.exceptions import (
+from lightweight_charts_pro.data.ohlcv_data import OhlcvData
+from lightweight_charts_pro.exceptions import (
     SeriesItemsTypeError,
     TypeValidationError,
     ValueValidationError,
 )
-from lightweight_charts_core.logging_config import get_logger
-from lightweight_charts_core.type_definitions.enums import (
+from lightweight_charts_pro.logging_config import get_logger
+from lightweight_charts_pro.type_definitions.enums import (
     ColumnNames,
     PriceScaleMode,
 )

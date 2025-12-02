@@ -9,10 +9,10 @@ from collections.abc import Sequence
 from typing import Any
 
 import pandas as pd
-from lightweight_charts_core.charts.base_chart import BaseChart
-from lightweight_charts_core.charts.options.sync_options import SyncOptions
-from lightweight_charts_core.data import OhlcvData
-from lightweight_charts_core.exceptions import (
+from lightweight_charts_pro.charts.base_chart import BaseChart
+from lightweight_charts_pro.charts.options.sync_options import SyncOptions
+from lightweight_charts_pro.data import OhlcvData
+from lightweight_charts_pro.exceptions import (
     DuplicateError,
     NotFoundError,
     TypeValidationError,

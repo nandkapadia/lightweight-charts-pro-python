@@ -19,7 +19,7 @@ Key Features:
 
 Example Usage:
     ```python
-    from lightweight_charts_core.data import SingleValueData
+    from lightweight_charts_pro.data import SingleValueData
 
     # Create single value data point
     data = SingleValueData(time="2024-01-01T00:00:00", value=100.0)
@@ -41,8 +41,8 @@ from typing import ClassVar
 # Third Party Imports
 # (None in this module)
 # Local Imports
-from lightweight_charts_core.data.data import Data
-from lightweight_charts_core.exceptions import RequiredFieldError
+from lightweight_charts_pro.data.data import Data
+from lightweight_charts_pro.exceptions import RequiredFieldError
 
 
 @dataclass
@@ -70,7 +70,7 @@ class SingleValueData(Data):
 
     Example:
         ```python
-        from lightweight_charts_core.data import SingleValueData
+        from lightweight_charts_pro.data import SingleValueData
 
         # Create single value data point
         data = SingleValueData(time="2024-01-01T00:00:00", value=100.0)

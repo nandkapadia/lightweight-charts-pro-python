@@ -7,8 +7,8 @@ each other when they are part of a linked chart system.
 
 from dataclasses import dataclass
 
-from lightweight_charts_core.charts.options.base_options import Options
-from lightweight_charts_core.utils import chainable_field
+from lightweight_charts_pro.charts.options.base_options import Options
+from lightweight_charts_pro.utils import chainable_field
 
 
 @dataclass
@@ -48,7 +48,7 @@ class SyncOptions(Options):
 
     Example:
         ```python
-        from lightweight_charts_core.charts.options import SyncOptions
+        from lightweight_charts_pro.charts.options import SyncOptions
 
         # Enable all synchronization
         sync_options = SyncOptions(enabled=True, crosshair=True, time_range=True)

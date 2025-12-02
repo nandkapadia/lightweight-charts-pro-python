@@ -13,7 +13,7 @@ allowing for intuitive method chaining when building charts and configuring opti
 
 Example Usage:
     ```python
-    from lightweight_charts_core.utils import chainable_property, chainable_field
+    from lightweight_charts_pro.utils import chainable_property, chainable_field
 
 
     class ChartConfig:

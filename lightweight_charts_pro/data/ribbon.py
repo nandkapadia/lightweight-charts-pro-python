@@ -8,8 +8,8 @@ import math
 from dataclasses import dataclass
 from typing import ClassVar
 
-from lightweight_charts_core.data.data import Data
-from lightweight_charts_core.utils import validated_field
+from lightweight_charts_pro.data.data import Data
+from lightweight_charts_pro.utils import validated_field
 
 
 @dataclass
@@ -32,7 +32,7 @@ class RibbonData(Data):
 
     Example:
         ```python
-        from lightweight_charts_core.data import RibbonData
+        from lightweight_charts_pro.data import RibbonData
 
         # Basic data point
         data = RibbonData(time="2024-01-01", upper=110, lower=100)

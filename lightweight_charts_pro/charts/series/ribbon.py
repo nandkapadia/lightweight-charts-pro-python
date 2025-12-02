@@ -5,16 +5,16 @@ that display upper and lower bands with fill areas between them.
 """
 
 import pandas as pd
-from lightweight_charts_core.charts.options.line_options import LineOptions
-from lightweight_charts_core.charts.series.base import Series
-from lightweight_charts_core.charts.series.defaults import (
+from lightweight_charts_pro.charts.options.line_options import LineOptions
+from lightweight_charts_pro.charts.series.base import Series
+from lightweight_charts_pro.charts.series.defaults import (
     create_lower_line,
     create_upper_line,
 )
-from lightweight_charts_core.constants import RIBBON_FILL_COLOR
-from lightweight_charts_core.data.ribbon import RibbonData
-from lightweight_charts_core.type_definitions import ChartType
-from lightweight_charts_core.utils import chainable_property
+from lightweight_charts_pro.constants import RIBBON_FILL_COLOR
+from lightweight_charts_pro.data.ribbon import RibbonData
+from lightweight_charts_pro.type_definitions import ChartType
+from lightweight_charts_pro.utils import chainable_property
 
 
 @chainable_property("upper_line", LineOptions, allow_none=True)

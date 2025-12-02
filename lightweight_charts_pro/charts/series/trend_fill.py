@@ -16,16 +16,16 @@ import logging
 import pandas as pd
 
 # Local Imports
-from lightweight_charts_core.charts.options.line_options import LineOptions
-from lightweight_charts_core.charts.series.base import Series
-from lightweight_charts_core.charts.series.defaults import (
+from lightweight_charts_pro.charts.options.line_options import LineOptions
+from lightweight_charts_pro.charts.series.base import Series
+from lightweight_charts_pro.charts.series.defaults import (
     create_base_line,
     create_downtrend_line,
     create_uptrend_line,
 )
-from lightweight_charts_core.data.trend_fill import TrendFillData
-from lightweight_charts_core.type_definitions.enums import ChartType
-from lightweight_charts_core.utils import add_opacity, chainable_property
+from lightweight_charts_pro.data.trend_fill import TrendFillData
+from lightweight_charts_pro.type_definitions.enums import ChartType
+from lightweight_charts_pro.utils import add_opacity, chainable_property
 
 logger = logging.getLogger(__name__)
 
@@ -58,8 +58,8 @@ class TrendFillSeries(Series):
 
     Example:
         ```python
-        from lightweight_charts_core import TrendFillSeries
-        from lightweight_charts_core.data import TrendFillData
+        from lightweight_charts_pro import TrendFillSeries
+        from lightweight_charts_pro.data import TrendFillData
 
         # Create trend fill data
         data = [

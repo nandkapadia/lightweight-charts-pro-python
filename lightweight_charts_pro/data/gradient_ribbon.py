@@ -8,8 +8,8 @@ import math
 from dataclasses import dataclass
 from typing import ClassVar
 
-from lightweight_charts_core.data.ribbon import RibbonData
-from lightweight_charts_core.exceptions import ValueValidationError
+from lightweight_charts_pro.data.ribbon import RibbonData
+from lightweight_charts_pro.exceptions import ValueValidationError
 
 
 @dataclass

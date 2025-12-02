@@ -19,7 +19,7 @@ Key Features:
 
 Example:
     ```python
-    from lightweight_charts_core.charts.options.base_options import Options
+    from lightweight_charts_pro.charts.options.base_options import Options
     from dataclasses import dataclass
 
 
@@ -48,10 +48,10 @@ from dataclasses import dataclass, fields
 from typing import Any
 
 # Local Imports
-from lightweight_charts_core.logging_config import get_logger
-from lightweight_charts_core.utils.case_converter import CaseConverter
-from lightweight_charts_core.utils.data_utils import snake_to_camel
-from lightweight_charts_core.utils.serialization import SerializableMixin
+from lightweight_charts_pro.logging_config import get_logger
+from lightweight_charts_pro.utils.case_converter import CaseConverter
+from lightweight_charts_pro.utils.data_utils import snake_to_camel
+from lightweight_charts_pro.utils.serialization import SerializableMixin
 
 # Initialize logger
 logger = get_logger(__name__)
@@ -90,7 +90,7 @@ class Options(SerializableMixin, ABC):
     Example:
         ```python
         from dataclasses import dataclass
-        from lightweight_charts_core.charts.options.base_options import Options
+        from lightweight_charts_pro.charts.options.base_options import Options
 
 
         @dataclass

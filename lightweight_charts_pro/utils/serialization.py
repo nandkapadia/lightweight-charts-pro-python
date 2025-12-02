@@ -38,7 +38,7 @@ Example:
     Basic serialization with default config::
 
         from dataclasses import dataclass
-        from lightweight_charts_core.utils.serialization import SerializableMixin
+        from lightweight_charts_pro.utils.serialization import SerializableMixin
 
 
         @dataclass
@@ -58,7 +58,7 @@ Example:
 
     Custom serialization config::
 
-        from lightweight_charts_core.utils.serialization import (
+        from lightweight_charts_pro.utils.serialization import (
             SerializationConfig,
             create_serializable_mixin,
         )
@@ -105,8 +105,8 @@ Example:
 Note:
     This module was created to consolidate serialization logic previously
     scattered across:
-        - lightweight_charts_core/data/data.py
-        - lightweight_charts_core/charts/options/base_options.py
+        - lightweight_charts_pro/data/data.py
+        - lightweight_charts_pro/charts/options/base_options.py
         - Other classes with custom asdict() implementations
 
     By centralizing this logic, we ensure consistent serialization behavior
@@ -123,7 +123,7 @@ from enum import Enum
 from typing import Any
 
 # Local Imports
-from lightweight_charts_core.utils.case_converter import CaseConverter
+from lightweight_charts_pro.utils.case_converter import CaseConverter
 
 # For backward compatibility with code that imports snake_to_camel from here
 # This maintains the existing import path while delegating to CaseConverter
@@ -289,7 +289,7 @@ class SerializableMixin:
         Basic usage::
 
             from dataclasses import dataclass
-            from lightweight_charts_core.utils.serialization import SerializableMixin
+            from lightweight_charts_pro.utils.serialization import SerializableMixin
 
 
             @dataclass
@@ -864,7 +864,7 @@ class SerializableMixin:
                 # Import inside function to avoid circular import issues
                 # The enum module may depend on this serialization module
                 # pylint: disable=import-outside-toplevel
-                from lightweight_charts_core.type_definitions.enums import (
+                from lightweight_charts_pro.type_definitions.enums import (
                     ColumnNames,
                 )
             except ImportError:
@@ -883,7 +883,7 @@ class SerializableMixin:
             try:
                 # Import inside function to avoid circular import issues
                 # pylint: disable=import-outside-toplevel
-                from lightweight_charts_core.type_definitions.enums import (
+                from lightweight_charts_pro.type_definitions.enums import (
                     ColumnNames,
                 )
             except ImportError:
@@ -918,7 +918,7 @@ class SimpleSerializableMixin(SerializableMixin):
         Simple data class::
 
             from dataclasses import dataclass
-            from lightweight_charts_core.utils.serialization import SimpleSerializableMixin
+            from lightweight_charts_pro.utils.serialization import SimpleSerializableMixin
 
 
             @dataclass
@@ -990,7 +990,7 @@ def create_serializable_mixin(
     Example:
         Create mixin that keeps None values::
 
-            from lightweight_charts_core.utils.serialization import (
+            from lightweight_charts_pro.utils.serialization import (
                 SerializationConfig,
                 create_serializable_mixin,
             )

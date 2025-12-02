@@ -44,7 +44,7 @@ Key Features:
 Example:
     Using the global profiler with decorators::
 
-        from lightweight_charts_core.utils.profiler import profile_function
+        from lightweight_charts_pro.utils.profiler import profile_function
 
 
         @profile_function("chart_rendering", data_size=1000)
@@ -59,7 +59,7 @@ Example:
 
     Using context manager for code blocks::
 
-        from lightweight_charts_core.utils.profiler import profile_operation
+        from lightweight_charts_pro.utils.profiler import profile_operation
 
         # Profile a specific block of code
         with profile_operation("data_processing", data_size=5000):
@@ -70,7 +70,7 @@ Example:
 
     Custom profiler instance::
 
-        from lightweight_charts_core.utils.profiler import PerformanceProfiler
+        from lightweight_charts_pro.utils.profiler import PerformanceProfiler
 
         # Create custom profiler with specific settings
         profiler = PerformanceProfiler(enable_memory_tracking=True)
@@ -89,7 +89,7 @@ Example:
 
     Memory monitoring::
 
-        from lightweight_charts_core.utils.profiler import get_memory_monitor
+        from lightweight_charts_pro.utils.profiler import get_memory_monitor
 
         monitor = get_memory_monitor()
 
@@ -110,7 +110,7 @@ Example:
 
     Performance summary::
 
-        from lightweight_charts_core.utils.profiler import get_performance_summary
+        from lightweight_charts_pro.utils.profiler import get_performance_summary
 
         # Get quick summary of all profiled operations
         summary = get_performance_summary()
@@ -153,7 +153,7 @@ from typing import Any
 import psutil
 
 # Local Imports
-from lightweight_charts_core.logging_config import get_logger
+from lightweight_charts_pro.logging_config import get_logger
 
 # Initialize logger for this module
 logger = get_logger(__name__)

@@ -26,7 +26,7 @@ Key Features:
 
 Example Usage:
     ```python
-    from lightweight_charts_core.type_definitions.enums import (
+    from lightweight_charts_pro.type_definitions.enums import (
         ChartType,
         LineStyle,
         MarkerPosition,

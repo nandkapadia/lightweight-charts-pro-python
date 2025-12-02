@@ -20,7 +20,7 @@ Key Features:
 
 Example Usage:
     ```python
-    from lightweight_charts_core.data import OhlcData
+    from lightweight_charts_pro.data import OhlcData
 
     # Create OHLC data point
     data = OhlcData(time="2024-01-01T00:00:00", open=100.0, high=105.0, low=98.0, close=102.0)
@@ -42,8 +42,8 @@ from typing import ClassVar
 # Third Party Imports
 # (None in this module)
 # Local Imports
-from lightweight_charts_core.data.data import Data
-from lightweight_charts_core.exceptions import (
+from lightweight_charts_pro.data.data import Data
+from lightweight_charts_pro.exceptions import (
     RequiredFieldError,
     ValueValidationError,
 )
@@ -76,7 +76,7 @@ class OhlcData(Data):
 
     Example:
         ```python
-        from lightweight_charts_core.data import OhlcData
+        from lightweight_charts_pro.data import OhlcData
 
         # Create OHLC data point
         data = OhlcData(time="2024-01-01T00:00:00", open=100.0, high=105.0, low=98.0, close=102.0)

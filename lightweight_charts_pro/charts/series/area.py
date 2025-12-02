@@ -17,8 +17,8 @@ Key Features:
 
 Example:
     ```python
-    from lightweight_charts_core.charts.series import AreaSeries
-    from lightweight_charts_core.data import AreaData
+    from lightweight_charts_pro.charts.series import AreaSeries
+    from lightweight_charts_pro.data import AreaData
 
     # Create area data
     data = [
@@ -49,17 +49,17 @@ License: MIT
 import pandas as pd
 
 # Local Imports
-from lightweight_charts_core.charts.options.line_options import LineOptions
-from lightweight_charts_core.charts.series.base import Series
+from lightweight_charts_pro.charts.options.line_options import LineOptions
+from lightweight_charts_pro.charts.series.base import Series
 
 # Local Imports (Constants)
-from lightweight_charts_core.constants import (
+from lightweight_charts_pro.constants import (
     AREA_BOTTOM_COLOR_DEFAULT,
     COLOR_BLUE_MATERIAL,
 )
-from lightweight_charts_core.data.area_data import AreaData
-from lightweight_charts_core.type_definitions import ChartType
-from lightweight_charts_core.utils import chainable_property
+from lightweight_charts_pro.data.area_data import AreaData
+from lightweight_charts_pro.type_definitions import ChartType
+from lightweight_charts_pro.utils import chainable_property
 
 
 @chainable_property("line_options", LineOptions, allow_none=True)
@@ -107,8 +107,8 @@ class AreaSeries(Series):
 
     Example:
         ```python
-        from lightweight_charts_core.charts.series import AreaSeries
-        from lightweight_charts_core.data import AreaData
+        from lightweight_charts_pro.charts.series import AreaSeries
+        from lightweight_charts_pro.data import AreaData
 
         # Create area data with line colors
         data = [

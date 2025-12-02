@@ -6,8 +6,8 @@ price charts, technical indicators, and trend analysis in financial visualizatio
 
 Example:
     ```python
-    from lightweight_charts_core.charts.series import LineSeries
-    from lightweight_charts_core.data import SingleValueData
+    from lightweight_charts_pro.charts.series import LineSeries
+    from lightweight_charts_pro.data import SingleValueData
 
     # Create line data
     data = [
@@ -28,11 +28,11 @@ Example:
 import pandas as pd
 
 # Local Imports
-from lightweight_charts_core.charts.options.line_options import LineOptions
-from lightweight_charts_core.charts.series.base import Series
-from lightweight_charts_core.data.line_data import LineData
-from lightweight_charts_core.type_definitions import ChartType
-from lightweight_charts_core.utils import chainable_property
+from lightweight_charts_pro.charts.options.line_options import LineOptions
+from lightweight_charts_pro.charts.series.base import Series
+from lightweight_charts_pro.data.line_data import LineData
+from lightweight_charts_pro.type_definitions import ChartType
+from lightweight_charts_pro.utils import chainable_property
 
 
 @chainable_property("line_options", LineOptions, allow_none=True)
@@ -59,8 +59,8 @@ class LineSeries(Series):
 
     Example:
         ```python
-        from lightweight_charts_core.charts.series import LineSeries
-        from lightweight_charts_core.data import LineData
+        from lightweight_charts_pro.charts.series import LineSeries
+        from lightweight_charts_pro.data import LineData
 
         # Create line data
         data = [

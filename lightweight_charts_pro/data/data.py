@@ -20,7 +20,7 @@ Key Features:
 
 Example Usage:
     ```python
-    from lightweight_charts_core.data import Data
+    from lightweight_charts_pro.data import Data
     from dataclasses import dataclass
 
 
@@ -45,9 +45,9 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import Any, ClassVar
 
-from lightweight_charts_core.type_definitions import ColumnNames
-from lightweight_charts_core.utils.data_utils import normalize_time
-from lightweight_charts_core.utils.serialization import SerializableMixin
+from lightweight_charts_pro.type_definitions import ColumnNames
+from lightweight_charts_pro.utils.data_utils import normalize_time
+from lightweight_charts_pro.utils.serialization import SerializableMixin
 
 # The following disables are for custom class property pattern, which pylint does not recognize.
 # pylint: disable=no-self-argument, no-member, invalid-name
@@ -119,7 +119,7 @@ class Data(SerializableMixin, ABC):
     Example:
         ```python
         from dataclasses import dataclass
-        from lightweight_charts_core.data import Data
+        from lightweight_charts_pro.data import Data
 
 
         @dataclass

@@ -11,7 +11,7 @@ Key Features:
 
 Example:
     ```python
-    from lightweight_charts_core.charts.options import LocalizationOptions
+    from lightweight_charts_pro.charts.options import LocalizationOptions
 
     # Create localization options for European market
     localization = LocalizationOptions(locale="de-DE", date_format="dd.MM.yyyy")
@@ -25,8 +25,8 @@ License: MIT
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from lightweight_charts_core.charts.options.base_options import Options
-from lightweight_charts_core.utils import chainable_field
+from lightweight_charts_pro.charts.options.base_options import Options
+from lightweight_charts_pro.utils import chainable_field
 
 
 @dataclass
@@ -53,7 +53,7 @@ class LocalizationOptions(Options):
 
     Example:
         ```python
-        from lightweight_charts_core.charts.options import LocalizationOptions
+        from lightweight_charts_pro.charts.options import LocalizationOptions
 
         # Basic locale configuration
         localization = LocalizationOptions(locale="ja-JP", date_format="yyyy年MM月dd日")

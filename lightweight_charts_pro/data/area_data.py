@@ -18,7 +18,7 @@ Key Features:
 
 Example Usage:
     ```python
-    from lightweight_charts_core.data import AreaData
+    from lightweight_charts_pro.data import AreaData
 
     # Create area data point with colors
     data = AreaData(
@@ -45,8 +45,8 @@ from typing import ClassVar
 # Third Party Imports
 # (None in this module)
 # Local Imports
-from lightweight_charts_core.data.single_value_data import SingleValueData
-from lightweight_charts_core.utils import validated_field
+from lightweight_charts_pro.data.single_value_data import SingleValueData
+from lightweight_charts_pro.utils import validated_field
 
 
 @dataclass
@@ -84,7 +84,7 @@ class AreaData(SingleValueData):
 
     Example:
         ```python
-        from lightweight_charts_core.data import AreaData
+        from lightweight_charts_pro.data import AreaData
 
         # Create area data point with colors
         data = AreaData(

@@ -5,7 +5,7 @@ shared between different frontend frameworks (Streamlit, Vue 3, React, etc.).
 """
 
 # Data models
-from lightweight_charts_core.data import (
+from lightweight_charts_pro.data import (
     AreaData,
     BarData,
     BaselineData,
@@ -19,7 +19,7 @@ from lightweight_charts_core.data import (
 )
 
 # Type definitions
-from lightweight_charts_core.type_definitions import (
+from lightweight_charts_pro.type_definitions import (
     AnnotationPosition,
     AnnotationType,
     BackgroundStyle,
@@ -45,7 +45,7 @@ from lightweight_charts_core.type_definitions import (
 )
 
 # Types and configuration
-from lightweight_charts_core.types import (
+from lightweight_charts_pro.types import (
     Options,
     SeriesConfigChange,
     SeriesConfigState,
@@ -56,7 +56,7 @@ from lightweight_charts_core.types import (
 )
 
 # Utilities
-from lightweight_charts_core.utils import (
+from lightweight_charts_pro.utils import (
     CaseConverter,
     SerializableMixin,
     SerializationConfig,

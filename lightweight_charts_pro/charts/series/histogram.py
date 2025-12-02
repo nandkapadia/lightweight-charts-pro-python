@@ -17,8 +17,8 @@ Key Features:
 
 Example:
     ```python
-    from lightweight_charts_core.charts.series import HistogramSeries
-    from lightweight_charts_core.data import HistogramData
+    from lightweight_charts_pro.charts.series import HistogramSeries
+    from lightweight_charts_pro.data import HistogramData
 
     # Create histogram data
     data = [
@@ -53,18 +53,18 @@ import numpy as np
 import pandas as pd
 
 # Local Imports
-from lightweight_charts_core.charts.series.base import Series
+from lightweight_charts_pro.charts.series.base import Series
 
 # Local Imports (Constants)
-from lightweight_charts_core.constants import (
+from lightweight_charts_pro.constants import (
     HISTOGRAM_DOWN_COLOR_DEFAULT,
     HISTOGRAM_UP_COLOR_DEFAULT,
 )
-from lightweight_charts_core.data import Data
-from lightweight_charts_core.data.histogram_data import HistogramData
-from lightweight_charts_core.data.ohlcv_data import OhlcvData
-from lightweight_charts_core.type_definitions import ChartType
-from lightweight_charts_core.utils import chainable_property
+from lightweight_charts_pro.data import Data
+from lightweight_charts_pro.data.histogram_data import HistogramData
+from lightweight_charts_pro.data.ohlcv_data import OhlcvData
+from lightweight_charts_pro.type_definitions import ChartType
+from lightweight_charts_pro.utils import chainable_property
 
 
 @chainable_property("color", str, validator="color")
@@ -102,8 +102,8 @@ class HistogramSeries(Series):
 
     Example:
         ```python
-        from lightweight_charts_core.charts.series import HistogramSeries
-        from lightweight_charts_core.data import HistogramData
+        from lightweight_charts_pro.charts.series import HistogramSeries
+        from lightweight_charts_pro.data import HistogramData
 
         # Create histogram data
         data = [

@@ -10,7 +10,7 @@ the charting library.
 
 Example:
     ```python
-    from lightweight_charts_core.data import BarData
+    from lightweight_charts_pro.data import BarData
 
     # Create a bar data point
     bar = BarData(
@@ -30,8 +30,8 @@ from dataclasses import dataclass
 from typing import ClassVar
 
 # Local Imports
-from lightweight_charts_core.data.ohlc_data import OhlcData
-from lightweight_charts_core.utils import validated_field
+from lightweight_charts_pro.data.ohlc_data import OhlcData
+from lightweight_charts_pro.utils import validated_field
 
 
 @dataclass

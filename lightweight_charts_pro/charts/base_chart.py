@@ -9,14 +9,14 @@ from collections.abc import Sequence
 from typing import TYPE_CHECKING, Any
 
 import pandas as pd
-from lightweight_charts_core.charts.managers import (
+from lightweight_charts_pro.charts.managers import (
     PriceScaleManager,
     SeriesManager,
     TradeManager,
 )
-from lightweight_charts_core.charts.options import ChartOptions
-from lightweight_charts_core.charts.series import Series
-from lightweight_charts_core.data import (
+from lightweight_charts_pro.charts.options import ChartOptions
+from lightweight_charts_pro.charts.series import Series
+from lightweight_charts_pro.data import (
     Annotation,
     AnnotationManager,
     OhlcvData,
@@ -24,15 +24,15 @@ from lightweight_charts_core.data import (
     TooltipManager,
     TradeData,
 )
-from lightweight_charts_core.exceptions import (
+from lightweight_charts_pro.exceptions import (
     AnnotationItemsTypeError,
     TypeValidationError,
     ValueValidationError,
 )
-from lightweight_charts_core.logging_config import get_logger
+from lightweight_charts_pro.logging_config import get_logger
 
 if TYPE_CHECKING:
-    from lightweight_charts_core.charts.options.price_scale_options import (
+    from lightweight_charts_pro.charts.options.price_scale_options import (
         PriceScaleOptions,
     )
 
