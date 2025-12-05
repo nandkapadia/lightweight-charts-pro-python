@@ -46,7 +46,9 @@ from lightweight_charts_pro.charts.options.layout_options import (
     GridOptions,
     LayoutOptions,
 )
-from lightweight_charts_pro.charts.options.localization_options import LocalizationOptions
+from lightweight_charts_pro.charts.options.localization_options import (
+    LocalizationOptions,
+)
 from lightweight_charts_pro.charts.options.price_scale_options import PriceScaleOptions
 from lightweight_charts_pro.charts.options.time_scale_options import TimeScaleOptions
 from lightweight_charts_pro.charts.options.trade_visualization_options import (

@@ -97,7 +97,7 @@ def add_opacity(color: str, opacity: float = 0.3) -> str:
     if len(color) != 7:
         raise ValueError(
             f"Invalid hex color format: {color}. "
-            f"Expected format: #RRGGBB (7 characters including #)"
+            "Expected format: #RRGGBB (7 characters including #)"
         )
 
     try:

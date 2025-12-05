@@ -12,7 +12,12 @@ from lightweight_charts_core.charts.options.line_options import LineOptions
 from lightweight_charts_core.charts.series.line import LineSeries
 from lightweight_charts_core.data.data import Data
 from lightweight_charts_core.data.line_data import LineData
-from lightweight_charts_core.data.marker import BarMarker, Marker, MarkerBase, PriceMarker
+from lightweight_charts_core.data.marker import (
+    BarMarker,
+    Marker,
+    MarkerBase,
+    PriceMarker,
+)
 from lightweight_charts_core.exceptions import (
     RequiredFieldError,
     TimeValidationError,

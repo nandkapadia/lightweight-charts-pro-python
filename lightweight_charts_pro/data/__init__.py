@@ -26,7 +26,12 @@ from lightweight_charts_pro.data.data import Data
 from lightweight_charts_pro.data.gradient_ribbon import GradientRibbonData
 from lightweight_charts_pro.data.histogram_data import HistogramData
 from lightweight_charts_pro.data.line_data import LineData
-from lightweight_charts_pro.data.marker import BarMarker, Marker, MarkerBase, PriceMarker
+from lightweight_charts_pro.data.marker import (
+    BarMarker,
+    Marker,
+    MarkerBase,
+    PriceMarker,
+)
 from lightweight_charts_pro.data.ohlc_data import OhlcData
 from lightweight_charts_pro.data.ohlcv_data import OhlcvData
 from lightweight_charts_pro.data.ribbon import RibbonData

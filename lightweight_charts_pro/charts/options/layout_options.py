@@ -12,7 +12,11 @@ from lightweight_charts_pro.type_definitions.colors import (
     BackgroundGradient,
     BackgroundSolid,
 )
-from lightweight_charts_pro.type_definitions.enums import HorzAlign, LineStyle, VertAlign
+from lightweight_charts_pro.type_definitions.enums import (
+    HorzAlign,
+    LineStyle,
+    VertAlign,
+)
 from lightweight_charts_pro.utils import chainable_field
 from lightweight_charts_pro.utils.data_utils import is_valid_color
 

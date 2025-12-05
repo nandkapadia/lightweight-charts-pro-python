@@ -48,7 +48,9 @@ import pytest
 
 # Local Imports
 from lightweight_charts_core.charts.options.line_options import LineOptions
-from lightweight_charts_core.charts.options.price_format_options import PriceFormatOptions
+from lightweight_charts_core.charts.options.price_format_options import (
+    PriceFormatOptions,
+)
 from lightweight_charts_core.charts.options.price_line_options import PriceLineOptions
 from lightweight_charts_core.charts.series.line import LineSeries
 from lightweight_charts_core.data import Marker

@@ -27,6 +27,7 @@ Example:
 """
 
 import pandas as pd
+
 from lightweight_charts_pro.charts.options.line_options import LineOptions
 from lightweight_charts_pro.charts.series.base import Series
 from lightweight_charts_pro.charts.series.defaults import (

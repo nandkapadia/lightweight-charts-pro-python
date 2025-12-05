@@ -11,8 +11,12 @@ This module contains comprehensive tests for the remaining option classes:
 
 import pytest
 from lightweight_charts_core.charts.options.line_options import LineOptions
-from lightweight_charts_core.charts.options.localization_options import LocalizationOptions
-from lightweight_charts_core.charts.options.price_format_options import PriceFormatOptions
+from lightweight_charts_core.charts.options.localization_options import (
+    LocalizationOptions,
+)
+from lightweight_charts_core.charts.options.price_format_options import (
+    PriceFormatOptions,
+)
 from lightweight_charts_core.charts.options.price_line_options import PriceLineOptions
 from lightweight_charts_core.charts.options.time_scale_options import TimeScaleOptions
 from lightweight_charts_core.charts.options.trade_visualization_options import (

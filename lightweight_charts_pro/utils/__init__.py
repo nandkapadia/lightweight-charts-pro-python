@@ -38,10 +38,22 @@ License: MIT
 
 """
 
+# ============================================================================
+# Local Imports
+# ============================================================================
+# Case conversion utilities for snake_case <-> camelCase transformations
 from .case_converter import CaseConverter, camel_to_snake, snake_to_camel
+
+# Chainable decorators for fluent API design
 from .chainable import chainable_field, chainable_property, validated_field
+
+# Color manipulation and validation utilities
 from .color_utils import add_opacity, hex_to_rgba, is_hex_color
+
+# Data processing and validation utilities
 from .data_utils import is_valid_color, normalize_time
+
+# Serialization utilities for converting Python objects to JavaScript-compatible dicts
 from .serialization import (
     DEFAULT_CONFIG,
     SerializableMixin,

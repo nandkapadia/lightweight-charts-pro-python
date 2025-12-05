@@ -7,6 +7,7 @@ time points.
 """
 
 import pandas as pd
+
 from lightweight_charts_pro.charts.series.base import Series
 from lightweight_charts_pro.data.signal_data import SignalData
 from lightweight_charts_pro.type_definitions import ChartType

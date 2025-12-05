@@ -17,7 +17,9 @@ from lightweight_charts_core.charts.options.layout_options import (
     GridOptions,
     LayoutOptions,
 )
-from lightweight_charts_core.charts.options.localization_options import LocalizationOptions
+from lightweight_charts_core.charts.options.localization_options import (
+    LocalizationOptions,
+)
 from lightweight_charts_core.charts.options.price_scale_options import (
     PriceScaleMargins,
     PriceScaleOptions,

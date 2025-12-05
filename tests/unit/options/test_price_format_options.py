@@ -1,5 +1,7 @@
 import pytest
-from lightweight_charts_core.charts.options.price_format_options import PriceFormatOptions
+from lightweight_charts_core.charts.options.price_format_options import (
+    PriceFormatOptions,
+)
 from lightweight_charts_core.exceptions import (
     TypeValidationError,
     ValueValidationError,

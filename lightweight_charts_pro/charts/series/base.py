@@ -886,7 +886,9 @@ class Series(ABC):  # noqa: B024
                 # This ensures all LineOptions are serialized the same way:
                 # upper_line -> upperLineColor, upperLineWidth, upperLineStyle
                 # line_options -> color, lineWidth, lineStyle (backward compatible)
-                from lightweight_charts_pro.charts.options.line_options import LineOptions
+                from lightweight_charts_pro.charts.options.line_options import (
+                    LineOptions,
+                )
 
                 if isinstance(attr_value, LineOptions):
                     line_dict = attr_value.asdict()

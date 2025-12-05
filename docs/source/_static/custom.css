@@ -1,0 +1,64 @@
+/* Custom CSS for Lightweight Charts Pro Python Documentation */
+
+/* Improve code block appearance */
+.highlight {
+    border-radius: 4px;
+    border: 1px solid #e1e4e5;
+}
+
+/* Add some spacing to admonitions */
+.admonition {
+    margin: 1.5em 0;
+}
+
+/* Style for API documentation sections */
+.py.class,
+.py.function,
+.py.method {
+    border-left: 3px solid #2980b9;
+    padding-left: 1em;
+    margin-bottom: 1.5em;
+}
+
+/* Improve table styling */
+table.docutils {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table.docutils th {
+    background-color: #f3f6f6;
+    font-weight: bold;
+}
+
+table.docutils td,
+table.docutils th {
+    border: 1px solid #e1e4e5;
+    padding: 8px 12px;
+}
+
+/* Code inline styling */
+code.literal {
+    background-color: #f5f5f5;
+    color: #e74c3c;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 90%;
+}
+
+/* Version badge styling */
+.version {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+/* Improve navigation sidebar */
+.wy-side-nav-search {
+    background-color: #2c3e50;
+}
+
+.wy-side-nav-search > a {
+    color: #fcfcfc;
+    font-size: 1.2em;
+    font-weight: bold;
+}

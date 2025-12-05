@@ -13,7 +13,10 @@ import pytest
 from lightweight_charts_core.charts.series.bar_series import BarSeries
 from lightweight_charts_core.data.bar_data import BarData
 from lightweight_charts_core.data.ohlc_data import OhlcData
-from lightweight_charts_core.exceptions import ColorValidationError, ValueValidationError
+from lightweight_charts_core.exceptions import (
+    ColorValidationError,
+    ValueValidationError,
+)
 
 
 class TestBarDataConstruction:

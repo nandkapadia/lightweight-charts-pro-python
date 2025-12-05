@@ -66,8 +66,12 @@ from lightweight_charts_pro.charts.options.layout_options import (
     WatermarkOptions,
 )
 from lightweight_charts_pro.charts.options.line_options import LineOptions
-from lightweight_charts_pro.charts.options.localization_options import LocalizationOptions
-from lightweight_charts_pro.charts.options.price_format_options import PriceFormatOptions
+from lightweight_charts_pro.charts.options.localization_options import (
+    LocalizationOptions,
+)
+from lightweight_charts_pro.charts.options.price_format_options import (
+    PriceFormatOptions,
+)
 from lightweight_charts_pro.charts.options.price_line_options import PriceLineOptions
 from lightweight_charts_pro.charts.options.price_scale_options import (
     PriceScaleMargins,

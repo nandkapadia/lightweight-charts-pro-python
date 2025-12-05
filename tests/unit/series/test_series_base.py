@@ -46,7 +46,9 @@ import pandas as pd
 import pytest
 
 # Local Imports
-from lightweight_charts_core.charts.options.price_format_options import PriceFormatOptions
+from lightweight_charts_core.charts.options.price_format_options import (
+    PriceFormatOptions,
+)
 from lightweight_charts_core.charts.options.price_line_options import PriceLineOptions
 from lightweight_charts_core.charts.options.price_scale_options import (
     PriceScaleMargins,

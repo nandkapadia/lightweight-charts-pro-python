@@ -4,7 +4,9 @@ This module tests the LocalizationOptions class functionality including
 construction, validation, and serialization.
 """
 
-from lightweight_charts_core.charts.options.localization_options import LocalizationOptions
+from lightweight_charts_core.charts.options.localization_options import (
+    LocalizationOptions,
+)
 
 
 class TestLocalizationOptions:

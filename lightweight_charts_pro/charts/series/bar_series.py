@@ -1,29 +1,62 @@
 """Bar series for streamlit-lightweight-charts.
 
 This module provides the BarSeries class for creating bar charts that display
-OHLC data as bars. Bar series are commonly used for price charts and volume overlays.
+OHLC (Open, High, Low, Close) data as bars. Bar series are commonly used for
+displaying price data with visible open/close markers on vertical bars.
 
-The BarSeries class supports various styling options including bar color, base value,
-and animation effects. It also supports markers and price line configurations.
+The BarSeries class supports various styling options including up/down bar colors,
+open price visibility, thin bar mode, and animation effects. It also supports
+markers and price line configurations.
+
+Key Features:
+    - OHLC bar visualization with tick marks for open/close
+    - Customizable up/down colors for bullish/bearish bars
+    - Optional open price visibility
+    - Thin bar mode for compact visualization
+    - Support for colored individual bars
+    - Markers and price lines support
 
 Example:
-    from lightweight_charts_pro.charts.series import BarSeries
-    from lightweight_charts_pro.data import SingleValueData
+    Basic bar series with OHLC data::
 
-    # Create bar data
-    data = [
-        SingleValueData("2024-01-01", 100),
-        SingleValueData("2024-01-02", 105)
-    ]
+        from lightweight_charts_pro.charts.series import BarSeries
+        from lightweight_charts_pro.data import BarData
 
-    # Create bar series with styling
-    series = BarSeries(data=data)
-    series.color = "#26a69a"
-    series.base = 0
+        # Create OHLC bar data
+        data = [
+            BarData(
+                time="2024-01-01",
+                open=100.0,
+                high=105.0,
+                low=98.0,
+                close=103.0
+            ),
+            BarData(
+                time="2024-01-02",
+                open=103.0,
+                high=108.0,
+                low=102.0,
+                close=106.0
+            )
+        ]
+
+        # Create bar series with custom styling
+        series = BarSeries(data=data)
+        series.up_color = "#26a69a"    # Green for bullish bars
+        series.down_color = "#ef5350"  # Red for bearish bars
+        series.open_visible = True     # Show open price ticks
+        series.thin_bars = False       # Use regular width bars
+
+Version: 0.1.0
+Author: Streamlit Lightweight Charts Contributors
+License: MIT
 
 """
 
+# Standard Imports
 import pandas as pd
+
+# Local Imports
 from lightweight_charts_pro.charts.series.base import Series
 from lightweight_charts_pro.data import BarData
 from lightweight_charts_pro.type_definitions import ChartType

@@ -21,7 +21,11 @@ from lightweight_charts_core.type_definitions.colors import (
     BackgroundGradient,
     BackgroundSolid,
 )
-from lightweight_charts_core.type_definitions.enums import HorzAlign, LineStyle, VertAlign
+from lightweight_charts_core.type_definitions.enums import (
+    HorzAlign,
+    LineStyle,
+    VertAlign,
+)
 
 
 class TestLayoutOptions:

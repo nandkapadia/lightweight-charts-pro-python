@@ -1,0 +1,22 @@
+# Documentation build requirements
+# Install with: pip install -r docs/requirements.txt
+
+# Core Sphinx
+sphinx>=7.0.0
+sphinx-rtd-theme>=2.0.0
+sphinx-copybutton>=0.5.0
+
+# API documentation
+sphinx-autoapi>=3.0.0
+
+# Markdown support
+myst-parser>=2.0.0
+
+# Live reload for development
+sphinx-autobuild>=2021.3.14
+
+# Coverage checking
+coverage[toml]>=7.0.0
+
+# The package itself (for autodoc)
+-e ..

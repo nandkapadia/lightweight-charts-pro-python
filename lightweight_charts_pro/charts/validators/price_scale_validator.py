@@ -55,10 +55,10 @@ class PriceScaleValidator:
             raise PriceScaleValidationError(
                 f"Series references non-existent price scale '{scale_id}'. "
                 f"Available scales: {available}. "
-                f"\n\nOptions to fix this:"
-                f"\n1. Enable auto-creation (default): auto_create_price_scales=True"
+                "\n\nOptions to fix this:"
+                "\n1. Enable auto-creation (default): auto_create_price_scales=True"
                 f"\n2. Manually add scale: chart.add_overlay_price_scale('{scale_id}', options)"
-                f"\n3. Use a built-in scale: price_scale_id='left' or 'right'"
+                "\n3. Use a built-in scale: price_scale_id='left' or 'right'"
             )
 
     @staticmethod
@@ -141,8 +141,8 @@ Recommended configuration:
             scale_names = ", ".join(f"'{s}'" for s in pane_scales)
             return (
                 f"Warning: Pane {pane_id} has multiple custom price scales ({scale_names}). "
-                f"Consider using a single shared scale for better performance, or use "
-                f"built-in scales ('left', 'right') for primary series."
+                "Consider using a single shared scale for better performance, or use "
+                "built-in scales ('left', 'right') for primary series."
             )
 
         return None

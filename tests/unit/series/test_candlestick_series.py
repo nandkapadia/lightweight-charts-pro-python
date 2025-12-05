@@ -21,7 +21,11 @@ from lightweight_charts_core.exceptions import (
     TypeValidationError,
     ValueValidationError,
 )
-from lightweight_charts_core.type_definitions import ChartType, MarkerPosition, MarkerShape
+from lightweight_charts_core.type_definitions import (
+    ChartType,
+    MarkerPosition,
+    MarkerShape,
+)
 
 
 class TestCandlestickSeriesConstruction:

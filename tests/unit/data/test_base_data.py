@@ -14,7 +14,10 @@ from lightweight_charts_core.exceptions import (
     RequiredFieldError,
     TimeValidationError,
 )
-from lightweight_charts_core.utils.data_utils import from_utc_timestamp, to_utc_timestamp
+from lightweight_charts_core.utils.data_utils import (
+    from_utc_timestamp,
+    to_utc_timestamp,
+)
 
 
 class TestSingleValueData:

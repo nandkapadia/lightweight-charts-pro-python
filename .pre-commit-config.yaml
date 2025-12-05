@@ -1,0 +1,291 @@
+# Pre-commit hooks configuration
+# See https://pre-commit.com for more information
+
+default_language_version:
+  python: python3.10
+
+repos:
+  # ==========================================================================
+  # Code Formatting
+  # ==========================================================================
+
+  # ISORT - Import sorting with float-to-top
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        name: isort (import sorting)
+        args:
+          - --profile=black
+          - --float-to-top
+          - --line-length=100
+
+  # Autoflake - Remove unused imports and variables
+  - repo: https://github.com/PyCQA/autoflake
+    rev: v2.2.1
+    hooks:
+      - id: autoflake
+        name: autoflake (remove unused imports)
+        args:
+          - --in-place
+          - --remove-all-unused-imports
+          - --remove-unused-variables
+          - --expand-star-imports
+          - --ignore-init-module-imports
+
+  # Black - Code formatting
+  - repo: https://github.com/psf/black
+    rev: 23.12.1
+    hooks:
+      - id: black
+        name: black (code formatting)
+        args:
+          - --line-length=100
+          - --enable-unstable-feature=string_processing
+          - --preview
+
+  # ==========================================================================
+  # Linting
+  # ==========================================================================
+
+  # Ruff - Fast Python linter
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.9
+    hooks:
+      - id: ruff
+        name: ruff (linting)
+        args:
+          - --fix
+          - --exit-non-zero-on-fix
+
+  # Pylint - Advanced Python linter
+  - repo: https://github.com/PyCQA/pylint
+    rev: v3.0.3
+    hooks:
+      - id: pylint
+        name: pylint (advanced linting)
+        args:
+          - --max-line-length=100
+          - --disable=C0114,C0115,C0116  # Allow missing docstrings temporarily
+        additional_dependencies:
+          - pandas
+          - numpy
+
+  # ==========================================================================
+  # Type Checking
+  # ==========================================================================
+
+  # MyPy - Static type checking
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
+        name: mypy (type checking)
+        args:
+          - --strict
+          - --ignore-missing-imports
+          - --allow-untyped-decorators
+        additional_dependencies:
+          - pandas-stubs
+          - types-setuptools
+
+  # ==========================================================================
+  # Documentation Validation
+  # ==========================================================================
+
+  # Pydocstyle - Docstring style checker
+  - repo: https://github.com/PyCQA/pydocstyle
+    rev: 6.3.0
+    hooks:
+      - id: pydocstyle
+        name: pydocstyle (docstring validation)
+        args:
+          - --convention=google
+          - --add-ignore=D100,D104  # Allow missing module/package docstrings
+        exclude: ^tests/
+
+  # Darglint - Docstring argument validation
+  - repo: https://github.com/terrencepreilly/darglint
+    rev: v1.8.1
+    hooks:
+      - id: darglint
+        name: darglint (docstring argument validation)
+        args:
+          - --docstring-style=google
+          - --strictness=short
+        exclude: ^tests/
+
+  # Doc8 - RST documentation linter
+  - repo: https://github.com/PyCQA/doc8
+    rev: v1.1.1
+    hooks:
+      - id: doc8
+        name: doc8 (RST linting)
+        args:
+          - --max-line-length=100
+          - --ignore-path=docs/build
+        files: \.rst$
+
+  # ==========================================================================
+  # Security and Code Quality
+  # ==========================================================================
+
+  # Bandit - Security vulnerability scanner
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.6
+    hooks:
+      - id: bandit
+        name: bandit (security check)
+        args:
+          - -r
+          - lightweight_charts_pro
+          - -ll  # Only report medium and high severity
+        exclude: ^tests/
+
+  # Safety - Check for known security vulnerabilities in dependencies
+  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
+    rev: v1.3.3
+    hooks:
+      - id: python-safety-dependencies-check
+        name: safety (dependency security check)
+        files: requirements.*\.txt$
+
+  # ==========================================================================
+  # General File Checks
+  # ==========================================================================
+
+  # Pre-commit built-in hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      # File formatting
+      - id: trailing-whitespace
+        name: trim trailing whitespace
+      - id: end-of-file-fixer
+        name: fix end of files
+      - id: mixed-line-ending
+        name: fix mixed line endings
+        args: [--fix=lf]
+
+      # JSON/YAML validation
+      - id: check-json
+        name: check JSON syntax
+      - id: check-yaml
+        name: check YAML syntax
+        args: [--safe]
+      - id: check-toml
+        name: check TOML syntax
+
+      # Python-specific
+      - id: check-ast
+        name: check Python AST
+      - id: check-builtin-literals
+        name: check builtin literals
+      - id: check-docstring-first
+        name: check docstring is first
+      - id: debug-statements
+        name: check for debug statements
+
+      # Git
+      - id: check-merge-conflict
+        name: check for merge conflicts
+      - id: check-added-large-files
+        name: check for large files
+        args: [--maxkb=500]
+
+      # General
+      - id: check-case-conflict
+        name: check for case conflicts
+      - id: check-executables-have-shebangs
+        name: check executables have shebangs
+
+  # ==========================================================================
+  # Commit Message Validation
+  # ==========================================================================
+
+  # Conventional Commits
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.0.0
+    hooks:
+      - id: conventional-pre-commit
+        name: conventional commits
+        stages: [commit-msg]
+        args:
+          - --force-scope
+
+  # ==========================================================================
+  # Pytest and Coverage
+  # ==========================================================================
+
+  # Run pytest before committing (optional, can be slow)
+  - repo: local
+    hooks:
+      - id: pytest-check
+        name: pytest (run tests)
+        entry: pytest
+        language: system
+        pass_filenames: false
+        always_run: true
+        args:
+          - --tb=short
+          - -v
+        stages: [push]  # Only run on push, not every commit
+
+      # Check test coverage
+      - id: pytest-coverage
+        name: pytest-cov (check coverage)
+        entry: pytest
+        language: system
+        pass_filenames: false
+        args:
+          - --cov=lightweight_charts_pro
+          - --cov-report=term-missing
+          - --cov-fail-under=90
+        stages: [push]  # Only run on push
+
+  # ==========================================================================
+  # Custom Documentation Checks
+  # ==========================================================================
+
+  - repo: local
+    hooks:
+      # Validate Sphinx documentation builds without warnings
+      - id: sphinx-build
+        name: sphinx-build (validate docs)
+        entry: bash -c 'cd docs && make clean && make html SPHINXOPTS="-W --keep-going"'
+        language: system
+        files: ^(docs/|lightweight_charts_pro/.*\.py)$
+        pass_filenames: false
+        stages: [push]
+
+      # Check documentation coverage
+      - id: sphinx-coverage
+        name: sphinx-coverage (doc coverage)
+        entry: bash -c 'cd docs && make coverage'
+        language: system
+        files: ^lightweight_charts_pro/.*\.py$
+        pass_filenames: false
+        stages: [push]
+
+      # Validate all docstrings have required sections
+      - id: validate-docstrings
+        name: validate-docstrings (Google style)
+        entry: python scripts/validate_docstrings.py
+        language: system
+        files: ^lightweight_charts_pro/.*\.py$
+        pass_filenames: true
+
+# =============================================================================
+# CI Configuration
+# =============================================================================
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit hooks
+
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ''
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: []
+  submodules: false
