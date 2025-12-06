@@ -138,7 +138,9 @@ class BaseChart:
                     setattr(self.options, key, value)
         return self
 
-    def add_annotation(self, annotation: Annotation, layer_name: str = "default") -> "BaseChart":
+    def add_annotation(
+        self, annotation: Annotation, layer_name: str = "default"
+    ) -> "BaseChart":
         """Add an annotation to the chart.
 
         Args:
@@ -247,13 +249,19 @@ class BaseChart:
             Self for method chaining.
 
         """
-        if layer_name is not None and (not layer_name or not isinstance(layer_name, str)):
-            raise ValueValidationError("layer_name", "must be None or a non-empty string")
+        if layer_name is not None and (
+            not layer_name or not isinstance(layer_name, str)
+        ):
+            raise ValueValidationError(
+                "layer_name", "must be None or a non-empty string"
+            )
         if layer_name is not None:
             self.annotation_manager.clear_layer(layer_name)
         return self
 
-    def add_overlay_price_scale(self, scale_id: str, options: "PriceScaleOptions") -> "BaseChart":
+    def add_overlay_price_scale(
+        self, scale_id: str, options: "PriceScaleOptions"
+    ) -> "BaseChart":
         """Add or update a custom overlay price scale configuration.
 
         Args:
@@ -403,7 +411,9 @@ class BaseChart:
 
         # Get base chart configuration
         chart_config = (
-            self.options.asdict() if self.options is not None else ChartOptions().asdict()
+            self.options.asdict()
+            if self.options is not None
+            else ChartOptions().asdict()
         )
 
         # Get price scale configuration

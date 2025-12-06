@@ -494,7 +494,7 @@ class PerformanceProfiler:
             tracemalloc.start()
 
     def profile_operation(self, operation_name: str, data_size: int | None = None):
-        """Decorator to profile a function or method.
+        """Profile a function or method.
 
         This decorator wraps a function to automatically profile its execution
         time, memory usage, and CPU utilization. Each invocation of the
@@ -535,9 +535,12 @@ class PerformanceProfiler:
 
         # Define the decorator that will wrap the target function
         def decorator(func: Callable) -> Callable:
+            """Decorator function that wraps the target function with profiling."""
+
             # Use functools.wraps to preserve function metadata
             @wraps(func)
             def wrapper(*args, **kwargs):
+                """Wrapper function that executes profiling around the original function."""
                 # Profile the function execution using measure_operation
                 with self.measure_operation(operation_name, data_size):
                     # Call the original function and return its result
@@ -871,7 +874,9 @@ class PerformanceProfiler:
 
         if memory_profiles:
             # Calculate average memory increase across operations
-            avg_memory_delta = sum(p.memory_delta for p in memory_profiles) / len(memory_profiles)
+            avg_memory_delta = sum(p.memory_delta for p in memory_profiles) / len(
+                memory_profiles
+            )
 
             # Flag if average memory increase exceeds 100 MB
             if avg_memory_delta > 100 * 1024 * 1024:  # 100MB threshold
@@ -892,7 +897,9 @@ class PerformanceProfiler:
 
         # Analysis 3: Check for large dataset processing
         # Filter operations processing more than 10,000 items
-        large_data_ops = [p for p in self.profiles if p.data_size and p.data_size > 10000]
+        large_data_ops = [
+            p for p in self.profiles if p.data_size and p.data_size > 10000
+        ]
 
         if large_data_ops:
             recommendations.append(
@@ -1391,12 +1398,16 @@ class MemoryMonitor:
             trend["trend"] == "increasing"
             and trend["rss_change"] > 100 * 1024 * 1024  # 100MB threshold
         ):
-            suggestions.append("Potential memory leak detected. Check for unclosed resources.")
+            suggestions.append(
+                "Potential memory leak detected. Check for unclosed resources."
+            )
 
         # Check 3: Excessive virtual memory usage
         # Flag if virtual memory exceeds 2GB
         if current["vms"] > 2 * 1024 * 1024 * 1024:  # 2GB threshold
-            suggestions.append("Large virtual memory usage. Consider using chunked processing.")
+            suggestions.append(
+                "Large virtual memory usage. Consider using chunked processing."
+            )
 
         # Return all generated suggestions
         return suggestions
@@ -1454,7 +1465,7 @@ def get_memory_monitor() -> MemoryMonitor:
 
 
 def profile_function(operation_name: str, data_size: int | None = None):
-    """Convenience decorator for profiling functions using global profiler.
+    """Profile functions using global profiler.
 
     This is a convenience wrapper around the global profiler's
     profile_operation decorator. It allows for easy function profiling
@@ -1479,7 +1490,7 @@ def profile_function(operation_name: str, data_size: int | None = None):
 
 @contextmanager
 def profile_operation(operation_name: str, data_size: int | None = None):
-    """Convenience context manager for profiling using global profiler.
+    """Profile code using global profiler.
 
     This is a convenience wrapper around the global profiler's
     measure_operation context manager. It allows for easy code block

@@ -60,6 +60,7 @@ class RibbonData(Data):
     lower_line_color: str | None = None
 
     def __post_init__(self):
+        """Validate and normalize ribbon data after initialization."""
         # Normalize time
         super().__post_init__()  # Call parent's __post_init__
 

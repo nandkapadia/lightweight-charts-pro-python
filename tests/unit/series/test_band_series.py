@@ -8,19 +8,20 @@ covering construction, styling options, serialization, and edge cases.
 
 import pandas as pd
 import pytest
-from lightweight_charts_core.charts.options.line_options import LineOptions
-from lightweight_charts_core.charts.options.price_line_options import PriceLineOptions
-from lightweight_charts_core.charts.series.band import BandSeries
-from lightweight_charts_core.charts.series.base import Series
-from lightweight_charts_core.data.band import BandData
-from lightweight_charts_core.data.marker import BarMarker
-from lightweight_charts_core.exceptions import (
+
+from lightweight_charts_pro.charts.options.line_options import LineOptions
+from lightweight_charts_pro.charts.options.price_line_options import PriceLineOptions
+from lightweight_charts_pro.charts.series.band import BandSeries
+from lightweight_charts_pro.charts.series.base import Series
+from lightweight_charts_pro.data.band import BandData
+from lightweight_charts_pro.data.marker import BarMarker
+from lightweight_charts_pro.exceptions import (
     DataFrameValidationError,
     InstanceTypeError,
     TypeValidationError,
     ValueValidationError,
 )
-from lightweight_charts_core.type_definitions.enums import (
+from lightweight_charts_pro.type_definitions.enums import (
     LineStyle,
     LineType,
     MarkerPosition,
@@ -697,7 +698,9 @@ class TestBandSeriesJsonStructure:
         data = [BandData(time=1640995200, upper=110.0, middle=105.0, lower=100.0)]
         series = BandSeries(data=data)
 
-        series.add_price_line(PriceLineOptions(price=105.0, color="#FF0000", line_width=2))
+        series.add_price_line(
+            PriceLineOptions(price=105.0, color="#FF0000", line_width=2)
+        )
 
         result = series.asdict()
         assert "priceLines" in result

@@ -4,7 +4,7 @@ This test module provides thorough coverage of all case conversion functionality
 including edge cases and error conditions.
 """
 
-from lightweight_charts_core.utils.case_converter import (
+from lightweight_charts_pro.utils.case_converter import (
     CaseConverter,
     camel_to_snake,
     snake_to_camel,
@@ -35,8 +35,13 @@ class TestSnakeToCamel:
     def test_three_plus_words(self):
         """Test multi-word snake_case conversion."""
         assert CaseConverter.snake_to_camel("http_status_code") == "httpStatusCode"
-        assert CaseConverter.snake_to_camel("right_price_scale_id") == "rightPriceScaleId"
-        assert CaseConverter.snake_to_camel("visible_range_from_time") == "visibleRangeFromTime"
+        assert (
+            CaseConverter.snake_to_camel("right_price_scale_id") == "rightPriceScaleId"
+        )
+        assert (
+            CaseConverter.snake_to_camel("visible_range_from_time")
+            == "visibleRangeFromTime"
+        )
 
     def test_numbers_in_name(self):
         """Test conversion with numbers in the string."""
@@ -48,16 +53,23 @@ class TestSnakeToCamel:
         """Test handling of leading underscores."""
         assert CaseConverter.snake_to_camel("_private") == "Private"
         assert CaseConverter.snake_to_camel("__dunder") == "Dunder"
-        assert CaseConverter.snake_to_camel("_leading_underscore") == "LeadingUnderscore"
+        assert (
+            CaseConverter.snake_to_camel("_leading_underscore") == "LeadingUnderscore"
+        )
 
     def test_trailing_underscores(self):
         """Test handling of trailing underscores."""
         assert CaseConverter.snake_to_camel("trailing_") == "trailing"
-        assert CaseConverter.snake_to_camel("trailing_underscore_") == "trailingUnderscore"
+        assert (
+            CaseConverter.snake_to_camel("trailing_underscore_") == "trailingUnderscore"
+        )
 
     def test_multiple_underscores(self):
         """Test handling of multiple consecutive underscores."""
-        assert CaseConverter.snake_to_camel("multiple___underscores") == "multipleUnderscores"
+        assert (
+            CaseConverter.snake_to_camel("multiple___underscores")
+            == "multipleUnderscores"
+        )
         assert CaseConverter.snake_to_camel("a__b__c") == "aBC"
 
     def test_empty_string(self):
@@ -104,8 +116,13 @@ class TestCamelToSnake:
     def test_three_plus_words(self):
         """Test multi-word camelCase conversion."""
         assert CaseConverter.camel_to_snake("httpStatusCode") == "http_status_code"
-        assert CaseConverter.camel_to_snake("rightPriceScaleId") == "right_price_scale_id"
-        assert CaseConverter.camel_to_snake("visibleRangeFromTime") == "visible_range_from_time"
+        assert (
+            CaseConverter.camel_to_snake("rightPriceScaleId") == "right_price_scale_id"
+        )
+        assert (
+            CaseConverter.camel_to_snake("visibleRangeFromTime")
+            == "visible_range_from_time"
+        )
 
     def test_consecutive_capitals(self):
         """Test handling of consecutive capital letters."""
@@ -115,8 +132,13 @@ class TestCamelToSnake:
 
     def test_mixed_case_with_capitals(self):
         """Test mixed case with capital letters."""
-        assert CaseConverter.camel_to_snake("getHTTPResponseCode") == "get_h_t_t_p_response_code"
-        assert CaseConverter.camel_to_snake("parseXMLDocument") == "parse_x_m_l_document"
+        assert (
+            CaseConverter.camel_to_snake("getHTTPResponseCode")
+            == "get_h_t_t_p_response_code"
+        )
+        assert (
+            CaseConverter.camel_to_snake("parseXMLDocument") == "parse_x_m_l_document"
+        )
 
     def test_numbers_in_name(self):
         """Test conversion with numbers."""
@@ -198,11 +220,17 @@ class TestConvertDictKeys:
     def test_nested_dict_conversion(self):
         """Test nested dictionary conversion."""
         data = {
-            "chart_options": {"time_scale": {"visible": True}, "price_scale": {"auto_scale": False}}
+            "chart_options": {
+                "time_scale": {"visible": True},
+                "price_scale": {"auto_scale": False},
+            }
         }
         result = CaseConverter.convert_dict_keys(data)
         assert result == {
-            "chartOptions": {"timeScale": {"visible": True}, "priceScale": {"autoScale": False}}
+            "chartOptions": {
+                "timeScale": {"visible": True},
+                "priceScale": {"autoScale": False},
+            }
         }
 
     def test_deeply_nested_conversion(self):
@@ -231,7 +259,11 @@ class TestConvertDictKeys:
         """Test conversion from camelCase to snake_case."""
         data = {"priceScaleId": "right", "lineWidth": 2, "autoScale": True}
         result = CaseConverter.convert_dict_keys(data, to_camel=False)
-        assert result == {"price_scale_id": "right", "line_width": 2, "auto_scale": True}
+        assert result == {
+            "price_scale_id": "right",
+            "line_width": 2,
+            "auto_scale": True,
+        }
 
     def test_shallow_conversion(self):
         """Test shallow (non-recursive) conversion."""
@@ -285,7 +317,11 @@ class TestRealWorldExamples:
                 "scale_margins": {"top": 0.1, "bottom": 0.1},
                 "border_color": "#2B2B43",
             },
-            "time_scale": {"visible": True, "time_visible": True, "seconds_visible": False},
+            "time_scale": {
+                "visible": True,
+                "time_visible": True,
+                "seconds_visible": False,
+            },
         }
 
         result = CaseConverter.convert_dict_keys(options)

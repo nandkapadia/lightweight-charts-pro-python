@@ -108,7 +108,8 @@ def _is_list_of_markers(value_type) -> bool:
                 # pylint: disable=import-outside-toplevel
                 from lightweight_charts_pro.data.marker import MarkerBase
 
-                return issubclass(arg_type, MarkerBase) if hasattr(arg_type, "__mro__") else False
+                # Only call issubclass if arg_type is actually a class
+                return isinstance(arg_type, type) and issubclass(arg_type, MarkerBase)
             except ImportError:
                 # If we can't import MarkerBase, check the name
                 return hasattr(arg_type, "__name__") and "Marker" in arg_type.__name__
@@ -148,17 +149,23 @@ def _validate_list_of_markers(value, attr_name: str) -> bool:
         if MarkerBase is not None:
             for item in value:
                 if not isinstance(item, MarkerBase):
-                    raise ValueValidationError(attr_name, "all items must be MarkerBase instances")
+                    raise ValueValidationError(
+                        attr_name, "all items must be MarkerBase instances"
+                    )
         else:
             # If MarkerBase is None (e.g., when patched), check for marker-like attributes
             for item in value:
                 if not hasattr(item, "time") or not hasattr(item, "position"):
-                    raise ValueValidationError(attr_name, "all items must be valid markers")
+                    raise ValueValidationError(
+                        attr_name, "all items must be valid markers"
+                    )
     except ImportError as exc:
         # If we can't import MarkerBase, just check that all items have marker-like attributes
         for item in value:
             if not hasattr(item, "time") or not hasattr(item, "position"):
-                raise ValueValidationError(attr_name, "all items must be valid markers") from exc
+                raise ValueValidationError(
+                    attr_name, "all items must be valid markers"
+                ) from exc
     return True
 
 
@@ -169,7 +176,7 @@ def chainable_property(
     allow_none: bool = False,
     top_level: bool = False,
 ):
-    """Decorator that creates both a property setter and a chaining method with optional validation.
+    """Create both a property setter and a chaining method with optional validation.
 
     This decorator enables two usage patterns for the same attribute:
     1. Property assignment: `obj.attr = value`
@@ -296,16 +303,23 @@ def chainable_property(
                         # Case 3: Complex types (classes, custom types)
                         # Indicate whether None is allowed in the error message
                         if allow_none:
-                            raise InstanceTypeError(attr_name, value_type, allow_none=True)
+                            raise InstanceTypeError(
+                                attr_name, value_type, allow_none=True
+                            )
                         raise InstanceTypeError(attr_name, value_type)
                     if isinstance(value_type, tuple):
                         # Case 4: Union types like (int, float)
                         # Create friendly error message from type names
                         type_names = [
-                            t.__name__ if hasattr(t, "__name__") else str(t) for t in value_type
+                            t.__name__ if hasattr(t, "__name__") else str(t)
+                            for t in value_type
                         ]
                         # Special handling for numeric union types
-                        if len(type_names) == 2 and "int" in type_names and "float" in type_names:
+                        if (
+                            len(type_names) == 2
+                            and "int" in type_names
+                            and "float" in type_names
+                        ):
                             raise TypeValidationError(attr_name, "number")
                         raise TypeMismatchError(attr_name, value_type, type(value))
 
@@ -397,14 +411,21 @@ def chainable_property(
                     if hasattr(value_type, "__name__"):
                         # For complex types, use a more user-friendly message
                         if allow_none:
-                            raise InstanceTypeError(attr_name, value_type, allow_none=True)
+                            raise InstanceTypeError(
+                                attr_name, value_type, allow_none=True
+                            )
                         raise InstanceTypeError(attr_name, value_type)
                     if isinstance(value_type, tuple):
                         # For tuple types like (int, float), create a user-friendly message
                         type_names = [
-                            t.__name__ if hasattr(t, "__name__") else str(t) for t in value_type
+                            t.__name__ if hasattr(t, "__name__") else str(t)
+                            for t in value_type
                         ]
-                        if len(type_names) == 2 and "int" in type_names and "float" in type_names:
+                        if (
+                            len(type_names) == 2
+                            and "int" in type_names
+                            and "float" in type_names
+                        ):
                             raise TypeValidationError(attr_name, "number")
                         raise TypeMismatchError(attr_name, value_type, type(value))
 
@@ -463,7 +484,7 @@ def chainable_field(
     validator: Callable[[Any], Any] | str | None = None,
     allow_none: bool = False,
 ):
-    """Decorator that creates a setter method for dataclass fields with optional validation.
+    """Create a setter method for dataclass fields with optional validation.
 
     This decorator enables method chaining for dataclass fields by creating a setter
     method that applies validation and returns the instance for chaining. Unlike
@@ -580,7 +601,7 @@ def chainable_field(
 
 
 def _validate_value(field_name: str, value, value_type=None, validator=None):
-    """Helper function to validate a value according to type and custom validators.
+    """Validate a value according to type and custom validators.
 
     This function applies both type checking and custom validation to a value
     before it is assigned to a field or property. It supports built-in validators
@@ -661,7 +682,7 @@ def validated_field(
     validator: Callable[[Any], Any] | str | None = None,
     allow_none: bool = False,
 ):
-    """Decorator that validates dataclass fields on initialization and provides setter methods.
+    """Validate dataclass fields on initialization and provide setter methods.
 
     This decorator extends chainable_field by adding validation during __post_init__.
     It ensures that field values are validated both when constructed and when using
@@ -760,7 +781,9 @@ def validated_field(
 
             # Apply validation using the same logic as the setter
             try:
-                validated_value = _validate_value(field_name, value, value_type, validator)
+                validated_value = _validate_value(
+                    field_name, value, value_type, validator
+                )
                 # Set the validated (and possibly transformed) value back
                 setattr(self, field_name, validated_value)
             except (TypeError, ValueError) as e:

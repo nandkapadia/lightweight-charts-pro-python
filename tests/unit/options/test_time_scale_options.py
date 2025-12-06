@@ -4,7 +4,7 @@ This module tests the TimeScaleOptions class functionality including
 construction, validation, and serialization.
 """
 
-from lightweight_charts_core.charts.options.time_scale_options import TimeScaleOptions
+from lightweight_charts_pro.charts.options.time_scale_options import TimeScaleOptions
 
 
 class TestTimeScaleOptions:
@@ -204,7 +204,8 @@ class TestTimeScaleOptions:
         assert copied.fix_left_edge == original.fix_left_edge
         assert copied.fix_right_edge == original.fix_right_edge
         assert (
-            copied.lock_visible_time_range_on_resize == original.lock_visible_time_range_on_resize
+            copied.lock_visible_time_range_on_resize
+            == original.lock_visible_time_range_on_resize
         )
         assert copied.right_bar_stays_on_scroll == original.right_bar_stays_on_scroll
         assert copied.border_visible == original.border_visible

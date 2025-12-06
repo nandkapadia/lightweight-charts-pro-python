@@ -9,19 +9,20 @@ import json
 
 import pandas as pd
 import pytest
-from lightweight_charts_core.charts.options.price_line_options import PriceLineOptions
-from lightweight_charts_core.charts.series.bar_series import BarSeries
-from lightweight_charts_core.charts.series.base import Series
-from lightweight_charts_core.data.bar_data import BarData
-from lightweight_charts_core.data.marker import BarMarker
-from lightweight_charts_core.exceptions import (
+
+from lightweight_charts_pro.charts.options.price_line_options import PriceLineOptions
+from lightweight_charts_pro.charts.series.bar_series import BarSeries
+from lightweight_charts_pro.charts.series.base import Series
+from lightweight_charts_pro.data.bar_data import BarData
+from lightweight_charts_pro.data.marker import BarMarker
+from lightweight_charts_pro.exceptions import (
     ColumnMappingRequiredError,
     DataFrameValidationError,
     DataItemsTypeError,
     TypeValidationError,
     ValueValidationError,
 )
-from lightweight_charts_core.type_definitions.enums import ChartType, LineStyle
+from lightweight_charts_pro.type_definitions.enums import ChartType, LineStyle
 
 
 class TestBarSeriesConstruction:
@@ -89,7 +90,13 @@ class TestBarSeriesConstruction:
         """Test BarSeries construction with pandas Series."""
         # Create a DataFrame with OHLC data (Series conversion is complex)
         test_dataframe = pd.DataFrame(
-            {"time": [1640995200], "open": [100], "high": [110], "low": [95], "close": [105]},
+            {
+                "time": [1640995200],
+                "open": [100],
+                "high": [110],
+                "low": [95],
+                "close": [105],
+            },
         )
 
         bar_series = BarSeries(
@@ -286,7 +293,9 @@ class TestBarSeriesMethods:
         data = [BarData(time=1640995200, open=100, high=110, low=95, close=105)]
         series = BarSeries(data=data)
 
-        marker = BarMarker(time=1640995200, position="aboveBar", color="#FF0000", shape="circle")
+        marker = BarMarker(
+            time=1640995200, position="aboveBar", color="#FF0000", shape="circle"
+        )
         result = (
             series.add_marker(marker)
             .add_price_line(PriceLineOptions(None, 100, "#FF0000"))
@@ -332,7 +341,12 @@ class TestBarSeriesDataHandling:
     def test_from_dataframe_with_index_columns(self):
         """Test from_dataframe with index columns."""
         test_dataframe = pd.DataFrame(
-            {"open": [100, 105], "high": [110, 115], "low": [95, 100], "close": [105, 110]},
+            {
+                "open": [100, 105],
+                "high": [110, 115],
+                "low": [95, 100],
+                "close": [105, 110],
+            },
             index=pd.DatetimeIndex(["2022-01-01", "2022-01-02"]),
         )
         test_dataframe.index.name = "time"
@@ -425,7 +439,13 @@ class TestBarSeriesEdgeCases:
     def test_large_dataset(self):
         """Test handling of large dataset."""
         data = [
-            BarData(time=1640995200 + i, open=100 + i, high=110 + i, low=95 + i, close=105 + i)
+            BarData(
+                time=1640995200 + i,
+                open=100 + i,
+                high=110 + i,
+                low=95 + i,
+                close=105 + i,
+            )
             for i in range(1000)
         ]
         series = BarSeries(data=data)
@@ -557,7 +577,9 @@ class TestBarSeriesJsonStructure:
         """Test price lines JSON structure."""
         data = [BarData(time=1640995200, open=100, high=110, low=95, close=105)]
         series = BarSeries(data=data)
-        series.add_price_line(PriceLineOptions(None, 100, "#FF0000", line_style=LineStyle.DASHED))
+        series.add_price_line(
+            PriceLineOptions(None, 100, "#FF0000", line_style=LineStyle.DASHED)
+        )
 
         result = series.asdict()
 
@@ -584,7 +606,9 @@ class TestBarSeriesJsonStructure:
 
         # Add markers and price lines
 
-        marker = BarMarker(time=1640995200, position="aboveBar", color="#FF0000", shape="circle")
+        marker = BarMarker(
+            time=1640995200, position="aboveBar", color="#FF0000", shape="circle"
+        )
         series.add_marker(marker)
         series.add_price_line(PriceLineOptions(None, 100, "#FF0000"))
 

@@ -5,8 +5,9 @@ data validation, property methods, and edge cases.
 """
 
 import pytest
-from lightweight_charts_core.data.trend_fill import TrendFillData
-from lightweight_charts_core.exceptions import (
+
+from lightweight_charts_pro.data.trend_fill import TrendFillData
+from lightweight_charts_pro.exceptions import (
     TrendDirectionIntegerError,
     TypeValidationError,
     ValueValidationError,
@@ -141,27 +142,37 @@ class TestTrendFillDataValidFillData:
 
     def test_valid_fill_data_uptrend(self):
         """Test valid fill data for uptrend."""
-        data = TrendFillData(time=1640995200, base_line=100.0, trend_line=105.0, trend_direction=1)
+        data = TrendFillData(
+            time=1640995200, base_line=100.0, trend_line=105.0, trend_direction=1
+        )
         assert data.has_valid_fill_data is True
 
     def test_valid_fill_data_downtrend(self):
         """Test valid fill data for downtrend."""
-        data = TrendFillData(time=1640995200, base_line=100.0, trend_line=95.0, trend_direction=-1)
+        data = TrendFillData(
+            time=1640995200, base_line=100.0, trend_line=95.0, trend_direction=-1
+        )
         assert data.has_valid_fill_data is True
 
     def test_invalid_fill_data_neutral(self):
         """Test invalid fill data for neutral trend."""
-        data = TrendFillData(time=1640995200, base_line=100.0, trend_line=105.0, trend_direction=0)
+        data = TrendFillData(
+            time=1640995200, base_line=100.0, trend_line=105.0, trend_direction=0
+        )
         assert data.has_valid_fill_data is False
 
     def test_invalid_fill_data_no_base_line(self):
         """Test invalid fill data with no base line."""
-        data = TrendFillData(time=1640995200, base_line=None, trend_line=105.0, trend_direction=1)
+        data = TrendFillData(
+            time=1640995200, base_line=None, trend_line=105.0, trend_direction=1
+        )
         assert data.has_valid_fill_data is False
 
     def test_invalid_fill_data_no_trend_line(self):
         """Test invalid fill data with no trend line."""
-        data = TrendFillData(time=1640995200, base_line=100.0, trend_line=None, trend_direction=1)
+        data = TrendFillData(
+            time=1640995200, base_line=100.0, trend_line=None, trend_direction=1
+        )
         assert data.has_valid_fill_data is False
 
 
@@ -170,22 +181,30 @@ class TestTrendFillDataValidUptrendFill:
 
     def test_valid_uptrend_fill(self):
         """Test valid uptrend fill data."""
-        data = TrendFillData(time=1640995200, base_line=100.0, trend_line=105.0, trend_direction=1)
+        data = TrendFillData(
+            time=1640995200, base_line=100.0, trend_line=105.0, trend_direction=1
+        )
         assert data.has_valid_uptrend_fill is True
 
     def test_invalid_uptrend_fill_wrong_direction(self):
         """Test invalid uptrend fill with wrong direction."""
-        data = TrendFillData(time=1640995200, base_line=100.0, trend_line=95.0, trend_direction=-1)
+        data = TrendFillData(
+            time=1640995200, base_line=100.0, trend_line=95.0, trend_direction=-1
+        )
         assert data.has_valid_uptrend_fill is False
 
     def test_invalid_uptrend_fill_no_base_line(self):
         """Test invalid uptrend fill with no base line."""
-        data = TrendFillData(time=1640995200, base_line=None, trend_line=105.0, trend_direction=1)
+        data = TrendFillData(
+            time=1640995200, base_line=None, trend_line=105.0, trend_direction=1
+        )
         assert data.has_valid_uptrend_fill is False
 
     def test_invalid_uptrend_fill_no_trend_line(self):
         """Test invalid uptrend fill with no trend line."""
-        data = TrendFillData(time=1640995200, base_line=100.0, trend_line=None, trend_direction=1)
+        data = TrendFillData(
+            time=1640995200, base_line=100.0, trend_line=None, trend_direction=1
+        )
         assert data.has_valid_uptrend_fill is False
 
 
@@ -194,22 +213,30 @@ class TestTrendFillDataValidDowntrendFill:
 
     def test_valid_downtrend_fill(self):
         """Test valid downtrend fill data."""
-        data = TrendFillData(time=1640995200, base_line=100.0, trend_line=95.0, trend_direction=-1)
+        data = TrendFillData(
+            time=1640995200, base_line=100.0, trend_line=95.0, trend_direction=-1
+        )
         assert data.has_valid_downtrend_fill is True
 
     def test_invalid_downtrend_fill_wrong_direction(self):
         """Test invalid downtrend fill with wrong direction."""
-        data = TrendFillData(time=1640995200, base_line=100.0, trend_line=105.0, trend_direction=1)
+        data = TrendFillData(
+            time=1640995200, base_line=100.0, trend_line=105.0, trend_direction=1
+        )
         assert data.has_valid_downtrend_fill is False
 
     def test_invalid_downtrend_fill_no_base_line(self):
         """Test invalid downtrend fill with no base line."""
-        data = TrendFillData(time=1640995200, base_line=None, trend_line=95.0, trend_direction=-1)
+        data = TrendFillData(
+            time=1640995200, base_line=None, trend_line=95.0, trend_direction=-1
+        )
         assert data.has_valid_downtrend_fill is False
 
     def test_invalid_downtrend_fill_no_trend_line(self):
         """Test invalid downtrend fill with no trend line."""
-        data = TrendFillData(time=1640995200, base_line=100.0, trend_line=None, trend_direction=-1)
+        data = TrendFillData(
+            time=1640995200, base_line=100.0, trend_line=None, trend_direction=-1
+        )
         assert data.has_valid_downtrend_fill is False
 
 
@@ -218,17 +245,23 @@ class TestTrendFillDataActiveTrendLine:
 
     def test_active_trend_line_uptrend(self):
         """Test active trend line for uptrend."""
-        data = TrendFillData(time=1640995200, base_line=100.0, trend_line=105.0, trend_direction=1)
+        data = TrendFillData(
+            time=1640995200, base_line=100.0, trend_line=105.0, trend_direction=1
+        )
         assert data.active_trend_line == 105.0
 
     def test_active_trend_line_downtrend(self):
         """Test active trend line for downtrend."""
-        data = TrendFillData(time=1640995200, base_line=100.0, trend_line=95.0, trend_direction=-1)
+        data = TrendFillData(
+            time=1640995200, base_line=100.0, trend_line=95.0, trend_direction=-1
+        )
         assert data.active_trend_line == 95.0
 
     def test_active_trend_line_neutral(self):
         """Test active trend line for neutral trend."""
-        data = TrendFillData(time=1640995200, base_line=100.0, trend_line=105.0, trend_direction=0)
+        data = TrendFillData(
+            time=1640995200, base_line=100.0, trend_line=105.0, trend_direction=0
+        )
         assert data.active_trend_line is None
 
 
@@ -237,12 +270,16 @@ class TestTrendFillDataActiveFillColor:
 
     def test_active_fill_color_uptrend(self):
         """Test active fill color for uptrend."""
-        data = TrendFillData(time=1640995200, trend_direction=1, uptrend_fill_color="#00ff00")
+        data = TrendFillData(
+            time=1640995200, trend_direction=1, uptrend_fill_color="#00ff00"
+        )
         assert data.active_fill_color == "#00ff00"
 
     def test_active_fill_color_downtrend(self):
         """Test active fill color for downtrend."""
-        data = TrendFillData(time=1640995200, trend_direction=-1, downtrend_fill_color="#ff0000")
+        data = TrendFillData(
+            time=1640995200, trend_direction=-1, downtrend_fill_color="#ff0000"
+        )
         assert data.active_fill_color == "#ff0000"
 
     def test_active_fill_color_neutral(self):
@@ -285,7 +322,9 @@ class TestTrendFillDataEdgeCases:
 
     def test_zero_values(self):
         """Test with zero values."""
-        data = TrendFillData(time=1640995200, base_line=0.0, trend_line=0.0, trend_direction=0)
+        data = TrendFillData(
+            time=1640995200, base_line=0.0, trend_line=0.0, trend_direction=0
+        )
 
         assert data.base_line == 0.0
         assert data.trend_line == 0.0
@@ -310,7 +349,9 @@ class TestTrendFillDataEdgeCases:
 
     def test_large_values(self):
         """Test with large values."""
-        data = TrendFillData(time=1640995200, base_line=1e6, trend_line=1.1e6, trend_direction=1)
+        data = TrendFillData(
+            time=1640995200, base_line=1e6, trend_line=1.1e6, trend_direction=1
+        )
 
         assert data.base_line == 1e6
         assert data.trend_line == 1.1e6

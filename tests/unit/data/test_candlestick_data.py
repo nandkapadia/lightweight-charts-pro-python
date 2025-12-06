@@ -43,12 +43,9 @@ import pandas as pd
 import pytest
 
 # Local Imports
-from lightweight_charts_core.data.candlestick_data import CandlestickData
-from lightweight_charts_core.data.ohlc_data import OhlcData
-from lightweight_charts_core.exceptions import (
-    ColorValidationError,
-    ValueValidationError,
-)
+from lightweight_charts_pro.data.candlestick_data import CandlestickData
+from lightweight_charts_pro.data.ohlc_data import OhlcData
+from lightweight_charts_pro.exceptions import ColorValidationError, ValueValidationError
 
 
 class TestCandlestickDataConstruction:
@@ -80,7 +77,9 @@ class TestCandlestickDataConstruction:
         """
         # Create CandlestickData with all required OHLC fields
         # Using a fixed timestamp for consistent testing
-        data = CandlestickData(time=1640995200, open=100.0, high=105.0, low=98.0, close=103.0)
+        data = CandlestickData(
+            time=1640995200, open=100.0, high=105.0, low=98.0, close=103.0
+        )
 
         # Verify all OHLC values are correctly assigned
         assert data.time == 1640995200  # Verify timestamp is preserved
@@ -130,7 +129,9 @@ class TestCandlestickDataConstruction:
 
     def test_construction_with_string_time(self):
         """Test construction with string time that gets converted."""
-        data = CandlestickData(time="2022-01-01", open=100.0, high=105.0, low=98.0, close=103.0)
+        data = CandlestickData(
+            time="2022-01-01", open=100.0, high=105.0, low=98.0, close=103.0
+        )
 
         # Time is stored as-is
         assert data.time == "2022-01-01"
@@ -169,7 +170,9 @@ class TestCandlestickDataValidation:
 
     def test_validation_ohlc_relationship(self):
         """Test that high >= low validation is enforced."""
-        with pytest.raises(ValueValidationError, match="high must be greater than or equal to low"):
+        with pytest.raises(
+            ValueValidationError, match="high must be greater than or equal to low"
+        ):
             CandlestickData(
                 time=1640995200,
                 open=100.0,
@@ -180,7 +183,9 @@ class TestCandlestickDataValidation:
 
     def test_validation_non_negative_values(self):
         """Test that all OHLC values must be non-negative."""
-        with pytest.raises(ValueValidationError, match="all OHLC values must be non-negative"):
+        with pytest.raises(
+            ValueValidationError, match="all OHLC values must be non-negative"
+        ):
             CandlestickData(
                 time=1640995200,
                 open=-100.0,
@@ -195,7 +200,9 @@ class TestCandlestickDataValidation:
             TypeError,
             match="'<' not supported between instances of 'NoneType' and 'int'",
         ):
-            CandlestickData(time=1640995200, open=None, high=105.0, low=98.0, close=103.0)
+            CandlestickData(
+                time=1640995200, open=None, high=105.0, low=98.0, close=103.0
+            )
 
     def test_validation_invalid_hex_color(self):
         """Test validation of invalid hex color."""
@@ -251,7 +258,9 @@ class TestCandlestickDataSerialization:
 
     def test_to_dict_basic(self):
         """Test basic to_dict serialization."""
-        data = CandlestickData(time=1640995200, open=100.0, high=105.0, low=98.0, close=103.0)
+        data = CandlestickData(
+            time=1640995200, open=100.0, high=105.0, low=98.0, close=103.0
+        )
 
         result = data.asdict()
 
@@ -340,16 +349,30 @@ class TestCandlestickDataInheritance:
     def test_required_columns_property(self):
         """Test required_columns property."""
         # CandlestickData inherits OHLC columns from OhlcData plus time
-        assert CandlestickData.required_columns == {"time", "open", "high", "low", "close"}
+        assert CandlestickData.required_columns == {
+            "time",
+            "open",
+            "high",
+            "low",
+            "close",
+        }
 
     def test_optional_columns_property(self):
         """Test optional_columns property."""
-        assert CandlestickData.optional_columns == {"color", "border_color", "wick_color"}
+        assert CandlestickData.optional_columns == {
+            "color",
+            "border_color",
+            "wick_color",
+        }
 
     def test_has_ohlc_validation(self):
         """Test that OHLC validation from parent is enforced."""
-        with pytest.raises(ValueValidationError, match="high must be greater than or equal to low"):
-            CandlestickData(time=1640995200, open=100.0, high=95.0, low=98.0, close=103.0)
+        with pytest.raises(
+            ValueValidationError, match="high must be greater than or equal to low"
+        ):
+            CandlestickData(
+                time=1640995200, open=100.0, high=95.0, low=98.0, close=103.0
+            )
 
 
 class TestCandlestickDataEdgeCases:
@@ -368,21 +391,27 @@ class TestCandlestickDataEdgeCases:
         assert data.open == 0.0
 
     def test_construction_with_infinity_value(self):
-        """Test construction with infinity value."""
-        data = CandlestickData(
-            time=1640995200,
-            open=float("inf"),
-            high=105.0,
-            low=98.0,
-            close=103.0,
-        )
-
-        assert data.open == float("inf")
+        """Test construction with infinity value raises validation error."""
+        # Infinity is not a valid OHLC value because open > high
+        with pytest.raises(
+            ValueValidationError, match="must be less than or equal to high"
+        ):
+            CandlestickData(
+                time=1640995200,
+                open=float("inf"),
+                high=105.0,
+                low=98.0,
+                close=103.0,
+            )
 
     def test_construction_with_negative_infinity_value(self):
         """Test construction with negative infinity value."""
-        with pytest.raises(ValueValidationError, match="all OHLC values must be non-negative"):
-            CandlestickData(time=1640995200, open=float("-inf"), high=105.0, low=98.0, close=103.0)
+        with pytest.raises(
+            ValueValidationError, match="all OHLC values must be non-negative"
+        ):
+            CandlestickData(
+                time=1640995200, open=float("-inf"), high=105.0, low=98.0, close=103.0
+            )
 
     def test_very_small_values(self):
         """Test construction with very small values."""
@@ -421,7 +450,9 @@ class TestCandlestickDataTimeHandling:
     def test_time_normalization_numpy_int64(self):
         """Test time normalization with numpy int64."""
         time_val = np.int64(1640995200)
-        data = CandlestickData(time=time_val, open=100.0, high=105.0, low=98.0, close=103.0)
+        data = CandlestickData(
+            time=time_val, open=100.0, high=105.0, low=98.0, close=103.0
+        )
 
         # Time stored as-is (numpy int64)
         assert isinstance(data.time, np.int64)
@@ -433,7 +464,9 @@ class TestCandlestickDataTimeHandling:
     def test_time_normalization_numpy_float64(self):
         """Test time normalization with numpy float64."""
         time_val = np.float64(1640995200.0)
-        data = CandlestickData(time=time_val, open=100.0, high=105.0, low=98.0, close=103.0)
+        data = CandlestickData(
+            time=time_val, open=100.0, high=105.0, low=98.0, close=103.0
+        )
 
         # Time stored as-is (numpy float64)
         assert isinstance(data.time, np.float64)
@@ -444,7 +477,9 @@ class TestCandlestickDataTimeHandling:
 
     def test_time_modification_after_construction(self):
         """Test that time can be modified after construction."""
-        data = CandlestickData(time="2024-01-01", open=100.0, high=105.0, low=98.0, close=103.0)
+        data = CandlestickData(
+            time="2024-01-01", open=100.0, high=105.0, low=98.0, close=103.0
+        )
         result1 = data.asdict()
         time1 = result1["time"]
 
@@ -505,7 +540,9 @@ class TestCandlestickDataColorHandling:
 
     def test_rgba_with_negative_alpha(self):
         """Test rgba colors with negative alpha (should be rejected)."""
-        with pytest.raises(ColorValidationError, match="Invalid color format for wick_color"):
+        with pytest.raises(
+            ColorValidationError, match="Invalid color format for wick_color"
+        ):
             CandlestickData(
                 time=1640995200,
                 open=100.0,

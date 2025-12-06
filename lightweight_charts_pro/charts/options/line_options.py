@@ -146,7 +146,7 @@ class LineOptions(Options):
 
     @staticmethod
     def _validate_color_static(color: str, property_name: str) -> str:
-        """Static version of color validator for decorator use.
+        """Validate color for decorator use with static method.
 
         Validates that the provided color string is in a valid format (hex or rgba)
         and raises an appropriate error if validation fails. This method is used

@@ -30,10 +30,7 @@ from lightweight_charts_pro.exceptions import (
     ValueValidationError,
 )
 from lightweight_charts_pro.logging_config import get_logger
-from lightweight_charts_pro.type_definitions.enums import (
-    ColumnNames,
-    PriceScaleMode,
-)
+from lightweight_charts_pro.type_definitions.enums import ColumnNames, PriceScaleMode
 
 # Initialize logger
 logger = get_logger(__name__)
@@ -286,7 +283,9 @@ class SeriesManager:
 
         # Extract volume-specific kwargs
         volume_up_color = volume_kwargs.get("up_color", HISTOGRAM_UP_COLOR_DEFAULT)
-        volume_down_color = volume_kwargs.get("down_color", HISTOGRAM_DOWN_COLOR_DEFAULT)
+        volume_down_color = volume_kwargs.get(
+            "down_color", HISTOGRAM_DOWN_COLOR_DEFAULT
+        )
         volume_base = volume_kwargs.get("base", 0)
 
         # Configure volume price scale through manager if provided
@@ -299,7 +298,9 @@ class SeriesManager:
                 mode=PriceScaleMode.NORMAL,
                 scale_margins=PriceScaleMargins(top=0.85, bottom=0.0),
             )
-            price_scale_manager.add_overlay_scale(ColumnNames.VOLUME.value, volume_price_scale)
+            price_scale_manager.add_overlay_scale(
+                ColumnNames.VOLUME.value, volume_price_scale
+            )
 
         # Ensure volume mapping includes 'value' key
         if "value" not in column_mapping:
@@ -404,7 +405,9 @@ class SeriesManager:
         # Note: zIndex is now in the options object after API restructuring
         for series_list in series_by_pane.values():
             series_list.sort(
-                key=lambda x: x.get("options", {}).get("zIndex", 0) if isinstance(x, dict) else 0
+                key=lambda x: (
+                    x.get("options", {}).get("zIndex", 0) if isinstance(x, dict) else 0
+                )
             )
 
         # Flatten sorted series back to a single list, maintaining pane order

@@ -42,10 +42,7 @@ from typing import Any, Optional
 
 import pandas as pd
 
-from lightweight_charts_pro.exceptions import (
-    TypeValidationError,
-    ValueValidationError,
-)
+from lightweight_charts_pro.exceptions import TypeValidationError, ValueValidationError
 from lightweight_charts_pro.type_definitions import ColumnNames
 from lightweight_charts_pro.type_definitions.enums import (
     AnnotationPosition,
@@ -118,6 +115,26 @@ class Annotation:
         show_time: bool = False,
         tooltip: str | None = None,
     ):
+        """Initialize an annotation with the given parameters.
+
+        Args:
+            time: Time value for the annotation.
+            price: Price level for the annotation.
+            text: Text to display in the annotation.
+            annotation_type: Type of annotation.
+            position: Position relative to the price.
+            color: Annotation color.
+            background_color: Background color.
+            font_size: Font size in pixels.
+            font_weight: Font weight (normal, bold, etc.).
+            text_color: Text color.
+            border_color: Border color.
+            border_width: Border width in pixels.
+            opacity: Opacity from 0.0 to 1.0.
+            show_time: Whether to show time in the annotation.
+            tooltip: Optional tooltip text.
+
+        """
         # Store time as-is, convert to UTC timestamp in asdict() for consistency
         self.time = time
 
@@ -145,7 +162,9 @@ class Annotation:
 
         # Validate opacity range
         if opacity < 0 or opacity > 1:
-            raise ValueValidationError("opacity", f"must be between 0 and 1, got {opacity}")
+            raise ValueValidationError(
+                "opacity", f"must be between 0 and 1, got {opacity}"
+            )
         self.opacity = opacity
 
         # Validate font size
@@ -155,7 +174,9 @@ class Annotation:
 
         # Validate border width
         if border_width < 0:
-            raise ValueValidationError("border_width", f"must be non-negative, got {border_width}")
+            raise ValueValidationError(
+                "border_width", f"must be non-negative, got {border_width}"
+            )
         self.border_width = border_width
 
         self.color = color
@@ -271,7 +292,9 @@ class AnnotationLayer:
     def set_opacity(self, opacity: float) -> "AnnotationLayer":
         """Set layer opacity."""
         if not 0 <= opacity <= 1:
-            raise ValueValidationError("opacity", f"must be between 0 and 1, got {opacity}")
+            raise ValueValidationError(
+                "opacity", f"must be between 0 and 1, got {opacity}"
+            )
         self.opacity = opacity
         return self
 
@@ -290,7 +313,9 @@ class AnnotationLayer:
             if start_ts <= annotation.timestamp <= end_ts
         ]
 
-    def filter_by_price_range(self, min_price: float, max_price: float) -> list[Annotation]:
+    def filter_by_price_range(
+        self, min_price: float, max_price: float
+    ) -> list[Annotation]:
         """Filter annotations by price range."""
         return [
             annotation
@@ -393,7 +418,11 @@ class AnnotationManager:
 
     def asdict(self) -> dict[str, Any]:
         """Convert manager to dictionary for serialization."""
-        return {"layers": {layer_name: layer.asdict() for layer_name, layer in self.layers.items()}}
+        return {
+            "layers": {
+                layer_name: layer.asdict() for layer_name, layer in self.layers.items()
+            }
+        }
 
 
 def create_text_annotation(

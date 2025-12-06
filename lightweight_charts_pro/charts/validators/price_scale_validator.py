@@ -4,9 +4,7 @@ This module provides validation and helpful error messages for price scale
 configurations, helping developers catch common mistakes early.
 """
 
-from lightweight_charts_pro.charts.options.price_scale_options import (
-    PriceScaleOptions,
-)
+from lightweight_charts_pro.charts.options.price_scale_options import PriceScaleOptions
 from lightweight_charts_pro.charts.series.base import Series
 
 

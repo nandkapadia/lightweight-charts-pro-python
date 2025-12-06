@@ -1,10 +1,12 @@
 import pytest
-from lightweight_charts_core.charts.options.price_line_options import PriceLineOptions
-from lightweight_charts_core.exceptions import ColorValidationError, TypeValidationError
-from lightweight_charts_core.type_definitions.enums import LineStyle
+
+from lightweight_charts_pro.charts.options.price_line_options import PriceLineOptions
+from lightweight_charts_pro.exceptions import ColorValidationError, TypeValidationError
+from lightweight_charts_pro.type_definitions.enums import LineStyle
 
 
 def test_standard_construction():
+    """Test standard construction of PriceLineOptions."""
     opts = PriceLineOptions(
         id="pl1",
         price=123.45,
@@ -30,6 +32,7 @@ def test_standard_construction():
 
 
 def test_default_values():
+    """Test default values of PriceLineOptions."""
     opts = PriceLineOptions()
     assert opts.id is None
     assert opts.price == 0.0
@@ -186,6 +189,7 @@ def test_both_property_styles_work():
 
 
 def test_optional_fields_omitted():
+    """Test optional fields are properly omitted."""
     opts = PriceLineOptions(price=10.0)
     assert opts.id is None
     assert opts.axis_label_color is None
@@ -204,7 +208,9 @@ def test_update_method():
     assert opts.line_visible is False
 
     # Test with camelCase
-    opts.update({"lineStyle": LineStyle.DASHED, "lineWidth": 5, "axisLabelVisible": True})
+    opts.update(
+        {"lineStyle": LineStyle.DASHED, "lineWidth": 5, "axisLabelVisible": True}
+    )
 
     assert opts.line_style == LineStyle.DASHED
     assert opts.line_width == 5
@@ -215,7 +221,10 @@ def test_static_color_validator():
     """Test the static color validator method."""
     # Valid colors
     assert PriceLineOptions._validate_color_static("#123456", "test") == "#123456"
-    assert PriceLineOptions._validate_color_static("rgba(1,2,3,0.5)", "test") == "rgba(1,2,3,0.5)"
+    assert (
+        PriceLineOptions._validate_color_static("rgba(1,2,3,0.5)", "test")
+        == "rgba(1,2,3,0.5)"
+    )
 
     # Invalid colors
     with pytest.raises(ColorValidationError):

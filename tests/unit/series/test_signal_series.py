@@ -6,10 +6,11 @@ for creating signal-based background coloring in financial charts.
 
 import pandas as pd
 import pytest
-from lightweight_charts_core.charts.series.signal_series import SignalSeries
-from lightweight_charts_core.data.signal_data import SignalData
-from lightweight_charts_core.exceptions import ColorValidationError
-from lightweight_charts_core.type_definitions import ChartType
+
+from lightweight_charts_pro.charts.series.signal_series import SignalSeries
+from lightweight_charts_pro.data.signal_data import SignalData
+from lightweight_charts_pro.exceptions import ColorValidationError
+from lightweight_charts_pro.type_definitions import ChartType
 
 
 class TestSignalSeries:
@@ -48,7 +49,9 @@ class TestSignalSeries:
     def test_construction_with_custom_options(self):
         """Test SignalSeries construction with custom options."""
         data = [SignalData("2024-01-01", 0)]
-        series = SignalSeries(data=data, visible=False, price_scale_id="left", pane_id=1)
+        series = SignalSeries(
+            data=data, visible=False, price_scale_id="left", pane_id=1
+        )
 
         assert series.visible is False
         assert series.price_scale_id == "left"
@@ -188,7 +191,9 @@ class TestSignalSeries:
 
     def test_from_dataframe_without_color(self):
         """Test creating SignalSeries from DataFrame without color column."""
-        test_dataframe = pd.DataFrame({"time": ["2024-01-01", "2024-01-02"], "value": [0, 1]})
+        test_dataframe = pd.DataFrame(
+            {"time": ["2024-01-01", "2024-01-02"], "value": [0, 1]}
+        )
 
         series = SignalSeries.from_dataframe(
             df=test_dataframe,
@@ -287,7 +292,9 @@ class TestSignalSeries:
 
     def test_large_dataset(self):
         """Test SignalSeries with large dataset."""
-        data = [SignalData(f"2024-01-{i:02d}", i % 3) for i in range(1, 32)]  # January 2024
+        data = [
+            SignalData(f"2024-01-{i:02d}", i % 3) for i in range(1, 32)
+        ]  # January 2024
         series = SignalSeries(data=data)
         assert len(series.data) == 31
 
@@ -310,7 +317,9 @@ class TestSignalSeries:
             SignalData("2024-01-01", 0, color="#ff0000"),  # Valid hex color
             SignalData("2024-01-02", 1, color="#00ff00"),  # Valid hex color
         ]
-        series = SignalSeries(data=data, neutral_color="#f0f0f0", signal_color="#ff0000")
+        series = SignalSeries(
+            data=data, neutral_color="#f0f0f0", signal_color="#ff0000"
+        )
 
         # The individual colors should be preserved
         assert series.data[0].color == "#ff0000"

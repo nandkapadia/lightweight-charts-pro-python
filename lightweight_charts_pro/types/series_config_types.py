@@ -5,7 +5,7 @@ management used in the frontend-backend communication.
 """
 
 from dataclasses import dataclass, field
-from typing import Any, Literal, Union
+from typing import Any, Literal
 
 from lightweight_charts_pro.types.options import Options
 from lightweight_charts_pro.utils.chainable import chainable_field
@@ -25,7 +25,7 @@ SeriesType = Literal[
     "macd",
 ]
 
-ConfigValue = Union[str, int, float, bool, dict[str, Any]]
+ConfigValue = str | int | float | bool | dict[str, Any]
 ConfigDict = dict[str, ConfigValue]
 
 
@@ -84,7 +84,8 @@ class SeriesConfigChangesResult(Options):
     def fromdict(cls, data: dict) -> "SeriesConfigChangesResult":
         """Create from dictionary with proper change object conversion."""
         changes = [
-            SeriesConfigChange.fromdict(change_data) for change_data in data.get("changes", [])
+            SeriesConfigChange.fromdict(change_data)
+            for change_data in data.get("changes", [])
         ]
 
         return cls(

@@ -1,7 +1,8 @@
 """Test the new dynamic legend value options."""
 
 import pytest
-from lightweight_charts_core.charts.options.ui_options import LegendOptions
+
+from lightweight_charts_pro.charts.options.ui_options import LegendOptions
 
 
 class TestLegendOptionsNewFeatures:
@@ -16,7 +17,9 @@ class TestLegendOptionsNewFeatures:
 
     def test_custom_dynamic_values(self):
         """Test setting custom dynamic value options."""
-        options = LegendOptions(show_values=False, value_format=".4f", update_on_crosshair=False)
+        options = LegendOptions(
+            show_values=False, value_format=".4f", update_on_crosshair=False
+        )
         assert options.show_values is False
         assert options.value_format == ".4f"
         assert options.update_on_crosshair is False
@@ -36,7 +39,9 @@ class TestLegendOptionsNewFeatures:
 
     def test_to_dict_includes_new_fields(self):
         """Test that serialization includes new fields."""
-        options = LegendOptions(show_values=False, value_format=".1f", update_on_crosshair=False)
+        options = LegendOptions(
+            show_values=False, value_format=".1f", update_on_crosshair=False
+        )
 
         result = options.asdict()
         assert "showValues" in result
@@ -83,7 +88,9 @@ class TestLegendOptionsNewFeatures:
 
     def test_repr_includes_new_fields(self):
         """Test that string representation includes new fields."""
-        options = LegendOptions(show_values=False, value_format=".4f", update_on_crosshair=False)
+        options = LegendOptions(
+            show_values=False, value_format=".4f", update_on_crosshair=False
+        )
 
         repr_str = repr(options)
         assert "show_values=False" in repr_str
@@ -103,7 +110,9 @@ class TestLegendOptionsNewFeatures:
 
     def test_copy_preserves_new_fields(self):
         """Test that copying preserves new fields."""
-        options = LegendOptions(show_values=False, value_format=".5f", update_on_crosshair=False)
+        options = LegendOptions(
+            show_values=False, value_format=".5f", update_on_crosshair=False
+        )
 
         # Test dict conversion and back (similar to copy)
         data = options.asdict()

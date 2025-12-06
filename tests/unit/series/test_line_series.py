@@ -47,21 +47,21 @@ import pandas as pd
 import pytest
 
 # Local Imports
-from lightweight_charts_core.charts.options.line_options import LineOptions
-from lightweight_charts_core.charts.options.price_format_options import (
+from lightweight_charts_pro.charts.options.line_options import LineOptions
+from lightweight_charts_pro.charts.options.price_format_options import (
     PriceFormatOptions,
 )
-from lightweight_charts_core.charts.options.price_line_options import PriceLineOptions
-from lightweight_charts_core.charts.series.line import LineSeries
-from lightweight_charts_core.data import Marker
-from lightweight_charts_core.data.line_data import LineData
-from lightweight_charts_core.data.marker import BarMarker
-from lightweight_charts_core.exceptions import (
+from lightweight_charts_pro.charts.options.price_line_options import PriceLineOptions
+from lightweight_charts_pro.charts.series.line import LineSeries
+from lightweight_charts_pro.data import Marker
+from lightweight_charts_pro.data.line_data import LineData
+from lightweight_charts_pro.data.marker import BarMarker
+from lightweight_charts_pro.exceptions import (
     InstanceTypeError,
     NotFoundError,
     ValueValidationError,
 )
-from lightweight_charts_core.type_definitions.enums import (
+from lightweight_charts_pro.type_definitions.enums import (
     ChartType,
     LastPriceAnimationMode,
     LineStyle,
@@ -101,6 +101,7 @@ def line_data():
 
 @pytest.fixture
 def df():
+    """Provide a sample DataFrame for testing."""
     return pd.DataFrame(
         {
             "datetime": ["2024-01-01", "2024-01-02"],
@@ -112,6 +113,7 @@ def df():
 
 @pytest.fixture
 def column_mapping():
+    """Provide a column mapping dictionary for testing."""
     return {"time": "time", "value": "value"}
 
 
@@ -119,6 +121,7 @@ class TestLineSeriesBasic:
     """Basic test cases for LineSeries."""
 
     def test_construction(self, line_data, line_options):
+        """Test LineSeries construction with data and options."""
         series = LineSeries(data=line_data)
         assert series.data == line_data
         # Set line_options after construction since it's no longer a constructor parameter
@@ -126,6 +129,7 @@ class TestLineSeriesBasic:
         assert series.line_options == line_options
 
     def test_from_dataframe(self, sample_dataframe, column_mapping):
+        """Test creating LineSeries from pandas DataFrame."""
         series = LineSeries.from_dataframe(sample_dataframe, column_mapping)
         assert len(series.data) == 10  # sample_dataframe has 10 rows
         assert isinstance(series.data[0], LineData)
@@ -134,17 +138,22 @@ class TestLineSeriesBasic:
         assert all(isinstance(d, LineData) for d in series.data)
 
     def test_missing_required_column_in_mapping(self, sample_dataframe):
+        """Test error handling when required column missing from mapping."""
         bad_mapping = {"value": "close", "color": "color"}  # missing 'time'
         with pytest.raises(ValueValidationError, match="required"):
             LineSeries.from_dataframe(sample_dataframe, bad_mapping)
 
     def test_missing_required_column_in_dataframe(self):
-        bad_test_data = pd.DataFrame({"close": [100.0, 105.0], "color": ["#2196F3", "#2196F3"]})
+        """Test error handling when required column missing from DataFrame."""
+        bad_test_data = pd.DataFrame(
+            {"close": [100.0, 105.0], "color": ["#2196F3", "#2196F3"]}
+        )
         mapping = {"time": "datetime", "value": "close", "color": "color"}
         with pytest.raises(NotFoundError):
             LineSeries.from_dataframe(bad_test_data, mapping)
 
     def test_to_dict_structure(self, line_data):
+        """Test dictionary serialization structure."""
         series = LineSeries(data=line_data)
         d = series.asdict()
         assert d["type"] == "line"
@@ -153,6 +162,7 @@ class TestLineSeriesBasic:
         # priceLines should only be present when price lines are added
 
     def test_set_price_format_and_price_lines(self, line_data):
+        """Test setting price format and adding price lines."""
         series = LineSeries(data=line_data)
         pf = PriceFormatOptions(type="price", precision=2)
         pl = PriceLineOptions(price=100.0, color="#2196F3")
@@ -162,21 +172,33 @@ class TestLineSeriesBasic:
         assert pl in series.price_lines
 
     def test_set_markers(self, line_data):
+        """Test setting markers on the series."""
         series = LineSeries(data=line_data)
-        m1 = BarMarker(time=1704067200, position="aboveBar", color="#2196F3", shape="circle")
-        m2 = BarMarker(time=1704153600, position="belowBar", color="#2196F3", shape="circle")
+        m1 = BarMarker(
+            time=1704067200, position="aboveBar", color="#2196F3", shape="circle"
+        )
+        m2 = BarMarker(
+            time=1704153600, position="belowBar", color="#2196F3", shape="circle"
+        )
         series.markers = [m1, m2]
         assert series.markers == [m1, m2]
 
     def test_empty_data(self):
+        """Test series with empty data."""
         series = LineSeries(data=[])
         assert not series.data
         d = series.asdict()
         assert d["data"] == []
 
     def test_extra_columns_in_dataframe(self):
+        """Test handling of extra columns in DataFrame."""
         test_data = pd.DataFrame(
-            {"datetime": ["2024-01-01"], "close": [100.0], "color": ["#2196F3"], "extra": [123]},
+            {
+                "datetime": ["2024-01-01"],
+                "close": [100.0],
+                "color": ["#2196F3"],
+                "extra": [123],
+            },
         )
         mapping = {"time": "datetime", "value": "close", "color": "color"}
         series = LineSeries.from_dataframe(test_data, mapping)
@@ -184,6 +206,7 @@ class TestLineSeriesBasic:
         assert series.data[0].value == 100.0
 
     def test_nan_handling(self):
+        """Test handling of NaN values in data."""
         test_data = pd.DataFrame(
             {"datetime": ["2024-01-01"], "close": [float("nan")], "color": ["#2196F3"]},
         )
@@ -192,9 +215,14 @@ class TestLineSeriesBasic:
         assert series.data[0].value == 0.0
 
     def test_method_chaining(self, line_data):
+        """Test method chaining with multiple operations."""
         series = LineSeries(data=line_data)
-        m1 = BarMarker(time=1704067200, position="aboveBar", color="#2196F3", shape="circle")
-        m2 = BarMarker(time=1704153600, position="belowBar", color="#2196F3", shape="circle")
+        m1 = BarMarker(
+            time=1704067200, position="aboveBar", color="#2196F3", shape="circle"
+        )
+        m2 = BarMarker(
+            time=1704153600, position="belowBar", color="#2196F3", shape="circle"
+        )
         pl = PriceLineOptions(price=100.0, color="#2196F3")
         # Chain multiple mutators
         result = (
@@ -211,13 +239,17 @@ class TestLineSeriesBasic:
         assert not series.price_lines
 
     def test_add_marker_chaining(self, line_data):
+        """Test adding marker returns self for chaining."""
         series = LineSeries(data=line_data)
-        m = BarMarker(time=1704067200, position="aboveBar", color="#2196F3", shape="circle")
+        m = BarMarker(
+            time=1704067200, position="aboveBar", color="#2196F3", shape="circle"
+        )
         result = series.add_marker(m)
         assert result is series
         assert len(series.markers) == 1
 
     def test_add_price_line_chaining(self, line_data):
+        """Test adding price line returns self for chaining."""
         series = LineSeries(data=line_data)
         pl = PriceLineOptions(price=100.0, color="#2196F3")
         result = series.add_price_line(pl)
@@ -225,14 +257,18 @@ class TestLineSeriesBasic:
         assert pl in series.price_lines
 
     def test_clear_markers_chaining(self, line_data):
+        """Test clearing markers returns self for chaining."""
         series = LineSeries(data=line_data)
-        m = BarMarker(time=1704067200, position="aboveBar", color="#2196F3", shape="circle")
+        m = BarMarker(
+            time=1704067200, position="aboveBar", color="#2196F3", shape="circle"
+        )
         series.add_marker(m)
         result = series.clear_markers()
         assert result is series
         assert not series.markers
 
     def test_clear_price_lines_chaining(self, line_data):
+        """Test clearing price lines returns self for chaining."""
         series = LineSeries(data=line_data)
         pl = PriceLineOptions(price=100.0, color="#2196F3")
         series.add_price_line(pl)
@@ -311,7 +347,11 @@ class TestLineSeriesExtended:
 
         series = LineSeries.from_dataframe(
             df=test_data,
-            column_mapping={"time": "timestamp", "value": "price", "color": "line_color"},
+            column_mapping={
+                "time": "timestamp",
+                "value": "price",
+                "color": "line_color",
+            },
         )
 
         assert len(series.data) == 2
@@ -568,7 +608,9 @@ class TestLineSeriesJsonFormat:
         assert line_opts["crosshairMarkerBorderColor"] == "#000000"
         assert line_opts["crosshairMarkerBackgroundColor"] == "#ffffff"
         assert line_opts["crosshairMarkerBorderWidth"] == 2
-        assert line_opts["lastPriceAnimation"] == 1  # LastPriceAnimationMode.CONTINUOUS.value
+        assert (
+            line_opts["lastPriceAnimation"] == 1
+        )  # LastPriceAnimationMode.CONTINUOUS.value
 
     def test_line_series_with_price_lines_json_structure(self):
         """Test line series with price lines JSON structure."""
@@ -832,10 +874,16 @@ class TestLineSeriesJsonFormat:
         # Verify key structure matches
         assert result["type"] == expected_structure["type"]
         assert result["data"] == expected_structure["data"]
-        assert result["options"]["lineOptions"]["color"] == expected_structure["options"]["color"]
+        assert (
+            result["options"]["lineOptions"]["color"]
+            == expected_structure["options"]["color"]
+        )
         assert (
             result["options"]["lineOptions"]["lineStyle"]
             == expected_structure["options"]["lineStyle"]
         )
-        assert result["priceLines"][0]["price"] == expected_structure["priceLines"][0]["price"]
+        assert (
+            result["priceLines"][0]["price"]
+            == expected_structure["priceLines"][0]["price"]
+        )
         assert result["paneId"] == expected_structure["pane_id"]

@@ -52,7 +52,9 @@ class PriceScaleManager:
         """
         self.left_price_scale = left_price_scale
         self.right_price_scale = right_price_scale
-        self.overlay_price_scales = overlay_price_scales if overlay_price_scales is not None else {}
+        self.overlay_price_scales = (
+            overlay_price_scales if overlay_price_scales is not None else {}
+        )
 
     def add_overlay_scale(
         self,
@@ -75,7 +77,9 @@ class PriceScaleManager:
         if options is None:
             raise TypeValidationError("options", "PriceScaleOptions")
         if not isinstance(options, PriceScaleOptions):
-            raise ValueValidationError("options", "must be a PriceScaleOptions instance")
+            raise ValueValidationError(
+                "options", "must be a PriceScaleOptions instance"
+            )
 
         # Update or add the overlay price scale (scale_id is used as dict key, not as property)
         self.overlay_price_scales[scale_id] = options

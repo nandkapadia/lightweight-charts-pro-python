@@ -10,9 +10,7 @@ Usage:
 
 """
 
-import os
 import re
-import shutil
 from pathlib import Path
 
 
@@ -99,7 +97,7 @@ def process_docs_to_wiki():
             continue
 
         # Read RST content
-        with open(rst_path, "r", encoding="utf-8") as f:
+        with open(rst_path, encoding="utf-8") as f:
             rst_content = f.read()
 
         # Convert to Markdown

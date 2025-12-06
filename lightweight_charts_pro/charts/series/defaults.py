@@ -40,7 +40,9 @@ def create_upper_line() -> LineOptions:
 
     """
     return LineOptions(
-        color=COLOR_UPPER_GREEN, line_width=LINE_WIDTH_STANDARD, line_style=LineStyle.SOLID
+        color=COLOR_UPPER_GREEN,
+        line_width=LINE_WIDTH_STANDARD,
+        line_style=LineStyle.SOLID,
     )
 
 
@@ -55,7 +57,9 @@ def create_middle_line() -> LineOptions:
 
     """
     return LineOptions(
-        color=COLOR_MIDDLE_BLUE, line_width=LINE_WIDTH_STANDARD, line_style=LineStyle.SOLID
+        color=COLOR_MIDDLE_BLUE,
+        line_width=LINE_WIDTH_STANDARD,
+        line_style=LineStyle.SOLID,
     )
 
 
@@ -72,7 +76,9 @@ def create_lower_line() -> LineOptions:
 
     """
     return LineOptions(
-        color=COLOR_LOWER_RED, line_width=LINE_WIDTH_STANDARD, line_style=LineStyle.SOLID
+        color=COLOR_LOWER_RED,
+        line_width=LINE_WIDTH_STANDARD,
+        line_style=LineStyle.SOLID,
     )
 
 

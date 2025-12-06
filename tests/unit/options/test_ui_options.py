@@ -23,14 +23,15 @@ import time
 
 # Third-party imports
 import pytest
-from lightweight_charts_core.charts.options.ui_options import (
+
+from lightweight_charts_pro.charts.options.ui_options import (
     LegendOptions,
     RangeConfig,
     RangeSwitcherOptions,
 )
 
 # Local imports
-from lightweight_charts_core.exceptions import TypeValidationError
+from lightweight_charts_pro.exceptions import TypeValidationError
 
 
 class TestRangeConfig:
@@ -130,7 +131,9 @@ class TestRangeSwitcherOptions:
         # Verify default values are set correctly
         assert options.visible is True  # Range switcher should be visible by default
         assert options.ranges == []  # No ranges configured by default
-        assert options.position == "bottom-right"  # Default position in bottom-right corner
+        assert (
+            options.position == "bottom-right"
+        )  # Default position in bottom-right corner
 
     def test_custom_construction(self):
         """Test construction with custom values.
@@ -201,7 +204,9 @@ class TestRangeSwitcherOptions:
         """
         # Create range configuration and switcher options
         ranges = [RangeConfig(text="1D", tooltip="1 Day")]
-        options = RangeSwitcherOptions(visible=False, ranges=ranges, position="top-left")
+        options = RangeSwitcherOptions(
+            visible=False, ranges=ranges, position="top-left"
+        )
 
         # Serialize to dictionary
         result = options.asdict()
@@ -272,7 +277,9 @@ class TestLegendOptions:
         and formatting are properly stored and accessible.
         """
         # Define a complex template with multiple placeholders and HTML formatting
-        template = "<div><strong>{title}</strong><br/>Price: ${value}<br/>Type: {type}</div>"
+        template = (
+            "<div><strong>{title}</strong><br/>Price: ${value}<br/>Type: {type}</div>"
+        )
 
         # Create LegendOptions with complex template
         options = LegendOptions(text=template)
@@ -800,7 +807,9 @@ class TestUIOptionsValidation:
         assert options.ranges == []
 
         # Test with many ranges to check scalability
-        many_ranges = [RangeConfig(text=f"R{i}", tooltip=f"Range {i}") for i in range(100)]
+        many_ranges = [
+            RangeConfig(text=f"R{i}", tooltip=f"Range {i}") for i in range(100)
+        ]
         options = RangeSwitcherOptions(visible=False, ranges=many_ranges)
 
         # Verify large ranges list is handled correctly

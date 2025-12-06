@@ -36,11 +36,8 @@ import pandas as pd
 import pytest
 
 # Local Imports
-from lightweight_charts_core.data.line_data import LineData
-from lightweight_charts_core.exceptions import (
-    ColorValidationError,
-    RequiredFieldError,
-)
+from lightweight_charts_pro.data.line_data import LineData
+from lightweight_charts_pro.exceptions import ColorValidationError, RequiredFieldError
 
 
 @pytest.fixture
@@ -104,22 +101,26 @@ def test_nan_value(valid_time):
 
 
 def test_color_validation_hex(valid_time):
+    """Test hex color validation."""
     data = LineData(time=valid_time, value=1.0, color="#ABCDEF")
     assert data.color == "#ABCDEF"
 
 
 def test_color_validation_rgba(valid_time):
+    """Test rgba color validation."""
     data = LineData(time=valid_time, value=1.0, color="rgba(33,150,243,1)")
     assert data.color == "rgba(33,150,243,1)"
 
 
 def test_color_invalid(valid_time):
+    """Test invalid color raises error."""
     # Centralized validation raises ColorValidationError (more specific than ValueValidationError)
     with pytest.raises(ColorValidationError):
         LineData(time=valid_time, value=1.0, color="notacolor")
 
 
 def test_color_omitted_in_dict(valid_time):
+    """Test color field omitted from dict when not set."""
     data = LineData(time=valid_time, value=1.0)
     d = data.asdict()
     assert "color" not in d
@@ -174,6 +175,7 @@ def test_time_normalization_from_pandas_timestamp():
 
 
 def test_error_on_none_value(valid_time):
+    """Test None value raises error."""
     with pytest.raises(RequiredFieldError):
         LineData(time=valid_time, value=None)
 
@@ -194,12 +196,14 @@ def test_time_modification_after_construction():
 
 
 def test_to_dict_keys_are_camel_case(valid_time):
+    """Test dictionary keys are in camelCase."""
     data = LineData(time=valid_time, value=1.0, color="#2196F3")
     d = data.asdict()
     assert set(d.keys()) == {"time", "value", "color"}
 
 
 def test_cross_type_dict_vs_dataclass(valid_time):
+    """Test dict and dataclass inputs produce same output."""
     # Simulate dict input and dataclass input producing same output
     data1 = LineData(time=valid_time, value=2.0, color="#2196F3")
     data2 = LineData(time="2024-01-01", value=2.0, color="#2196F3")

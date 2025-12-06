@@ -7,8 +7,9 @@ This module contains comprehensive tests for OHLCV data classes:
 from datetime import datetime, timedelta
 
 import pytest
-from lightweight_charts_core.data.ohlcv_data import OhlcvData
-from lightweight_charts_core.exceptions import ValueValidationError
+
+from lightweight_charts_pro.data.ohlcv_data import OhlcvData
+from lightweight_charts_pro.exceptions import ValueValidationError
 
 
 class TestOhlcvData:
@@ -36,7 +37,9 @@ class TestOhlcvData:
     def test_construction_with_zero_volume(self):
         """Test construction with zero volume."""
         timestamp = int(datetime.now().timestamp())
-        data = OhlcvData(time=timestamp, open=100.0, high=110.0, low=95.0, close=105.0, volume=0.0)
+        data = OhlcvData(
+            time=timestamp, open=100.0, high=110.0, low=95.0, close=105.0, volume=0.0
+        )
 
         assert data.volume == 0.0
 
@@ -74,7 +77,14 @@ class TestOhlcvData:
         timestamp = int(datetime.now().timestamp())
 
         with pytest.raises(ValueValidationError):
-            OhlcvData(time=timestamp, open=100.0, high=110.0, low=95.0, close=105.0, volume=-100.0)
+            OhlcvData(
+                time=timestamp,
+                open=100.0,
+                high=110.0,
+                low=95.0,
+                close=105.0,
+                volume=-100.0,
+            )
 
     def test_validation_nan_volume(self):
         """Test validation of NaN volume."""
@@ -102,7 +112,14 @@ class TestOhlcvData:
             TypeError,
             match="'<' not supported between instances of 'NoneType' and 'int'",
         ):
-            OhlcvData(time=timestamp, open=100.0, high=110.0, low=95.0, close=105.0, volume=None)
+            OhlcvData(
+                time=timestamp,
+                open=100.0,
+                high=110.0,
+                low=95.0,
+                close=105.0,
+                volume=None,
+            )
 
     def test_validation_inherited_ohlc_constraints(self):
         """Test that inherited OHLC validation constraints are enforced."""
@@ -158,31 +175,61 @@ class TestOhlcvData:
             TypeError,
             match="'<' not supported between instances of 'NoneType' and 'int'",
         ):
-            OhlcvData(time=timestamp, open=None, high=110.0, low=95.0, close=105.0, volume=1000.0)
-
-        with pytest.raises(
-            TypeError,
-            match="'<' not supported between instances of 'NoneType' and 'float'",
-        ):
-            OhlcvData(time=timestamp, open=100.0, high=None, low=95.0, close=105.0, volume=1000.0)
-
-        with pytest.raises(
-            TypeError,
-            match="'<' not supported between instances of 'float' and 'NoneType'",
-        ):
-            OhlcvData(time=timestamp, open=100.0, high=110.0, low=None, close=105.0, volume=1000.0)
+            OhlcvData(
+                time=timestamp,
+                open=None,
+                high=110.0,
+                low=95.0,
+                close=105.0,
+                volume=1000.0,
+            )
 
         with pytest.raises(
             TypeError,
             match="'<' not supported between instances of 'NoneType' and 'int'",
         ):
-            OhlcvData(time=timestamp, open=100.0, high=110.0, low=95.0, close=None, volume=1000.0)
+            OhlcvData(
+                time=timestamp,
+                open=100.0,
+                high=None,
+                low=95.0,
+                close=105.0,
+                volume=1000.0,
+            )
+
+        with pytest.raises(
+            TypeError,
+            match="'<' not supported between instances of 'NoneType' and 'int'",
+        ):
+            OhlcvData(
+                time=timestamp,
+                open=100.0,
+                high=110.0,
+                low=None,
+                close=105.0,
+                volume=1000.0,
+            )
+
+        with pytest.raises(
+            TypeError,
+            match="'<' not supported between instances of 'NoneType' and 'int'",
+        ):
+            OhlcvData(
+                time=timestamp,
+                open=100.0,
+                high=110.0,
+                low=95.0,
+                close=None,
+                volume=1000.0,
+            )
 
     def test_time_normalization(self):
         """Test that time is properly normalized."""
         # Test with datetime object
         dt = datetime.now()
-        data = OhlcvData(time=dt, open=100.0, high=110.0, low=95.0, close=105.0, volume=1000.0)
+        data = OhlcvData(
+            time=dt, open=100.0, high=110.0, low=95.0, close=105.0, volume=1000.0
+        )
 
         # Time stored as datetime object
         assert data.time == dt
@@ -361,7 +408,9 @@ class TestOhlcvData:
     def test_edge_case_zero_ohlc_values(self):
         """Test edge case with zero OHLC values."""
         timestamp = 1640995200
-        data = OhlcvData(time=timestamp, open=0.0, high=0.0, low=0.0, close=0.0, volume=1000.0)
+        data = OhlcvData(
+            time=timestamp, open=0.0, high=0.0, low=0.0, close=0.0, volume=1000.0
+        )
 
         assert data.open == 0.0
         assert data.high == 0.0

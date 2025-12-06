@@ -36,6 +36,7 @@ class GradientRibbonData(RibbonData):
     gradient: float | None = None
 
     def __post_init__(self):
+        """Validate and normalize gradient ribbon data after initialization."""
         # Call parent's __post_init__ for time normalization and NaN handling
         super().__post_init__()
 

@@ -12,12 +12,13 @@ from datetime import datetime
 
 import pandas as pd
 import pytest
-from lightweight_charts_core.exceptions import (
+
+from lightweight_charts_pro.exceptions import (
     TimeValidationError,
     UnsupportedTimeTypeError,
     ValueValidationError,
 )
-from lightweight_charts_core.utils.data_utils import (
+from lightweight_charts_pro.utils.data_utils import (
     from_utc_timestamp,
     is_valid_color,
     normalize_time,

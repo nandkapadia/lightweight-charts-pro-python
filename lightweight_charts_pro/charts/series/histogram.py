@@ -237,7 +237,9 @@ class HistogramSeries(Series):
             volume_col = column_mapping.get("volume", "volume")
             updated_mapping = column_mapping.copy()
             updated_mapping["color"] = "color"  # Map color field to DataFrame column
-            updated_mapping["value"] = volume_col  # Map volume to value for HistogramSeries
+            updated_mapping["value"] = (
+                volume_col  # Map volume to value for HistogramSeries
+            )
 
             # Use from_dataframe factory method to create the series
             return cls.from_dataframe(volume_dataframe, column_mapping=updated_mapping, **kwargs)  # type: ignore[return-value]
@@ -252,7 +254,11 @@ class HistogramSeries(Series):
         for item in data:
             if isinstance(item, dict):
                 # Determine color based on price movement for dictionary input
-                color = up_color if item.get("close", 0) >= item.get("open", 0) else down_color
+                color = (
+                    up_color
+                    if item.get("close", 0) >= item.get("open", 0)
+                    else down_color
+                )
                 processed_item = item.copy()
                 processed_item["color"] = color  # Add color information
                 processed_data.append(processed_item)

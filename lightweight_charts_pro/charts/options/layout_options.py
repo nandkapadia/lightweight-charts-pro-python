@@ -39,8 +39,12 @@ class GridLineOptions(Options):
 class GridOptions(Options):
     """Grid configuration for chart."""
 
-    vert_lines: GridLineOptions = field(default_factory=lambda: GridLineOptions(visible=False))
-    horz_lines: GridLineOptions = field(default_factory=lambda: GridLineOptions(visible=True))
+    vert_lines: GridLineOptions = field(
+        default_factory=lambda: GridLineOptions(visible=False)
+    )
+    horz_lines: GridLineOptions = field(
+        default_factory=lambda: GridLineOptions(visible=True)
+    )
 
 
 @dataclass
@@ -84,7 +88,9 @@ class LayoutOptions(Options):
     )
     text_color: str = "#131722"
     font_size: int = 11
-    font_family: str = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+    font_family: str = (
+        "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+    )
     pane_options: PaneOptions | None = None
     pane_heights: dict[int, PaneHeightOptions] | None = None
     attribution_logo: bool = False

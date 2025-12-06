@@ -16,7 +16,7 @@ from dataclasses import dataclass
 import pytest
 
 # Local Imports
-from lightweight_charts_core.charts.options.base_options import Options
+from lightweight_charts_pro.charts.options.base_options import Options
 
 # =============================================================================
 # Test Data Classes
@@ -230,7 +230,7 @@ class TestUpdateNonDataclassAttributes:
             name: str = "test"
 
             def my_method(self):
-                """A method."""
+                """Test method."""
                 return "method_result"
 
         options = OptionsWithMethod()

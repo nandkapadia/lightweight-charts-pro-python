@@ -4,14 +4,15 @@ This module tests the color validation and background classes in the colors modu
 """
 
 import pytest
-from lightweight_charts_core.exceptions import ColorValidationError
-from lightweight_charts_core.type_definitions.colors import (
+
+from lightweight_charts_pro.exceptions import ColorValidationError
+from lightweight_charts_pro.type_definitions.colors import (
     Background,
     BackgroundGradient,
     BackgroundSolid,
 )
-from lightweight_charts_core.type_definitions.enums import BackgroundStyle
-from lightweight_charts_core.utils.data_utils import is_valid_color
+from lightweight_charts_pro.type_definitions.enums import BackgroundStyle
+from lightweight_charts_pro.utils.data_utils import is_valid_color
 
 
 class TestIsValidColor:
@@ -25,7 +26,14 @@ class TestIsValidColor:
 
     def test_valid_hex_colors_6_digits(self):
         """Test valid 6-digit hex colors."""
-        valid_colors = ["#ffffff", "#000000", "#abcdef", "#ABCDEF", "#123456", "#789abc"]
+        valid_colors = [
+            "#ffffff",
+            "#000000",
+            "#abcdef",
+            "#ABCDEF",
+            "#123456",
+            "#789abc",
+        ]
         for color in valid_colors:
             assert is_valid_color(color) is True
 
@@ -235,7 +243,9 @@ class TestBackgroundGradient:
 
     def test_valid_rgb_colors(self):
         """Test with valid RGB colors."""
-        background = BackgroundGradient(top_color="rgb(255, 0, 0)", bottom_color="rgb(0, 255, 0)")
+        background = BackgroundGradient(
+            top_color="rgb(255, 0, 0)", bottom_color="rgb(0, 255, 0)"
+        )
         assert background.top_color == "rgb(255, 0, 0)"
         assert background.bottom_color == "rgb(0, 255, 0)"
 
@@ -256,26 +266,38 @@ class TestBackgroundGradient:
 
     def test_invalid_top_color_raises_value_error(self):
         """Test that invalid top color raises ColorValidationError."""
-        with pytest.raises(ColorValidationError, match="Invalid color format for top_color"):
+        with pytest.raises(
+            ColorValidationError, match="Invalid color format for top_color"
+        ):
             BackgroundGradient(top_color="invalid_color")
 
     def test_invalid_bottom_color_raises_value_error(self):
         """Test that invalid bottom color raises ColorValidationError."""
-        with pytest.raises(ColorValidationError, match="Invalid color format for bottom_color"):
+        with pytest.raises(
+            ColorValidationError, match="Invalid color format for bottom_color"
+        ):
             BackgroundGradient(bottom_color="invalid_color")
 
     def test_to_dict_method(self):
         """Test to_dict method."""
         background = BackgroundGradient(top_color="#ff0000", bottom_color="#00ff00")
         result = background.asdict()
-        expected = {"topColor": "#ff0000", "bottomColor": "#00ff00", "style": "gradient"}
+        expected = {
+            "topColor": "#ff0000",
+            "bottomColor": "#00ff00",
+            "style": "gradient",
+        }
         assert result == expected
 
     def test_to_dict_with_default_values(self):
         """Test to_dict method with default values."""
         background = BackgroundGradient()
         result = background.asdict()
-        expected = {"topColor": "#ffffff", "bottomColor": "#000000", "style": "gradient"}
+        expected = {
+            "topColor": "#ffffff",
+            "bottomColor": "#000000",
+            "style": "gradient",
+        }
         assert result == expected
 
 

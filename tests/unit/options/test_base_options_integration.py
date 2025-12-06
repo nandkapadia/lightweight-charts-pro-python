@@ -16,7 +16,7 @@ from enum import Enum
 import pytest
 
 # Local Imports
-from lightweight_charts_core.charts.options.base_options import Options
+from lightweight_charts_pro.charts.options.base_options import Options
 
 # =============================================================================
 # Test Data Classes
@@ -262,7 +262,11 @@ class TestComplexIntegrationScenarios:
 
         # Update via method
         options.update(
-            {"height": 600, "autoSize": True, "nested": {"color": "#00ff00", "width": 5}}
+            {
+                "height": 600,
+                "autoSize": True,
+                "nested": {"color": "#00ff00", "width": 5},
+            }
         )
 
         # Serialize

@@ -5,9 +5,10 @@ functionality to ensure proper operation of the tooltip system.
 """
 
 import pandas as pd
-from lightweight_charts_core.charts import BaseChart, LineSeries
-from lightweight_charts_core.data import SingleValueData
-from lightweight_charts_core.data.tooltip import (
+
+from lightweight_charts_pro.charts import BaseChart, LineSeries
+from lightweight_charts_pro.data import SingleValueData
+from lightweight_charts_pro.data.tooltip import (
     TooltipConfig,
     TooltipField,
     TooltipManager,

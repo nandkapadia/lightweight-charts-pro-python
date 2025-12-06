@@ -152,7 +152,9 @@ def normalize_time(time_value: Any) -> int:
         except (ValueError, TypeError):
             # If item() fails, try type-specific conversion
             # Check if object can be converted to int (has __int__ method)
-            time_value = int(time_value) if hasattr(time_value, "__int__") else float(time_value)
+            time_value = (
+                int(time_value) if hasattr(time_value, "__int__") else float(time_value)
+            )
 
     # Step 2: Handle already-converted integer timestamps
     # If value is already an int, it's assumed to be a UNIX timestamp

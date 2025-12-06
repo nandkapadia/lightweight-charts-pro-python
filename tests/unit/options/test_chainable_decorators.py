@@ -1,7 +1,8 @@
 """Comprehensive tests for chainable decorators across all Options classes."""
 
 import pytest
-from lightweight_charts_core.charts.options import (
+
+from lightweight_charts_pro.charts.options import (
     CrosshairOptions,
     LayoutOptions,
     LegendOptions,
@@ -15,12 +16,12 @@ from lightweight_charts_core.charts.options import (
     TimeScaleOptions,
     TradeVisualizationOptions,
 )
-from lightweight_charts_core.exceptions import (
+from lightweight_charts_pro.exceptions import (
     ColorValidationError,
     TypeValidationError,
     ValueValidationError,
 )
-from lightweight_charts_core.type_definitions.enums import (
+from lightweight_charts_pro.type_definitions.enums import (
     CrosshairMode,
     LineStyle,
     LineType,
@@ -464,7 +465,10 @@ class TestStaticValidators:
         for cls in classes_with_static_color_validators:
             # Valid colors
             assert cls._validate_color_static("#123456", "test") == "#123456"
-            assert cls._validate_color_static("rgba(1,2,3,0.5)", "test") == "rgba(1,2,3,0.5)"
+            assert (
+                cls._validate_color_static("rgba(1,2,3,0.5)", "test")
+                == "rgba(1,2,3,0.5)"
+            )
             assert cls._validate_color_static("rgb(255,0,0)", "test") == "rgb(255,0,0)"
 
             # Invalid colors - different classes raise different exceptions

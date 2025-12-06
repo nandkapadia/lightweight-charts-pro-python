@@ -17,7 +17,7 @@ Example:
     localization = LocalizationOptions(locale="de-DE", date_format="dd.MM.yyyy")
     ```
 
-Version: 0.1.9
+Version: 0.1.0
 License: MIT
 
 """

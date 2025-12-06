@@ -246,7 +246,9 @@ class Series(ABC):  # noqa: B024
         self._legend = None  # Legend configuration
 
     @staticmethod
-    def prepare_index(data_frame: pd.DataFrame, column_mapping: dict[str, str]) -> pd.DataFrame:
+    def prepare_index(
+        data_frame: pd.DataFrame, column_mapping: dict[str, str]
+    ) -> pd.DataFrame:
         """Prepare index for column mapping.
 
         Handles all index-related column mapping cases:
@@ -345,7 +347,9 @@ class Series(ABC):  # noqa: B024
                             level_name = level_names[level_idx]
                             # Update column mapping to use actual column name
                             new_col_name = (
-                                level_name if level_name is not None else f"level_{level_idx}"
+                                level_name
+                                if level_name is not None
+                                else f"level_{level_idx}"
                             )
                             column_mapping[field] = new_col_name
                             continue
@@ -354,12 +358,16 @@ class Series(ABC):  # noqa: B024
 
                     # 'index': use first unnamed level if any, else first level
                     if col_name == "index":
-                        unnamed_levels = [i for i, name in enumerate(level_names) if name is None]
+                        unnamed_levels = [
+                            i for i, name in enumerate(level_names) if name is None
+                        ]
                         level_idx = unnamed_levels[0] if unnamed_levels else 0
                         data_frame = data_frame.reset_index(level=level_idx)
                         level_name = level_names[level_idx]
                         new_col_name = (
-                            level_name if level_name is not None else f"level_{level_idx}"
+                            level_name
+                            if level_name is not None
+                            else f"level_{level_idx}"
                         )
                         column_mapping[field] = new_col_name
                         continue
@@ -433,7 +441,9 @@ class Series(ABC):  # noqa: B024
         missing_required = normalized_required - normalized_mapping_keys
         if missing_required:
             # Convert back to original format for error message
-            missing_original = {key for key in required if normalize_key(key) in missing_required}
+            missing_original = {
+                key for key in required if normalize_key(key) in missing_required
+            }
             raise ValueValidationError(
                 "DataFrame",
                 f"is missing required column mapping: {missing_original}",
@@ -916,7 +926,9 @@ class Series(ABC):  # noqa: B024
                             else:
                                 # Normal case: capitalize first letter and append
                                 # e.g., upperLine + color -> upperLineColor
-                                flattened_key = prefix + line_key[0].upper() + line_key[1:]
+                                flattened_key = (
+                                    prefix + line_key[0].upper() + line_key[1:]
+                                )
 
                             if is_top_level:
                                 config[flattened_key] = line_value

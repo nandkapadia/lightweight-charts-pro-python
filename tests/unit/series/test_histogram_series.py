@@ -10,19 +10,20 @@ import json
 
 import pandas as pd
 import pytest
-from lightweight_charts_core.charts.options.price_line_options import PriceLineOptions
-from lightweight_charts_core.charts.series.base import Series
-from lightweight_charts_core.charts.series.histogram import HistogramSeries
-from lightweight_charts_core.data.histogram_data import HistogramData
-from lightweight_charts_core.data.marker import BarMarker
-from lightweight_charts_core.exceptions import (
+
+from lightweight_charts_pro.charts.options.price_line_options import PriceLineOptions
+from lightweight_charts_pro.charts.series.base import Series
+from lightweight_charts_pro.charts.series.histogram import HistogramSeries
+from lightweight_charts_pro.data.histogram_data import HistogramData
+from lightweight_charts_pro.data.marker import BarMarker
+from lightweight_charts_pro.exceptions import (
     ColumnMappingRequiredError,
     DataFrameValidationError,
     DataItemsTypeError,
     TypeValidationError,
     ValueValidationError,
 )
-from lightweight_charts_core.type_definitions import ChartType
+from lightweight_charts_pro.type_definitions import ChartType
 
 
 class TestHistogramSeriesConstruction:
@@ -43,7 +44,9 @@ class TestHistogramSeriesConstruction:
     def test_construction_with_custom_parameters(self):
         """Test HistogramSeries construction with custom parameters."""
         data = [HistogramData(time=1640995200, value=100.5)]
-        series = HistogramSeries(data=data, visible=False, price_scale_id="left", pane_id=1)
+        series = HistogramSeries(
+            data=data, visible=False, price_scale_id="left", pane_id=1
+        )
 
         assert series.data == data
         assert series._visible is False
@@ -76,7 +79,10 @@ class TestHistogramSeriesConstruction:
 
         series = HistogramSeries(
             data=values,
-            column_mapping={"time": "index", "value": 0},  # Use column index 0 for values
+            column_mapping={
+                "time": "index",
+                "value": 0,
+            },  # Use column index 0 for values
         )
 
         assert len(series.data) == 3

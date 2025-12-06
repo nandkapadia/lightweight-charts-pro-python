@@ -9,19 +9,20 @@ This module contains comprehensive tests for layout-related option classes:
 """
 
 import pytest
-from lightweight_charts_core.charts.options.layout_options import (
+
+from lightweight_charts_pro.charts.options.layout_options import (
     GridLineOptions,
     GridOptions,
     LayoutOptions,
     PaneOptions,
     WatermarkOptions,
 )
-from lightweight_charts_core.exceptions import TypeValidationError
-from lightweight_charts_core.type_definitions.colors import (
+from lightweight_charts_pro.exceptions import TypeValidationError
+from lightweight_charts_pro.type_definitions.colors import (
     BackgroundGradient,
     BackgroundSolid,
 )
-from lightweight_charts_core.type_definitions.enums import (
+from lightweight_charts_pro.type_definitions.enums import (
     HorzAlign,
     LineStyle,
     VertAlign,
@@ -166,7 +167,9 @@ class TestGridLineOptions:
 
     def test_custom_construction(self):
         """Test construction with custom values."""
-        options = GridLineOptions(color="#ff0000", style=LineStyle.DOTTED, visible=False)
+        options = GridLineOptions(
+            color="#ff0000", style=LineStyle.DOTTED, visible=False
+        )
 
         assert options.color == "#ff0000"
         assert options.style == LineStyle.DOTTED
@@ -194,7 +197,9 @@ class TestGridLineOptions:
 
     def test_to_dict(self):
         """Test serialization."""
-        options = GridLineOptions(color="#ff0000", style=LineStyle.DOTTED, visible=False)
+        options = GridLineOptions(
+            color="#ff0000", style=LineStyle.DOTTED, visible=False
+        )
         result = options.asdict()
 
         assert result["color"] == "#ff0000"

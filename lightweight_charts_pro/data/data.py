@@ -145,7 +145,9 @@ class Data(SerializableMixin, ABC):
 
     """
 
-    REQUIRED_COLUMNS: ClassVar[set] = {"time"}  # Required columns for DataFrame conversion
+    REQUIRED_COLUMNS: ClassVar[set] = {
+        "time"
+    }  # Required columns for DataFrame conversion
     OPTIONAL_COLUMNS: ClassVar[set] = set()  # Optional columns for DataFrame conversion
 
     time: Any  # Accept any time format, normalize in asdict()

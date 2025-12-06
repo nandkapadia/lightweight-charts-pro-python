@@ -14,7 +14,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
 
-from lightweight_charts_core.utils.serialization import (
+from lightweight_charts_pro.utils.serialization import (
     DEFAULT_CONFIG,
     SerializableMixin,
     SerializationConfig,
@@ -24,8 +24,8 @@ from lightweight_charts_core.utils.serialization import (
 )
 
 
-class TestEnum(Enum):
-    """Test enum for serialization tests."""
+class SampleEnum(Enum):
+    """Sample enum for serialization tests."""
 
     VALUE_ONE = "value1"
     VALUE_TWO = "value2"
@@ -125,7 +125,7 @@ class TestSerializableMixin:
 
         @dataclass
         class EnumData(SerializableMixin):
-            status: TestEnum = TestEnum.VALUE_ONE
+            status: SampleEnum = SampleEnum.VALUE_ONE
 
             def asdict(self) -> dict[str, Any]:
                 return dict(self._serialize_to_dict())
@@ -395,7 +395,7 @@ class TestSerializationIntegration:
             bool_val: bool = True
             none_val: str = None
             empty_val: str = ""
-            enum_val: TestEnum = TestEnum.VALUE_TWO
+            enum_val: SampleEnum = SampleEnum.VALUE_TWO
             nan_val: float = math.nan
 
             def asdict(self) -> dict[str, Any]:
@@ -450,7 +450,7 @@ class TestSerializationIntegration:
 
         @dataclass
         class Inner(SerializableMixin):
-            status: TestEnum = TestEnum.VALUE_ONE
+            status: SampleEnum = SampleEnum.VALUE_ONE
 
             def asdict(self) -> dict[str, Any]:
                 return dict(self._serialize_to_dict())
@@ -458,7 +458,7 @@ class TestSerializationIntegration:
         @dataclass
         class Outer(SerializableMixin):
             inner: Inner = field(default_factory=Inner)
-            outer_status: TestEnum = TestEnum.VALUE_TWO
+            outer_status: SampleEnum = SampleEnum.VALUE_TWO
 
             def asdict(self) -> dict[str, Any]:
                 return dict(self._serialize_to_dict())

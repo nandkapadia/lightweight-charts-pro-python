@@ -43,10 +43,7 @@ from typing import ClassVar
 # (None in this module)
 # Local Imports
 from lightweight_charts_pro.data.data import Data
-from lightweight_charts_pro.exceptions import (
-    RequiredFieldError,
-    ValueValidationError,
-)
+from lightweight_charts_pro.exceptions import RequiredFieldError, ValueValidationError
 
 
 @dataclass

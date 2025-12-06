@@ -4,7 +4,7 @@ This module tests the SyncOptions class functionality including
 synchronization configuration, method chaining, and edge cases.
 """
 
-from lightweight_charts_core.charts.options.sync_options import SyncOptions
+from lightweight_charts_pro.charts.options.sync_options import SyncOptions
 
 
 class TestSyncOptionsInitialization:
@@ -223,7 +223,10 @@ class TestSyncOptionsMethodChaining:
         sync_options = SyncOptions()
 
         result = (
-            sync_options.enable_all().disable_crosshair().enable_crosshair().disable_time_range()
+            sync_options.enable_all()
+            .disable_crosshair()
+            .enable_crosshair()
+            .disable_time_range()
         )
 
         assert result is sync_options
@@ -236,7 +239,10 @@ class TestSyncOptionsMethodChaining:
         sync_options = SyncOptions()
 
         result = (
-            sync_options.enable_crosshair().enable_time_range().disable_all().enable_time_range()
+            sync_options.enable_crosshair()
+            .enable_time_range()
+            .disable_all()
+            .enable_time_range()
         )
 
         assert result is sync_options
@@ -279,11 +285,15 @@ class TestSyncOptionsEdgeCases:
 
         # Test enabling when all are False
         sync_options.enable_all()
-        assert all([sync_options.enabled, sync_options.crosshair, sync_options.time_range])
+        assert all(
+            [sync_options.enabled, sync_options.crosshair, sync_options.time_range]
+        )
 
         # Test disabling when all are True
         sync_options.disable_all()
-        assert not any([sync_options.enabled, sync_options.crosshair, sync_options.time_range])
+        assert not any(
+            [sync_options.enabled, sync_options.crosshair, sync_options.time_range]
+        )
 
     def test_mixed_state_transitions(self):
         """Test various state transitions."""
@@ -336,12 +346,19 @@ class TestSyncOptionsAsDict:
         )
         result = sync_options.asdict()
 
-        expected = {"enabled": True, "crosshair": True, "timeRange": True, "groupId": "test_group"}
+        expected = {
+            "enabled": True,
+            "crosshair": True,
+            "timeRange": True,
+            "groupId": "test_group",
+        }
         assert result == expected
 
     def test_asdict_partial_values(self):
         """Test asdict with partial values."""
-        sync_options = SyncOptions(enabled=True, crosshair=False, group_id="partial_group")
+        sync_options = SyncOptions(
+            enabled=True, crosshair=False, group_id="partial_group"
+        )
         result = sync_options.asdict()
 
         expected = {

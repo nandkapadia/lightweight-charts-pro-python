@@ -58,7 +58,9 @@ class RangeSwitcherOptions(Options):
 
     visible: bool = True
     ranges: list[RangeConfig] = field(default_factory=list)
-    position: Literal["top-left", "top-right", "bottom-left", "bottom-right"] = "bottom-right"
+    position: Literal["top-left", "top-right", "bottom-left", "bottom-right"] = (
+        "bottom-right"
+    )
 
 
 @dataclass

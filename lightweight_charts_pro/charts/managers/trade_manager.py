@@ -7,10 +7,7 @@ for chart trades.
 from typing import Any
 
 from lightweight_charts_pro.data.trade import TradeData
-from lightweight_charts_pro.exceptions import (
-    TypeValidationError,
-    ValueValidationError,
-)
+from lightweight_charts_pro.exceptions import TypeValidationError, ValueValidationError
 from lightweight_charts_pro.logging_config import get_logger
 
 # Initialize logger
@@ -57,7 +54,9 @@ class TradeManager:
         # Validate that all items are TradeData objects
         for trade in trades:
             if not isinstance(trade, TradeData):
-                raise ValueValidationError("trades", "all items must be TradeData objects")
+                raise ValueValidationError(
+                    "trades", "all items must be TradeData objects"
+                )
 
         # Store trades for frontend processing
         self.trades = trades

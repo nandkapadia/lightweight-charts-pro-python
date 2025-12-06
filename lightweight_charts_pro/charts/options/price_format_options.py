@@ -34,7 +34,7 @@ class PriceFormatOptions(Options):
 
     @staticmethod
     def _validate_type_static(type_value: str) -> str:
-        """Static version of type validator for decorator use."""
+        """Validate type for decorator use with static method."""
         if type_value not in {"price", "volume", "percent", "custom"}:
             raise ValueValidationError(
                 "type",
@@ -44,14 +44,14 @@ class PriceFormatOptions(Options):
 
     @staticmethod
     def _validate_precision_static(precision: int) -> int:
-        """Static version of precision validator for decorator use."""
+        """Validate precision for decorator use with static method."""
         if not isinstance(precision, int) or precision < 0:
             raise ValueValidationError("precision", "must be a non-negative integer")
         return precision
 
     @staticmethod
     def _validate_min_move_static(min_move: float) -> float:
-        """Static version of min_move validator for decorator use."""
+        """Validate min_move for decorator use with static method."""
         if not isinstance(min_move, (int, float)) or min_move <= 0:
             raise ValueValidationError("min_move", "must be a positive number")
         return min_move

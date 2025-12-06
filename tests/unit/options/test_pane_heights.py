@@ -7,7 +7,8 @@ LayoutOptions and Chart configuration.
 import time
 
 import pytest
-from lightweight_charts_core.charts import (
+
+from lightweight_charts_pro.charts import (
     AreaSeries,
     BaseChart,
     CandlestickSeries,
@@ -17,13 +18,13 @@ from lightweight_charts_core.charts import (
     LineSeries,
     PaneHeightOptions,
 )
-from lightweight_charts_core.data import (
+from lightweight_charts_pro.data import (
     AreaData,
     CandlestickData,
     HistogramData,
     LineData,
 )
-from lightweight_charts_core.exceptions import ValueValidationError
+from lightweight_charts_pro.exceptions import ValueValidationError
 
 
 class TestPaneHeightOptions:
@@ -137,7 +138,10 @@ class TestLayoutOptionsPaneHeights:
     def test_layout_options_serialization(self):
         """Test LayoutOptions serialization with pane_heights."""
         layout = LayoutOptions(
-            pane_heights={0: PaneHeightOptions(factor=2.0), 1: PaneHeightOptions(factor=1.0)},
+            pane_heights={
+                0: PaneHeightOptions(factor=2.0),
+                1: PaneHeightOptions(factor=1.0),
+            },
         )
         result = layout.asdict()
         assert "paneHeights" in result
@@ -152,7 +156,10 @@ class TestLayoutOptionsPaneHeights:
     def test_layout_options_update_pane_heights(self):
         """Test updating pane_heights after construction."""
         layout = LayoutOptions()
-        layout.pane_heights = {0: PaneHeightOptions(factor=2.0), 1: PaneHeightOptions(factor=1.0)}
+        layout.pane_heights = {
+            0: PaneHeightOptions(factor=2.0),
+            1: PaneHeightOptions(factor=1.0),
+        }
 
         result = layout.asdict()
         assert result["paneHeights"]["0"]["factor"] == 2.0
@@ -283,7 +290,9 @@ class TestChartPaneHeights:
     def test_chart_with_different_series_types(self):
         """Test Chart with different series types in different panes."""
         [LineData(time=1640995200, value=100)]
-        candlestick_data = [CandlestickData(time=1640995200, open=100, high=110, low=90, close=105)]
+        candlestick_data = [
+            CandlestickData(time=1640995200, open=100, high=110, low=90, close=105)
+        ]
         volume_data = [HistogramData(time=1640995200, value=1000)]
         area_data = [AreaData(time=1640995200, value=100)]
 
@@ -361,7 +370,10 @@ class TestPaneHeightsEdgeCases:
     def test_large_factor_values(self):
         """Test large factor values."""
         layout = LayoutOptions(
-            pane_heights={0: PaneHeightOptions(factor=10.0), 1: PaneHeightOptions(factor=0.1)},
+            pane_heights={
+                0: PaneHeightOptions(factor=10.0),
+                1: PaneHeightOptions(factor=0.1),
+            },
         )
         result = layout.asdict()
         assert result["paneHeights"]["0"]["factor"] == 10.0
@@ -370,7 +382,10 @@ class TestPaneHeightsEdgeCases:
     def test_string_pane_ids(self):
         """Test that pane IDs are converted to strings in serialization."""
         layout = LayoutOptions(
-            pane_heights={0: PaneHeightOptions(factor=2.0), 1: PaneHeightOptions(factor=1.0)},
+            pane_heights={
+                0: PaneHeightOptions(factor=2.0),
+                1: PaneHeightOptions(factor=1.0),
+            },
         )
         result = layout.asdict()
         assert "0" in result["paneHeights"]
@@ -380,7 +395,10 @@ class TestPaneHeightsEdgeCases:
     def test_negative_pane_ids(self):
         """Test negative pane IDs."""
         layout = LayoutOptions(
-            pane_heights={-1: PaneHeightOptions(factor=1.0), -2: PaneHeightOptions(factor=2.0)},
+            pane_heights={
+                -1: PaneHeightOptions(factor=1.0),
+                -2: PaneHeightOptions(factor=2.0),
+            },
         )
         result = layout.asdict()
         assert "-1" in result["paneHeights"]
@@ -441,7 +459,9 @@ class TestPaneHeightsIntegration:
             CandlestickData(time=1640995200 + i, open=100, high=110, low=90, close=105)
             for i in range(10)
         ]
-        volume_data = [HistogramData(time=1640995200 + i, value=1000 + i) for i in range(10)]
+        volume_data = [
+            HistogramData(time=1640995200 + i, value=1000 + i) for i in range(10)
+        ]
 
         chart = BaseChart(
             options=ChartOptions(
@@ -657,7 +677,10 @@ class TestPaneHeightsValidation:
         layout = LayoutOptions()
 
         # Valid pane_heights
-        layout.pane_heights = {0: PaneHeightOptions(factor=1.0), 1: PaneHeightOptions(factor=2.0)}
+        layout.pane_heights = {
+            0: PaneHeightOptions(factor=1.0),
+            1: PaneHeightOptions(factor=2.0),
+        }
         assert layout.pane_heights is not None
 
         # Invalid pane_heights (should fail during construction)
@@ -686,7 +709,9 @@ class TestPaneHeightsValidation:
         with pytest.raises(ValueValidationError):
             BaseChart(
                 options=ChartOptions(
-                    layout=LayoutOptions(pane_heights={0: PaneHeightOptions(factor=-1.0)}),
+                    layout=LayoutOptions(
+                        pane_heights={0: PaneHeightOptions(factor=-1.0)}
+                    ),
                 ),
                 series=[LineSeries(data=data, pane_id=0)],
             )

@@ -484,7 +484,9 @@ class CaseConverter:
 
         # Step 1: Select appropriate conversion function based on direction
         # This is done once at the start to avoid repeated conditionals
-        converter = CaseConverter.snake_to_camel if to_camel else CaseConverter.camel_to_snake
+        converter = (
+            CaseConverter.snake_to_camel if to_camel else CaseConverter.camel_to_snake
+        )
 
         # Step 2: Initialize result dictionary
         # We create a new dict rather than modifying the original
@@ -503,11 +505,15 @@ class CaseConverter:
                 if isinstance(value, dict):
                     # Value is a nested dictionary - recursively convert it
                     # Example: {"auto_scale": True} → {"autoScale": True}
-                    result[new_key] = CaseConverter.convert_dict_keys(value, to_camel, recursive)
+                    result[new_key] = CaseConverter.convert_dict_keys(
+                        value, to_camel, recursive
+                    )
                 elif isinstance(value, list):
                     # Value is a list - may contain dicts that need conversion
                     # Example: [{"line_color": "red"}] → [{"lineColor": "red"}]
-                    result[new_key] = CaseConverter._convert_list(value, to_camel, recursive)
+                    result[new_key] = CaseConverter._convert_list(
+                        value, to_camel, recursive
+                    )
                 else:
                     # Value is a primitive type (str, int, bool, etc.)
                     # Keep it as-is
@@ -575,7 +581,9 @@ class CaseConverter:
                 # Item is a dictionary - convert its keys recursively
                 # This ensures nested dicts within lists are also converted
                 # Example: {"line_color": "red"} → {"lineColor": "red"}
-                result.append(CaseConverter.convert_dict_keys(item, to_camel, recursive))
+                result.append(
+                    CaseConverter.convert_dict_keys(item, to_camel, recursive)
+                )
             elif isinstance(item, list) and recursive:
                 # Item is a nested list and we're in recursive mode
                 # Recursively process the nested list
@@ -591,7 +599,9 @@ class CaseConverter:
         return result
 
     @staticmethod
-    def convert_keys_shallow(data: dict[str, Any], to_camel: bool = True) -> dict[str, Any]:
+    def convert_keys_shallow(
+        data: dict[str, Any], to_camel: bool = True
+    ) -> dict[str, Any]:
         """Convert dictionary keys without recursing into nested structures.
 
         This is a convenience method equivalent to calling convert_dict_keys

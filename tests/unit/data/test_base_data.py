@@ -8,16 +8,14 @@ from datetime import datetime, timezone
 
 import pandas as pd
 import pytest
-from lightweight_charts_core.data import LineData
-from lightweight_charts_core.exceptions import (
+
+from lightweight_charts_pro.data import LineData
+from lightweight_charts_pro.exceptions import (
     ColorValidationError,
     RequiredFieldError,
     TimeValidationError,
 )
-from lightweight_charts_core.utils.data_utils import (
-    from_utc_timestamp,
-    to_utc_timestamp,
-)
+from lightweight_charts_pro.utils.data_utils import from_utc_timestamp, to_utc_timestamp
 
 
 class TestSingleValueData:

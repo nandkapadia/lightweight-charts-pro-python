@@ -196,7 +196,9 @@ class AreaSeries(Series):
         # Initialize area-specific properties with default values
         self._line_options = LineOptions()  # Line styling configuration
         self._top_color = COLOR_BLUE_MATERIAL  # Top area color (blue)
-        self._bottom_color = AREA_BOTTOM_COLOR_DEFAULT  # Bottom area color (transparent)
+        self._bottom_color = (
+            AREA_BOTTOM_COLOR_DEFAULT  # Bottom area color (transparent)
+        )
         self._relative_gradient = False  # Absolute gradient positioning
         self._invert_filled_area = False  # Normal area filling direction
 

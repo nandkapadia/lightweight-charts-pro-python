@@ -18,7 +18,7 @@ from types import SimpleNamespace
 import pytest
 
 # Local Imports
-from lightweight_charts_core.charts.options.base_options import Options
+from lightweight_charts_pro.charts.options.base_options import Options
 
 # =============================================================================
 # Test Data Classes
@@ -86,7 +86,9 @@ class TestAnalyzeTypeForOptions:
         options = SimpleOptions()
 
         # Test with direct Options type
-        contains_options, options_class, is_dict = options._analyze_type_for_options(SimpleOptions)
+        contains_options, options_class, is_dict = options._analyze_type_for_options(
+            SimpleOptions
+        )
 
         assert contains_options is True
         assert options_class == SimpleOptions
@@ -97,7 +99,9 @@ class TestAnalyzeTypeForOptions:
         options = SimpleOptions()
 
         # Test with simple type (no __origin__)
-        contains_options, options_class, is_dict = options._analyze_type_for_options(str)
+        contains_options, options_class, is_dict = options._analyze_type_for_options(
+            str
+        )
 
         assert contains_options is False
         assert options_class is None
@@ -123,7 +127,9 @@ class TestAnalyzeDictTypes:
         assert field_type is not None
 
         # Analyze the Dict[str, SimpleOptions] type
-        contains_options, options_class, is_dict = options._analyze_type_for_options(field_type)
+        contains_options, options_class, is_dict = options._analyze_type_for_options(
+            field_type
+        )
 
         assert contains_options is True
         assert options_class == SimpleOptions
@@ -145,7 +151,9 @@ class TestAnalyzeDictTypes:
         assert field_type is not None
 
         # Analyze the Dict[str, str] type (non-Options value type)
-        contains_options, options_class, is_dict = options._analyze_type_for_options(field_type)
+        contains_options, options_class, is_dict = options._analyze_type_for_options(
+            field_type
+        )
 
         assert contains_options is False
         assert options_class is None
@@ -161,7 +169,9 @@ class TestAnalyzeDictTypes:
         mock_dict_type.__args__ = (str,)  # Only one type arg
 
         # Analyze this malformed dict type
-        contains_options, options_class, is_dict = options._analyze_type_for_options(mock_dict_type)
+        contains_options, options_class, is_dict = options._analyze_type_for_options(
+            mock_dict_type
+        )
 
         # Should return False, None, False for malformed Dict
         assert contains_options is False
@@ -178,7 +188,9 @@ class TestAnalyzeDictTypes:
         mock_dict_type.__args__ = ()  # Empty args
 
         # Analyze this dict type with no args
-        contains_options, options_class, is_dict = options._analyze_type_for_options(mock_dict_type)
+        contains_options, options_class, is_dict = options._analyze_type_for_options(
+            mock_dict_type
+        )
 
         assert contains_options is False
         assert options_class is None
@@ -204,7 +216,9 @@ class TestAnalyzeListTypes:
         assert field_type is not None
 
         # Analyze the List[SimpleOptions] type
-        contains_options, options_class, is_dict = options._analyze_type_for_options(field_type)
+        contains_options, options_class, is_dict = options._analyze_type_for_options(
+            field_type
+        )
 
         assert contains_options is True
         assert options_class == SimpleOptions
@@ -230,7 +244,9 @@ class TestAnalyzeUnionTypes:
         assert field_type is not None
 
         # Analyze the Optional[SimpleOptions] type
-        contains_options, options_class, is_dict = options._analyze_type_for_options(field_type)
+        contains_options, options_class, is_dict = options._analyze_type_for_options(
+            field_type
+        )
 
         assert contains_options is True
         assert options_class == SimpleOptions
@@ -252,7 +268,9 @@ class TestAnalyzeUnionTypes:
         assert field_type is not None
 
         # Analyze the Optional[Dict[str, SimpleOptions]] type
-        contains_options, options_class, is_dict = options._analyze_type_for_options(field_type)
+        contains_options, options_class, is_dict = options._analyze_type_for_options(
+            field_type
+        )
 
         assert contains_options is True
         assert options_class == SimpleOptions

@@ -79,6 +79,7 @@ class BandData(Data):
     lower_fill_color: str | None = None
 
     def __post_init__(self):
+        """Validate and normalize band data after initialization."""
         # Normalize time
         super().__post_init__()  # Call parent's __post_init__
         # Handle NaN in value

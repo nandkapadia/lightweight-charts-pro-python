@@ -17,11 +17,12 @@ import re
 from typing import Any, ClassVar
 
 import pytest
-from lightweight_charts_core.charts.series import LineSeries
-from lightweight_charts_core.data import LineData
-from lightweight_charts_core.exceptions import ColorValidationError
-from lightweight_charts_core.type_definitions.enums import LineStyle
-from lightweight_charts_core.utils.data_utils import snake_to_camel
+
+from lightweight_charts_pro.charts.series import LineSeries
+from lightweight_charts_pro.data import LineData
+from lightweight_charts_pro.exceptions import ColorValidationError
+from lightweight_charts_pro.type_definitions.enums import LineStyle
+from lightweight_charts_pro.utils.data_utils import snake_to_camel
 
 
 class PropertyTestCase:
@@ -43,7 +44,7 @@ class PropertyTestCase:
         property_name: str,
         expected_default: Any,
     ):
-        """Helper to test default values."""
+        """Test default values."""
         series = series_class(data=sample_data)
         actual_value = getattr(series, property_name)
         assert (
@@ -57,7 +58,7 @@ class PropertyTestCase:
         property_name: str,
         test_value: Any,
     ):
-        """Helper to test method chaining."""
+        """Test method chaining."""
         series = series_class(data=sample_data)
         setter_method = getattr(series, f"set_{property_name}")
         result = setter_method(test_value)
@@ -73,7 +74,7 @@ class PropertyTestCase:
         test_value: Any,
         expected_camel_case: str,
     ):
-        """Helper to test camelCase serialization."""
+        """Test camelCase serialization."""
         series = series_class(data=sample_data)
         setattr(series, property_name, test_value)
         config = series.asdict()
@@ -92,7 +93,7 @@ class PropertyTestCase:
         invalid_value: Any,
         expected_error: type[Exception],
     ):
-        """Helper to test validation."""
+        """Test validation."""
         series = series_class(data=sample_data)
         with pytest.raises(expected_error):
             setattr(series, property_name, invalid_value)
@@ -491,8 +492,8 @@ class TestCustomPropertyFiltering:
 
     def test_markers_is_top_level(self, sample_data):
         """Test markers is at top level, not in options."""
-        from lightweight_charts_core.data.marker import BarMarker
-        from lightweight_charts_core.type_definitions.enums import (
+        from lightweight_charts_pro.data.marker import BarMarker
+        from lightweight_charts_pro.type_definitions.enums import (
             MarkerPosition,
             MarkerShape,
         )

@@ -9,15 +9,16 @@ This module contains comprehensive tests for interaction-related option classes:
 """
 
 import pytest
-from lightweight_charts_core.charts.options.interaction_options import (
+
+from lightweight_charts_pro.charts.options.interaction_options import (
     CrosshairLineOptions,
     CrosshairOptions,
     CrosshairSyncOptions,
     KineticScrollOptions,
     TrackingModeOptions,
 )
-from lightweight_charts_core.exceptions import TypeValidationError
-from lightweight_charts_core.type_definitions.enums import CrosshairMode, LineStyle
+from lightweight_charts_pro.exceptions import TypeValidationError
+from lightweight_charts_pro.type_definitions.enums import CrosshairMode, LineStyle
 
 
 class TestCrosshairOptions:
@@ -315,7 +316,9 @@ class TestInteractionOptionsIntegration:
         assert result["horzLine"]["color"] == "#00ff00"
         assert result["horzLine"]["width"] == 3
         assert result["horzLine"]["style"] == 1  # LineStyle.DOTTED.value
-        assert result["horzLine"]["labelVisible"] is False  # False values are now included
+        assert (
+            result["horzLine"]["labelVisible"] is False
+        )  # False values are now included
 
     def test_kinetic_scroll_with_tracking_mode(self):
         """Test KineticScrollOptions with TrackingModeOptions integration."""
@@ -331,7 +334,9 @@ class TestInteractionOptionsIntegration:
 
     def test_crosshair_sync_with_multiple_charts(self):
         """Test CrosshairSyncOptions for multiple chart synchronization."""
-        sync_options = CrosshairSyncOptions(group_id=123, suppress_series_animations=True)
+        sync_options = CrosshairSyncOptions(
+            group_id=123, suppress_series_animations=True
+        )
         result = sync_options.asdict()
 
         assert result["groupId"] == 123

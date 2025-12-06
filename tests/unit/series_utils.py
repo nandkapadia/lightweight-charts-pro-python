@@ -2,7 +2,7 @@
 
 
 def _get_enum_value(value, enum_class):
-    """Helper function to get enum value, handling both enum objects and strings.
+    """Get enum value, handling both enum objects and strings.
 
     This function safely converts enum values to their string representations,
     handling cases where the value might already be a string or an enum object.
