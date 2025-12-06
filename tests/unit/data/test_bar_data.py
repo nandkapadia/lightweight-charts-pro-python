@@ -296,18 +296,12 @@ class TestBarDataSerialization:
         assert "color" not in result  # empty string should be omitted
 
     def test_to_dict_nan_handling(self):
-        """Test to_dict with NaN values."""
-        data = BarData(
-            time=1640995200, open=float("nan"), high=110.0, low=95.0, close=105.0
-        )
-
-        result = data.asdict()
-
-        assert result["time"] == 1640995200
-        assert result["open"] == 0.0  # NaN should be converted to 0.0
-        assert result["high"] == 110.0
-        assert result["low"] == 95.0
-        assert result["close"] == 105.0
+        """Test that NaN values raise error."""
+        # NaN should raise ValueValidationError
+        with pytest.raises(ValueValidationError):
+            BarData(
+                time=1640995200, open=float("nan"), high=110.0, low=95.0, close=105.0
+            )
 
 
 class TestBarDataInheritance:
@@ -342,20 +336,16 @@ class TestBarDataEdgeCases:
     """Test BarData edge cases."""
 
     def test_nan_values_handling(self):
-        """Test handling of NaN values."""
-        data = BarData(
-            time=1640995200,
-            open=float("nan"),
-            high=float("nan"),
-            low=float("nan"),
-            close=float("nan"),
-        )
-
-        # NaN values should be converted to 0.0
-        assert data.open == 0.0
-        assert data.high == 0.0
-        assert data.low == 0.0
-        assert data.close == 0.0
+        """Test handling of NaN values - should raise error."""
+        # NaN values should raise ValueValidationError
+        with pytest.raises(ValueValidationError):
+            BarData(
+                time=1640995200,
+                open=float("nan"),
+                high=float("nan"),
+                low=float("nan"),
+                close=float("nan"),
+            )
 
     def test_zero_values(self):
         """Test handling of zero values."""

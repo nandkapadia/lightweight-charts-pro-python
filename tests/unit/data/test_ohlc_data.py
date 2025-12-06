@@ -108,18 +108,17 @@ class TestOhlcData:
 
     def test_nan_handling(self):
         """Test handling of NaN values."""
-        # NaN values should be converted to 0.0
-        data = OhlcData(
-            time=1640995200,
-            open=float("nan"),
-            high=float("nan"),
-            low=float("nan"),
-            close=float("nan"),
-        )
-        assert data.open == 0.0
-        assert data.high == 0.0
-        assert data.low == 0.0
-        assert data.close == 0.0
+        # NaN values should raise ValueValidationError (not be coerced to 0)
+        # This prevents silent data corruption in backtests/PnL calculations
+        with pytest.raises(ValueValidationError) as exc_info:
+            OhlcData(
+                time=1640995200,
+                open=float("nan"),
+                high=float("nan"),
+                low=float("nan"),
+                close=float("nan"),
+            )
+        assert "NaN is not allowed" in str(exc_info.value)
 
         # Infinity values are not handled by the class (they remain as inf)
         data = OhlcData(

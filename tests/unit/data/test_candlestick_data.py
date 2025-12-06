@@ -322,21 +322,16 @@ class TestCandlestickDataSerialization:
         assert "wick_color" not in result
 
     def test_to_dict_with_nan_values(self):
-        """Test to_dict with NaN values converted to 0.0."""
-        data = CandlestickData(
-            time=1640995200,
-            open=float("nan"),
-            high=105.0,
-            low=98.0,
-            close=103.0,
-        )
-
-        result = data.asdict()
-
-        assert result["open"] == 0.0
-        assert result["high"] == 105.0
-        assert result["low"] == 98.0
-        assert result["close"] == 103.0
+        """Test that NaN values raise error."""
+        # NaN values should raise ValueValidationError
+        with pytest.raises(ValueValidationError):
+            CandlestickData(
+                time=1640995200,
+                open=float("nan"),
+                high=105.0,
+                low=98.0,
+                close=103.0,
+            )
 
 
 class TestCandlestickDataInheritance:
@@ -379,16 +374,16 @@ class TestCandlestickDataEdgeCases:
     """Test CandlestickData edge cases."""
 
     def test_construction_with_nan_value(self):
-        """Test construction with NaN value."""
-        data = CandlestickData(
-            time=1640995200,
-            open=float("nan"),
-            high=105.0,
-            low=98.0,
-            close=103.0,
-        )
-
-        assert data.open == 0.0
+        """Test construction with NaN value - should raise error."""
+        # NaN values should raise ValueValidationError
+        with pytest.raises(ValueValidationError):
+            CandlestickData(
+                time=1640995200,
+                open=float("nan"),
+                high=105.0,
+                low=98.0,
+                close=103.0,
+            )
 
     def test_construction_with_infinity_value(self):
         """Test construction with infinity value raises validation error."""

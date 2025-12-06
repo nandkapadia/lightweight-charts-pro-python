@@ -243,10 +243,14 @@ class BaseChart:
         """Clear annotations from the chart.
 
         Args:
-            layer_name: Name of the layer to clear, or None for all.
+            layer_name: Name of the layer to clear, or None to clear all layers.
 
         Returns:
             Self for method chaining.
+
+        Note:
+            When layer_name is None, ALL annotation layers are cleared.
+            When layer_name is specified, only that specific layer is cleared.
 
         """
         if layer_name is not None and (
@@ -255,9 +259,38 @@ class BaseChart:
             raise ValueValidationError(
                 "layer_name", "must be None or a non-empty string"
             )
-        if layer_name is not None:
+
+        # Clear all layers when layer_name is None
+        if layer_name is None:
+            self.annotation_manager.clear_all_layers()
+        else:
+            # Clear specific layer
             self.annotation_manager.clear_layer(layer_name)
+
         return self
+
+    def reset_annotations(self) -> "BaseChart":
+        """Reset all annotations by clearing all layers.
+
+        This is a convenience method that explicitly clears all annotation layers,
+        making it clear that this is a complete reset operation. It's equivalent
+        to calling clear_annotations(None).
+
+        Returns:
+            Self for method chaining.
+
+        Example:
+            ```python
+            # Reset all annotations before adding new ones
+            chart.reset_annotations()
+            chart.add_annotation(new_annotation, "signals")
+            ```
+
+        See Also:
+            clear_annotations: Clear specific layer or all layers.
+
+        """
+        return self.clear_annotations(None)
 
     def add_overlay_price_scale(
         self, scale_id: str, options: "PriceScaleOptions"
