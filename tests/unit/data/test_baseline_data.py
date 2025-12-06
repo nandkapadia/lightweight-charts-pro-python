@@ -449,6 +449,7 @@ class TestBaselineDataInheritance:
             "bottom_fill_color1",
             "bottom_fill_color2",
             "bottom_line_color",
+            "_cached_timestamp",
         }
         assert field_names == expected_fields
 

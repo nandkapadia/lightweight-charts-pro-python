@@ -42,7 +42,7 @@ License: MIT
 """
 
 from abc import ABC
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, ClassVar
 
 from lightweight_charts_pro.type_definitions import ColumnNames
@@ -151,6 +151,8 @@ class Data(SerializableMixin, ABC):
     OPTIONAL_COLUMNS: ClassVar[set] = set()  # Optional columns for DataFrame conversion
 
     time: Any  # Accept any time format, normalize in asdict()
+    # Cache normalized timestamp for performance (init=False so not included in __init__)
+    _cached_timestamp: int | None = field(default=None, init=False, repr=False)
 
     @classproperty
     def required_columns(self):  # pylint: disable=no-self-argument
@@ -224,10 +226,15 @@ class Data(SerializableMixin, ABC):
         modify time values after construction. Normalization happens during
         serialization in asdict().
 
+        The _cached_timestamp attribute is initialized to None and will be populated
+        on first asdict() call for performance optimization.
+
         Subclasses can override this method to add validation or processing.
         """
         # Time normalization happens in asdict() to allow post-construction modification
         # Subclasses may override this for additional processing
+        # Initialize cache (needs to be done here for dataclass field that has default)
+        object.__setattr__(self, "_cached_timestamp", None)
 
     def asdict(self) -> dict[str, Any]:
         """Serialize the data class to a dict with camelCase keys for frontend.
@@ -271,20 +278,48 @@ class Data(SerializableMixin, ABC):
             ```
 
         Note:
-            - Time is normalized fresh each call (no caching)
+            - Time normalization is cached after first call for performance
+            - Cache is invalidated if time attribute is modified
             - NaN values are converted to 0.0
             - NumPy scalar types are converted to Python native types
             - Enum values are extracted using their .value property
             - Time column uses standardized ColumnNames.TIME.value
 
+        Performance:
+            For large datasets with repeated asdict() calls (e.g., during chart
+            config serialization), timestamp caching provides significant speedup
+            by avoiding repeated pandas.to_datetime() parsing.
+
         """
-        # Normalize time during serialization (not cached in __post_init__)
-        normalized_time = normalize_time(self.time)
+        # Use cached timestamp if available, otherwise normalize and cache
+        # This provides significant performance improvement for repeated serialization
+        if self._cached_timestamp is None:
+            self._cached_timestamp = normalize_time(self.time)
+        normalized_time = self._cached_timestamp
 
         # Use the inherited serialization from SerializableMixin
         result = dict(self._serialize_to_dict())
+
+        # Remove internal cache field from serialization
+        result.pop("CachedTimestamp", None)  # Remove camelCase version (capital C)
+        result.pop("cachedTimestamp", None)  # Try lowercase version too
+        result.pop("_cached_timestamp", None)  # Remove snake_case version if present
 
         # Override the time field with normalized value
         result[ColumnNames.TIME.value] = normalized_time
 
         return result
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        """Override attribute setter to invalidate timestamp cache when time changes.
+
+        Args:
+            name: Name of the attribute being set.
+            value: Value to set.
+
+        """
+        # Invalidate cache if time is being modified
+        if name == "time" and hasattr(self, "_cached_timestamp"):
+            object.__setattr__(self, "_cached_timestamp", None)
+        # Call parent setattr
+        object.__setattr__(self, name, value)

@@ -61,7 +61,7 @@ from lightweight_charts_pro.exceptions import (
     ExitTimeAfterEntryTimeError,
     ValueValidationError,
 )
-from lightweight_charts_pro.utils.data_utils import to_utc_timestamp
+from lightweight_charts_pro.utils.data_utils import to_timestamp
 from lightweight_charts_pro.utils.serialization import SerializableMixin
 
 
@@ -135,8 +135,8 @@ class TradeData(SerializableMixin):
         self.is_profitable = bool(self.is_profitable)
 
         # Step 3: Validate that exit time is after entry time
-        entry_timestamp = to_utc_timestamp(self.entry_time)
-        exit_timestamp = to_utc_timestamp(self.exit_time)
+        entry_timestamp = to_timestamp(self.entry_time)
+        exit_timestamp = to_timestamp(self.exit_time)
 
         # This is critical for trade logic - a trade cannot exit before it enters
         if isinstance(entry_timestamp, (int, float)) and isinstance(
@@ -225,22 +225,45 @@ class TradeData(SerializableMixin):
             Dict[str, Any]: Serialized trade with camelCase keys ready for
                 frontend consumption.
 
+        Note:
+            Core trade fields (entryTime, exitTime, entryPrice, exitPrice, pnl, etc.)
+            are protected and cannot be overridden by additional_data. Additional data
+            is merged first, then core fields are set to ensure data integrity.
+
         """
-        entry_timestamp = to_utc_timestamp(self.entry_time)
-        exit_timestamp = to_utc_timestamp(self.exit_time)
+        entry_timestamp = to_timestamp(self.entry_time)
+        exit_timestamp = to_timestamp(self.exit_time)
 
-        trade_dict = {
-            "entryTime": entry_timestamp,
-            "entryPrice": self.entry_price,
-            "exitTime": exit_timestamp,
-            "exitPrice": self.exit_price,
-            "isProfitable": self.is_profitable,
-            "id": self.id,
-            "pnl": self.pnl,
-            "pnlPercentage": self.pnl_percentage,
-        }
-
+        # Start with additional_data (if any)
+        trade_dict = {}
         if self.additional_data:
-            trade_dict.update(self.additional_data)
+            # Only include additional_data fields that don't conflict with core fields
+            reserved_keys = {
+                "entryTime",
+                "entryPrice",
+                "exitTime",
+                "exitPrice",
+                "isProfitable",
+                "id",
+                "pnl",
+                "pnlPercentage",
+            }
+            for key, value in self.additional_data.items():
+                if key not in reserved_keys:
+                    trade_dict[key] = value
+
+        # Set core fields last to ensure they cannot be overridden
+        trade_dict.update(
+            {
+                "entryTime": entry_timestamp,
+                "entryPrice": self.entry_price,
+                "exitTime": exit_timestamp,
+                "exitPrice": self.exit_price,
+                "isProfitable": self.is_profitable,
+                "id": self.id,
+                "pnl": self.pnl,
+                "pnlPercentage": self.pnl_percentage,
+            }
+        )
 
         return trade_dict

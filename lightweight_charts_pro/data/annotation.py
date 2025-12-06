@@ -48,7 +48,7 @@ from lightweight_charts_pro.type_definitions.enums import (
     AnnotationPosition,
     AnnotationType,
 )
-from lightweight_charts_pro.utils.data_utils import from_utc_timestamp, to_utc_timestamp
+from lightweight_charts_pro.utils.data_utils import from_timestamp, to_timestamp
 
 # Use a null logger by default - can be configured by the consuming package
 logger = logging.getLogger(__name__)
@@ -195,7 +195,7 @@ class Annotation:
             int: UNIX timestamp as integer (seconds).
 
         """
-        return to_utc_timestamp(self.time)
+        return to_timestamp(self.time)
 
     @property
     def datetime_value(self) -> pd.Timestamp:
@@ -206,7 +206,7 @@ class Annotation:
                 annotation time.
 
         """
-        return pd.Timestamp(from_utc_timestamp(to_utc_timestamp(self.time)))
+        return pd.Timestamp(from_timestamp(to_timestamp(self.time)))
 
     def asdict(self) -> dict[str, Any]:
         """Convert annotation to dictionary for serialization.
@@ -217,7 +217,7 @@ class Annotation:
 
         """
         return {
-            ColumnNames.TIME: to_utc_timestamp(self.time),
+            ColumnNames.TIME: to_timestamp(self.time),
             "price": self.price,
             "text": self.text,
             "type": self.annotation_type.value,
@@ -304,8 +304,8 @@ class AnnotationLayer:
         end_time: pd.Timestamp | datetime | str | int | float,
     ) -> list[Annotation]:
         """Filter annotations by time range."""
-        start_ts = to_utc_timestamp(start_time)
-        end_ts = to_utc_timestamp(end_time)
+        start_ts = to_timestamp(start_time)
+        end_ts = to_timestamp(end_time)
 
         return [
             annotation

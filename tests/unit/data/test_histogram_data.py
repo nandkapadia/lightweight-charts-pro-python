@@ -219,7 +219,7 @@ class TestHistogramDataInheritance:
     def test_dataclass_fields(self):
         """Test that HistogramData has correct dataclass fields."""
         field_names = {field.name for field in fields(HistogramData)}
-        expected_fields = {"time", "value", "color"}
+        expected_fields = {"time", "value", "color", "_cached_timestamp"}
         assert field_names == expected_fields
 
 

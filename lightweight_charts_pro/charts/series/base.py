@@ -270,12 +270,14 @@ class Series(ABC):  # noqa: B024
             ValueError: If time column is not found and no DatetimeIndex is available
 
         Note:
-            This method does not modify the input column_mapping dict.
-            A new dict with adjusted mappings is returned.
+            This method does not modify the input column_mapping dict or DataFrame.
+            Copies are made to ensure the caller's data remains unchanged.
 
         """
-        # Copy column_mapping to avoid mutating caller's dict
+        # Copy both inputs to avoid mutating caller's data
         column_mapping = column_mapping.copy()
+        data_frame = data_frame.copy()
+
         # Handle time column mapping first (special case for DatetimeIndex)
         if "time" in column_mapping:
             time_col = column_mapping["time"]
