@@ -7,8 +7,9 @@ This module contains comprehensive tests for OHLCV data classes:
 from datetime import datetime, timedelta
 
 import pytest
-from lightweight_charts_core.data.ohlcv_data import OhlcvData
-from lightweight_charts_core.exceptions import ValueValidationError
+
+from lightweight_charts_pro.data.ohlcv_data import OhlcvData
+from lightweight_charts_pro.exceptions import RequiredFieldError, ValueValidationError
 
 
 class TestOhlcvData:
@@ -36,7 +37,9 @@ class TestOhlcvData:
     def test_construction_with_zero_volume(self):
         """Test construction with zero volume."""
         timestamp = int(datetime.now().timestamp())
-        data = OhlcvData(time=timestamp, open=100.0, high=110.0, low=95.0, close=105.0, volume=0.0)
+        data = OhlcvData(
+            time=timestamp, open=100.0, high=110.0, low=95.0, close=105.0, volume=0.0
+        )
 
         assert data.volume == 0.0
 
@@ -74,35 +77,47 @@ class TestOhlcvData:
         timestamp = int(datetime.now().timestamp())
 
         with pytest.raises(ValueValidationError):
-            OhlcvData(time=timestamp, open=100.0, high=110.0, low=95.0, close=105.0, volume=-100.0)
+            OhlcvData(
+                time=timestamp,
+                open=100.0,
+                high=110.0,
+                low=95.0,
+                close=105.0,
+                volume=-100.0,
+            )
 
     def test_validation_nan_volume(self):
         """Test validation of NaN volume."""
         timestamp = int(datetime.now().timestamp())
 
-        # NaN should be converted to 0.0
-        data = OhlcvData(
-            time=timestamp,
-            open=100.0,
-            high=110.0,
-            low=95.0,
-            close=105.0,
-            volume=float("nan"),
-        )
+        # NaN should raise ValueValidationError (not be coerced to 0)
+        # This prevents silent data corruption and misleading "zero volume" bars
+        with pytest.raises(ValueValidationError) as exc_info:
+            OhlcvData(
+                time=timestamp,
+                open=100.0,
+                high=110.0,
+                low=95.0,
+                close=105.0,
+                volume=float("nan"),
+            )
 
-        assert data.volume == 0.0
+        assert "NaN is not allowed" in str(exc_info.value)
 
     def test_validation_none_volume(self):
         """Test validation of None volume."""
         timestamp = int(datetime.now().timestamp())
 
-        # The validation order in the parent class will catch None values first
-        # So we need to test for the parent class error message
-        with pytest.raises(
-            TypeError,
-            match="'<' not supported between instances of 'NoneType' and 'int'",
-        ):
-            OhlcvData(time=timestamp, open=100.0, high=110.0, low=95.0, close=105.0, volume=None)
+        # None should raise RequiredFieldError
+        with pytest.raises(RequiredFieldError):
+            OhlcvData(
+                time=timestamp,
+                open=100.0,
+                high=110.0,
+                low=95.0,
+                close=105.0,
+                volume=None,
+            )
 
     def test_validation_inherited_ohlc_constraints(self):
         """Test that inherited OHLC validation constraints are enforced."""
@@ -131,23 +146,22 @@ class TestOhlcvData:
             )
 
     def test_validation_nan_ohlc_values(self):
-        """Test that NaN OHLC values are converted to 0.0."""
+        """Test that NaN OHLC values raise ValueValidationError."""
         timestamp = int(datetime.now().timestamp())
 
-        data = OhlcvData(
-            time=timestamp,
-            open=float("nan"),
-            high=float("nan"),
-            low=float("nan"),
-            close=float("nan"),
-            volume=1000.0,
-        )
+        # NaN should raise ValueValidationError (not be coerced to 0)
+        # This prevents silent data corruption in backtests/PnL calculations
+        with pytest.raises(ValueValidationError) as exc_info:
+            OhlcvData(
+                time=timestamp,
+                open=float("nan"),
+                high=float("nan"),
+                low=float("nan"),
+                close=float("nan"),
+                volume=1000.0,
+            )
 
-        assert data.open == 0.0
-        assert data.high == 0.0
-        assert data.low == 0.0
-        assert data.close == 0.0
-        assert data.volume == 1000.0
+        assert "NaN is not allowed" in str(exc_info.value)
 
     def test_validation_none_ohlc_values(self):
         """Test that None OHLC values raise TypeError due to comparison."""
@@ -158,31 +172,61 @@ class TestOhlcvData:
             TypeError,
             match="'<' not supported between instances of 'NoneType' and 'int'",
         ):
-            OhlcvData(time=timestamp, open=None, high=110.0, low=95.0, close=105.0, volume=1000.0)
-
-        with pytest.raises(
-            TypeError,
-            match="'<' not supported between instances of 'NoneType' and 'float'",
-        ):
-            OhlcvData(time=timestamp, open=100.0, high=None, low=95.0, close=105.0, volume=1000.0)
-
-        with pytest.raises(
-            TypeError,
-            match="'<' not supported between instances of 'float' and 'NoneType'",
-        ):
-            OhlcvData(time=timestamp, open=100.0, high=110.0, low=None, close=105.0, volume=1000.0)
+            OhlcvData(
+                time=timestamp,
+                open=None,
+                high=110.0,
+                low=95.0,
+                close=105.0,
+                volume=1000.0,
+            )
 
         with pytest.raises(
             TypeError,
             match="'<' not supported between instances of 'NoneType' and 'int'",
         ):
-            OhlcvData(time=timestamp, open=100.0, high=110.0, low=95.0, close=None, volume=1000.0)
+            OhlcvData(
+                time=timestamp,
+                open=100.0,
+                high=None,
+                low=95.0,
+                close=105.0,
+                volume=1000.0,
+            )
+
+        with pytest.raises(
+            TypeError,
+            match="'<' not supported between instances of 'NoneType' and 'int'",
+        ):
+            OhlcvData(
+                time=timestamp,
+                open=100.0,
+                high=110.0,
+                low=None,
+                close=105.0,
+                volume=1000.0,
+            )
+
+        with pytest.raises(
+            TypeError,
+            match="'<' not supported between instances of 'NoneType' and 'int'",
+        ):
+            OhlcvData(
+                time=timestamp,
+                open=100.0,
+                high=110.0,
+                low=95.0,
+                close=None,
+                volume=1000.0,
+            )
 
     def test_time_normalization(self):
         """Test that time is properly normalized."""
         # Test with datetime object
         dt = datetime.now()
-        data = OhlcvData(time=dt, open=100.0, high=110.0, low=95.0, close=105.0, volume=1000.0)
+        data = OhlcvData(
+            time=dt, open=100.0, high=110.0, low=95.0, close=105.0, volume=1000.0
+        )
 
         # Time stored as datetime object
         assert data.time == dt
@@ -249,21 +293,30 @@ class TestOhlcvData:
         assert result["volume"] == 1000.0
 
     def test_to_dict_with_nan_values(self):
-        """Test serialization with NaN values converted to 0.0."""
+        """Test that NaN values raise ValueValidationError."""
         timestamp = 1640995200
-        data = OhlcvData(
-            time=timestamp,
-            open=float("nan"),
-            high=110.0,
-            low=95.0,
-            close=105.0,
-            volume=float("nan"),
-        )
 
-        result = data.asdict()
+        # NaN in OHLC should raise error
+        with pytest.raises(ValueValidationError):
+            OhlcvData(
+                time=timestamp,
+                open=float("nan"),
+                high=110.0,
+                low=95.0,
+                close=105.0,
+                volume=1000.0,
+            )
 
-        assert result["open"] == 0.0
-        assert result["volume"] == 0.0
+        # NaN in volume should also raise error
+        with pytest.raises(ValueValidationError):
+            OhlcvData(
+                time=timestamp,
+                open=100.0,
+                high=110.0,
+                low=95.0,
+                close=105.0,
+                volume=float("nan"),
+            )
 
     def test_required_columns_property(self):
         """Test required_columns class property."""
@@ -361,7 +414,9 @@ class TestOhlcvData:
     def test_edge_case_zero_ohlc_values(self):
         """Test edge case with zero OHLC values."""
         timestamp = 1640995200
-        data = OhlcvData(time=timestamp, open=0.0, high=0.0, low=0.0, close=0.0, volume=1000.0)
+        data = OhlcvData(
+            time=timestamp, open=0.0, high=0.0, low=0.0, close=0.0, volume=1000.0
+        )
 
         assert data.open == 0.0
         assert data.high == 0.0
@@ -549,40 +604,34 @@ class TestOhlcvData:
             )
 
     def test_edge_case_mixed_nan_values(self):
-        """Test edge case with mixed NaN and valid values."""
+        """Test edge case with mixed NaN and valid values - should raise error."""
         timestamp = 1640995200
-        data = OhlcvData(
-            time=timestamp,
-            open=float("nan"),
-            high=110.0,
-            low=float("nan"),
-            close=105.0,
-            volume=float("nan"),
-        )
 
-        assert data.open == 0.0
-        assert data.high == 110.0
-        assert data.low == 0.0
-        assert data.close == 105.0
-        assert data.volume == 0.0
+        # Mixed NaN values should raise ValueValidationError
+        with pytest.raises(ValueValidationError):
+            OhlcvData(
+                time=timestamp,
+                open=float("nan"),
+                high=110.0,
+                low=float("nan"),
+                close=105.0,
+                volume=float("nan"),
+            )
 
     def test_edge_case_all_nan_values(self):
-        """Test edge case with all NaN values."""
+        """Test edge case with all NaN values - should raise error."""
         timestamp = 1640995200
-        data = OhlcvData(
-            time=timestamp,
-            open=float("nan"),
-            high=float("nan"),
-            low=float("nan"),
-            close=float("nan"),
-            volume=float("nan"),
-        )
 
-        assert data.open == 0.0
-        assert data.high == 0.0
-        assert data.low == 0.0
-        assert data.close == 0.0
-        assert data.volume == 0.0
+        # All NaN values should raise ValueValidationError
+        with pytest.raises(ValueValidationError):
+            OhlcvData(
+                time=timestamp,
+                open=float("nan"),
+                high=float("nan"),
+                low=float("nan"),
+                close=float("nan"),
+                volume=float("nan"),
+            )
 
     def test_edge_case_volume_with_decimal_precision(self):
         """Test edge case with volume having high decimal precision."""

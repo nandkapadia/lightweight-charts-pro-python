@@ -10,9 +10,7 @@ Usage:
 
 """
 
-import os
 import re
-import shutil
 from pathlib import Path
 
 
@@ -99,7 +97,7 @@ def process_docs_to_wiki():
             continue
 
         # Read RST content
-        with open(rst_path, "r", encoding="utf-8") as f:
+        with open(rst_path, encoding="utf-8") as f:
             rst_content = f.read()
 
         # Convert to Markdown
@@ -136,8 +134,8 @@ Welcome to the Lightweight Charts Pro Python documentation wiki!
 
 ## External Links
 
-* [Full Documentation](https://lightweight-charts-pro-python.readthedocs.io/) - Complete documentation on Read the Docs
-* [GitHub Repository](https://github.com/your-username/lightweight-charts-pro-python) - Source code and issues
+* [Full Documentation](https://lightweight-charts-pro-python.readthedocs.io/) - Complete docs
+* [GitHub Repository](https://github.com/your-username/lightweight-charts-pro-python) - Source code
 * [PyPI Package](https://pypi.org/project/lightweight-charts-pro/) - Install via pip
 
 ## Quick Start
@@ -168,8 +166,8 @@ series.color = "#2196F3"
 
 For questions and discussions, please use:
 
-* [GitHub Discussions](https://github.com/your-username/lightweight-charts-pro-python/discussions) - Ask questions
-* [GitHub Issues](https://github.com/your-username/lightweight-charts-pro-python/issues) - Report bugs
+* [GitHub Discussions](https://github.com/your-username/lightweight-charts-pro-python/discussions)
+* [GitHub Issues](https://github.com/your-username/lightweight-charts-pro-python/issues)
 
 ## License
 

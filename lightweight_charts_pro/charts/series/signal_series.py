@@ -120,7 +120,7 @@ class SignalSeries(Series):
         self._alert_color = alert_color
 
     def __repr__(self) -> str:
-        """String representation of the signal series."""
+        """Return string representation of the signal series."""
         return (
             f"SignalSeries(data_points={len(self.data)}, neutral_color='{self._neutral_color}',"
             f" signal_color='{self._signal_color}')"

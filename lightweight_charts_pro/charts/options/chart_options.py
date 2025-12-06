@@ -186,9 +186,13 @@ class ChartOptions(Options):
         if self.right_price_scale is not None and not isinstance(
             self.right_price_scale, PriceScaleOptions
         ):
-            raise PriceScaleOptionsTypeError("right_price_scale", type(self.right_price_scale))
+            raise PriceScaleOptionsTypeError(
+                "right_price_scale", type(self.right_price_scale)
+            )
 
         if self.left_price_scale is not None and not isinstance(
             self.left_price_scale, PriceScaleOptions
         ):
-            raise PriceScaleOptionsTypeError("left_price_scale", type(self.left_price_scale))
+            raise PriceScaleOptionsTypeError(
+                "left_price_scale", type(self.left_price_scale)
+            )

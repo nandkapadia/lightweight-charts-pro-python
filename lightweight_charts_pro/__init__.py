@@ -76,10 +76,7 @@ License:
 # Local Imports - Chart base classes
 # ============================================================================
 # Base classes for chart and chart manager implementations
-from lightweight_charts_pro.charts import (
-    BaseChart,
-    BaseChartManager,
-)
+from lightweight_charts_pro.charts import BaseChart, BaseChartManager
 
 # ============================================================================
 # Local Imports - Chart options

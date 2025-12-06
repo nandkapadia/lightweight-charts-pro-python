@@ -20,7 +20,7 @@ from typing import Any, Optional
 import pytest
 
 # Local Imports
-from lightweight_charts_core.charts.options.base_options import Options
+from lightweight_charts_pro.charts.options.base_options import Options
 
 # =============================================================================
 # Test Data Classes
@@ -495,7 +495,9 @@ class TestDictSerialization:
         """Test asdict with nested options dict."""
         nested1 = NestedOptions(color="#ff0000", width=2)
         nested2 = NestedOptions(color="#00ff00", width=3)
-        options = MockOptionsDataClass(options_dict={"first": nested1, "second": nested2})
+        options = MockOptionsDataClass(
+            options_dict={"first": nested1, "second": nested2}
+        )
 
         result = options.asdict()
 
@@ -667,7 +669,9 @@ class TestComplexStructures:
     def test_asdict_performance_with_large_nested_structure(self):
         """Test asdict performance with large nested structure."""
         large_list = [NestedOptions(color=f"#ff{i:04x}", width=i) for i in range(100)]
-        large_dict = {f"key_{i}": NestedOptions(color=f"#ff{i:04x}", width=i) for i in range(100)}
+        large_dict = {
+            f"key_{i}": NestedOptions(color=f"#ff{i:04x}", width=i) for i in range(100)
+        }
 
         options = MockOptionsDataClass(
             options_list=large_list,

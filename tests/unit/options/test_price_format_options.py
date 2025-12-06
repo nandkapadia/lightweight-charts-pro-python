@@ -1,14 +1,13 @@
 import pytest
-from lightweight_charts_core.charts.options.price_format_options import (
+
+from lightweight_charts_pro.charts.options.price_format_options import (
     PriceFormatOptions,
 )
-from lightweight_charts_core.exceptions import (
-    TypeValidationError,
-    ValueValidationError,
-)
+from lightweight_charts_pro.exceptions import TypeValidationError, ValueValidationError
 
 
 def test_standard_construction():
+    """Test standard construction of PriceFormatOptions."""
     opts = PriceFormatOptions(
         type="price",
         precision=4,
@@ -22,6 +21,7 @@ def test_standard_construction():
 
 
 def test_default_values():
+    """Test default values of PriceFormatOptions."""
     opts = PriceFormatOptions()
     assert opts.type == "price"
     assert opts.precision == 2
@@ -147,12 +147,16 @@ def test_both_property_styles_work():
 
 
 def test_optional_fields_omitted():
+    """Test optional fields are properly omitted."""
     opts = PriceFormatOptions(type="price", precision=2, min_move=0.01)
     assert opts.formatter is None
 
 
 def test_custom_formatter():
-    opts = PriceFormatOptions(type="custom", precision=2, min_move=0.01, formatter="myfmt")
+    """Test custom formatter option."""
+    opts = PriceFormatOptions(
+        type="custom", precision=2, min_move=0.01, formatter="myfmt"
+    )
     assert opts.formatter == "myfmt"
 
 

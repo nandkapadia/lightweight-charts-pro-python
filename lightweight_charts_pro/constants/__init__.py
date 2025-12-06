@@ -113,7 +113,9 @@ COLOR_BORDER_DEFAULT: Final[str] = "rgba(197, 203, 206, 0.8)"
 
 # --- Area Series ---
 AREA_TOP_COLOR_DEFAULT: Final[str] = COLOR_BLUE_MEDIUM_DARK  # "rgba(33, 150, 243, 0.4)"
-AREA_BOTTOM_COLOR_DEFAULT: Final[str] = COLOR_BLUE_TRANSPARENT  # "rgba(33, 150, 243, 0.0)"
+AREA_BOTTOM_COLOR_DEFAULT: Final[str] = (
+    COLOR_BLUE_TRANSPARENT  # "rgba(33, 150, 243, 0.0)"
+)
 
 # --- Histogram/Volume Series ---
 HISTOGRAM_UP_COLOR_DEFAULT: Final[str] = COLOR_TEAL_SEMI  # "rgba(38, 166, 154, 0.5)"
@@ -121,9 +123,13 @@ HISTOGRAM_DOWN_COLOR_DEFAULT: Final[str] = COLOR_CORAL_SEMI  # "rgba(239, 83, 80
 
 # --- Baseline Series ---
 BASELINE_TOP_FILL_COLOR1: Final[str] = COLOR_TEAL_LIGHT  # "rgba(38, 166, 154, 0.28)"
-BASELINE_TOP_FILL_COLOR2: Final[str] = COLOR_TEAL_VERY_LIGHT  # "rgba(38, 166, 154, 0.05)"
+BASELINE_TOP_FILL_COLOR2: Final[str] = (
+    COLOR_TEAL_VERY_LIGHT  # "rgba(38, 166, 154, 0.05)"
+)
 BASELINE_TOP_LINE_COLOR: Final[str] = COLOR_TEAL_SOLID  # "rgba(38, 166, 154, 1)"
-BASELINE_BOTTOM_FILL_COLOR1: Final[str] = COLOR_CORAL_VERY_LIGHT  # "rgba(239, 83, 80, 0.05)"
+BASELINE_BOTTOM_FILL_COLOR1: Final[str] = (
+    COLOR_CORAL_VERY_LIGHT  # "rgba(239, 83, 80, 0.05)"
+)
 BASELINE_BOTTOM_FILL_COLOR2: Final[str] = COLOR_CORAL_LIGHT  # "rgba(239, 83, 80, 0.28)"
 BASELINE_BOTTOM_LINE_COLOR: Final[str] = COLOR_CORAL_SOLID  # "rgba(239, 83, 80, 1)"
 
@@ -139,11 +145,15 @@ RIBBON_FILL_COLOR: Final[str] = COLOR_GREEN_LIGHT  # "rgba(76, 175, 80, 0.1)"
 # ============================================================================
 
 # --- Tooltips ---
-TOOLTIP_BACKGROUND_COLOR: Final[str] = COLOR_WHITE_SEMI_TRANSPARENT  # "rgba(255, 255, 255, 0.95)"
+TOOLTIP_BACKGROUND_COLOR: Final[str] = (
+    COLOR_WHITE_SEMI_TRANSPARENT  # "rgba(255, 255, 255, 0.95)"
+)
 TOOLTIP_BOX_SHADOW: Final[str] = "0 2px 4px rgba(0, 0, 0, 0.1)"
 
 # --- Annotations ---
-ANNOTATION_BACKGROUND_COLOR: Final[str] = COLOR_WHITE_VERY_DARK  # "rgba(255, 255, 255, 0.9)"
+ANNOTATION_BACKGROUND_COLOR: Final[str] = (
+    COLOR_WHITE_VERY_DARK  # "rgba(255, 255, 255, 0.9)"
+)
 ANNOTATION_EXAMPLE_BACKGROUND: Final[str] = "rgba(0, 255, 0, 0.2)"  # Green highlight
 
 # --- Trade Visualization ---
@@ -154,7 +164,9 @@ TRADE_RECTANGLE_TEXT_BACKGROUND: Final[str] = COLOR_BLACK_DARK  # "rgba(0, 0, 0,
 LEGEND_BACKGROUND_COLOR: Final[str] = COLOR_BLACK_VERY_DARK  # "rgba(0, 0, 0, 0.8)"
 
 # --- Layout ---
-LAYOUT_WATERMARK_COLOR: Final[str] = COLOR_WHITE_VERY_LIGHT  # "rgba(255, 255, 255, 0.1)"
+LAYOUT_WATERMARK_COLOR: Final[str] = (
+    COLOR_WHITE_VERY_LIGHT  # "rgba(255, 255, 255, 0.1)"
+)
 
 # ============================================================================
 # TIMEOUTS (milliseconds)
@@ -210,7 +222,9 @@ MAX_SERIES_PER_CHART: Final[int] = 10  # Recommended max series per chart
 # ============================================================================
 
 COLOR_HEX_REGEX: Final[str] = r"^#(?:[0-9a-fA-F]{3}){1,2}$"
-COLOR_RGBA_REGEX: Final[str] = r"^rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*(?:,\s*[\d.]+\s*)?\)$"
+COLOR_RGBA_REGEX: Final[str] = (
+    r"^rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*(?:,\s*[\d.]+\s*)?\)$"
+)
 
 # ============================================================================
 # EXPORTS

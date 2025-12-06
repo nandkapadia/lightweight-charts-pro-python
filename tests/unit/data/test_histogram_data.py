@@ -10,9 +10,10 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 import pytest
-from lightweight_charts_core.data.histogram_data import HistogramData
-from lightweight_charts_core.data.single_value_data import SingleValueData
-from lightweight_charts_core.exceptions import ColorValidationError
+
+from lightweight_charts_pro.data.histogram_data import HistogramData
+from lightweight_charts_pro.data.single_value_data import SingleValueData
+from lightweight_charts_pro.exceptions import ColorValidationError
 
 
 class TestHistogramDataConstruction:
@@ -151,7 +152,11 @@ class TestHistogramDataSerialization:
         """Test to_dict with rgba color."""
         data = HistogramData(time=1640995200, value=100.5, color="rgba(33,150,243,1)")
         result = data.asdict()
-        assert result == {"time": 1640995200, "value": 100.5, "color": "rgba(33,150,243,1)"}
+        assert result == {
+            "time": 1640995200,
+            "value": 100.5,
+            "color": "rgba(33,150,243,1)",
+        }
 
     def test_to_dict_with_none_color(self):
         """Test to_dict with None color (should be omitted)."""
@@ -214,7 +219,7 @@ class TestHistogramDataInheritance:
     def test_dataclass_fields(self):
         """Test that HistogramData has correct dataclass fields."""
         field_names = {field.name for field in fields(HistogramData)}
-        expected_fields = {"time", "value", "color"}
+        expected_fields = {"time", "value", "color", "_cached_timestamp"}
         assert field_names == expected_fields
 
 

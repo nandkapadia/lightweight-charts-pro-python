@@ -58,7 +58,7 @@ class PriceLineOptions(Options):
 
     @staticmethod
     def _validate_color_static(color: str, property_name: str) -> str:
-        """Static version of color validator for decorator use."""
+        """Validate color for decorator use with static method."""
         if color and not is_valid_color(color):
             raise ColorValidationError(property_name, color)
         return color

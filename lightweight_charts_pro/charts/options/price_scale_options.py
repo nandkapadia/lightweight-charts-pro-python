@@ -150,7 +150,9 @@ class PriceScaleOptions(Options):
     # Core visibility and behavior settings
     visible: bool = True  # Whether the price scale is visible
     auto_scale: bool = True  # Whether to automatically scale based on data
-    mode: PriceScaleMode = PriceScaleMode.NORMAL  # Price scale mode (linear/log/percentage)
+    mode: PriceScaleMode = (
+        PriceScaleMode.NORMAL
+    )  # Price scale mode (linear/log/percentage)
     invert_scale: bool = False  # Whether to invert the scale orientation
 
     # Visual appearance configuration

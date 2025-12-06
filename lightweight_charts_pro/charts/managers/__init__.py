@@ -1,4 +1,4 @@
-"""Managers module for lightweight-charts-core.
+"""Managers module for lightweight-charts-pro.
 
 This module provides manager classes for handling series, price scales, and trades.
 """

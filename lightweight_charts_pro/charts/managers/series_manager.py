@@ -30,10 +30,7 @@ from lightweight_charts_pro.exceptions import (
     ValueValidationError,
 )
 from lightweight_charts_pro.logging_config import get_logger
-from lightweight_charts_pro.type_definitions.enums import (
-    ColumnNames,
-    PriceScaleMode,
-)
+from lightweight_charts_pro.type_definitions.enums import ColumnNames, PriceScaleMode
 
 # Initialize logger
 logger = get_logger(__name__)
@@ -226,6 +223,11 @@ class SeriesManager:
         Args:
             data: OHLCV data containing price and volume information.
             column_mapping: Mapping of column names for DataFrame conversion.
+                If None, uses default mapping: {"time": "time", "open": "open",
+                "high": "high", "low": "low", "close": "close", "volume": "volume"}.
+                Required keys depend on price_type:
+                - candlestick: time, open, high, low, close, volume
+                - line: time, close, volume
             price_type: Type of price series ('candlestick' or 'line').
             price_kwargs: Additional arguments for price series configuration.
             volume_kwargs: Additional arguments for volume series configuration.
@@ -233,8 +235,13 @@ class SeriesManager:
             price_scale_manager: Optional PriceScaleManager for price scale config.
 
         Raises:
-            TypeValidationError: If data or column_mapping is invalid.
-            ValueValidationError: If data is empty or price_type is invalid.
+            TypeValidationError: If data or column_mapping type is invalid.
+            ValueValidationError: If data is empty, price_type is invalid, or
+                required column_mapping keys are missing.
+
+        Note:
+            The column_mapping dict is copied internally, so the caller's dict
+            is not modified.
 
         """
         # Validate inputs
@@ -245,10 +252,36 @@ class SeriesManager:
         ):
             raise ValueValidationError("data", "must be a non-empty list or DataFrame")
 
+        # Default column mapping if None provided
         if column_mapping is None:
-            raise TypeValidationError("column_mapping", "dict")
+            column_mapping = {
+                "time": "time",
+                "open": "open",
+                "high": "high",
+                "low": "low",
+                "close": "close",
+                "volume": "volume",
+            }
+
+        # Validate column_mapping is a dict
         if not isinstance(column_mapping, dict):
             raise TypeValidationError("column_mapping", "dict")
+
+        # Copy to avoid mutating caller's dict
+        column_mapping = column_mapping.copy()
+
+        # Validate required keys for price/volume series
+        required_keys = {"time", "volume"}
+        if price_type == "candlestick":
+            required_keys.update({"open", "high", "low", "close"})
+        elif price_type == "line":
+            required_keys.add("close")
+
+        missing_keys = required_keys - column_mapping.keys()
+        if missing_keys:
+            raise ValueValidationError(
+                "column_mapping", f"missing required keys: {missing_keys}"
+            )
 
         if pane_id < 0:
             raise ValueValidationError("pane_id", "must be non-negative")
@@ -286,7 +319,9 @@ class SeriesManager:
 
         # Extract volume-specific kwargs
         volume_up_color = volume_kwargs.get("up_color", HISTOGRAM_UP_COLOR_DEFAULT)
-        volume_down_color = volume_kwargs.get("down_color", HISTOGRAM_DOWN_COLOR_DEFAULT)
+        volume_down_color = volume_kwargs.get(
+            "down_color", HISTOGRAM_DOWN_COLOR_DEFAULT
+        )
         volume_base = volume_kwargs.get("base", 0)
 
         # Configure volume price scale through manager if provided
@@ -299,7 +334,9 @@ class SeriesManager:
                 mode=PriceScaleMode.NORMAL,
                 scale_margins=PriceScaleMargins(top=0.85, bottom=0.0),
             )
-            price_scale_manager.add_overlay_scale(ColumnNames.VOLUME.value, volume_price_scale)
+            price_scale_manager.add_overlay_scale(
+                ColumnNames.VOLUME.value, volume_price_scale
+            )
 
         # Ensure volume mapping includes 'value' key
         if "value" not in column_mapping:
@@ -404,7 +441,9 @@ class SeriesManager:
         # Note: zIndex is now in the options object after API restructuring
         for series_list in series_by_pane.values():
             series_list.sort(
-                key=lambda x: x.get("options", {}).get("zIndex", 0) if isinstance(x, dict) else 0
+                key=lambda x: (
+                    x.get("options", {}).get("zIndex", 0) if isinstance(x, dict) else 0
+                )
             )
 
         # Flatten sorted series back to a single list, maintaining pane order

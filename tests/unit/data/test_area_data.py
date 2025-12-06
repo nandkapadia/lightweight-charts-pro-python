@@ -8,8 +8,9 @@ from datetime import datetime
 
 import pandas as pd
 import pytest
-from lightweight_charts_core.data.area_data import AreaData
-from lightweight_charts_core.exceptions import (
+
+from lightweight_charts_pro.data.area_data import AreaData
+from lightweight_charts_pro.exceptions import (
     ColorValidationError,
     RequiredFieldError,
     TimeValidationError,
@@ -47,7 +48,9 @@ class TestAreaDataConstruction:
 
     def test_construction_with_partial_colors(self):
         """Test AreaData construction with some color properties."""
-        data = AreaData(time=1640995200, value=100, line_color="#ff0000", top_color="#00ff00")
+        data = AreaData(
+            time=1640995200, value=100, line_color="#ff0000", top_color="#00ff00"
+        )
 
         assert data.time == 1640995200
         assert data.value == 100
@@ -77,7 +80,9 @@ class TestAreaDataConstruction:
         assert isinstance(result["time"], int)
         # The actual timestamp depends on timezone, so we'll check it's a reasonable value
         assert result["time"] > 1640970000  # Should be around 2022-01-01
-        assert result["time"] < 1641020000  # Should be around 2022-01-01 (accounting for timezone)
+        assert (
+            result["time"] < 1641020000
+        )  # Should be around 2022-01-01 (accounting for timezone)
 
     def test_construction_with_pandas_timestamp(self):
         """Test AreaData construction with pandas Timestamp."""
@@ -113,7 +118,11 @@ class TestAreaDataValidation:
 
     def test_valid_rgba_colors(self):
         """Test AreaData construction with valid rgba colors."""
-        valid_colors = ["rgba(255, 0, 0, 1)", "rgba(0, 255, 0, 0.5)", "rgba(0, 0, 255, 0.8)"]
+        valid_colors = [
+            "rgba(255, 0, 0, 1)",
+            "rgba(0, 255, 0, 0.5)",
+            "rgba(0, 0, 255, 0.8)",
+        ]
 
         for color in valid_colors:
             data = AreaData(
@@ -129,17 +138,23 @@ class TestAreaDataValidation:
 
     def test_invalid_line_color(self):
         """Test AreaData construction with invalid line color."""
-        with pytest.raises(ColorValidationError, match="Invalid color format for line_color"):
+        with pytest.raises(
+            ColorValidationError, match="Invalid color format for line_color"
+        ):
             AreaData(time=1640995200, value=100, line_color="invalid_color")
 
     def test_invalid_top_color(self):
         """Test AreaData construction with invalid top color."""
-        with pytest.raises(ColorValidationError, match="Invalid color format for top_color"):
+        with pytest.raises(
+            ColorValidationError, match="Invalid color format for top_color"
+        ):
             AreaData(time=1640995200, value=100, top_color="invalid_color")
 
     def test_invalid_bottom_color(self):
         """Test AreaData construction with invalid bottom color."""
-        with pytest.raises(ColorValidationError, match="Invalid color format for bottom_color"):
+        with pytest.raises(
+            ColorValidationError, match="Invalid color format for bottom_color"
+        ):
             AreaData(time=1640995200, value=100, bottom_color="invalid_color")
 
     def test_none_value(self):
@@ -189,7 +204,9 @@ class TestAreaDataSerialization:
 
     def test_to_dict_with_partial_colors(self):
         """Test AreaData to_dict with some color properties."""
-        data = AreaData(time=1640995200, value=100, line_color="#ff0000", top_color="#00ff00")
+        data = AreaData(
+            time=1640995200, value=100, line_color="#ff0000", top_color="#00ff00"
+        )
         data_dict = data.asdict()
 
         assert data_dict["time"] == 1640995200
@@ -201,7 +218,9 @@ class TestAreaDataSerialization:
     def test_to_dict_with_empty_colors(self):
         """Test AreaData to_dict with empty color strings."""
         # Empty color strings are converted to None by centralized validation
-        data = AreaData(time=1640995200, value=100, line_color="", top_color="", bottom_color="")
+        data = AreaData(
+            time=1640995200, value=100, line_color="", top_color="", bottom_color=""
+        )
         data_dict = data.asdict()
 
         assert data_dict["time"] == 1640995200
@@ -362,6 +381,8 @@ class TestAreaDataComparison:
         """Test AreaData inequality."""
         data1 = AreaData(time=1640995200, value=100, line_color="#ff0000")
 
-        data2 = AreaData(time=1641081600, value=100, line_color="#ff0000")  # Different time
+        data2 = AreaData(
+            time=1641081600, value=100, line_color="#ff0000"
+        )  # Different time
 
         assert data1.time != data2.time

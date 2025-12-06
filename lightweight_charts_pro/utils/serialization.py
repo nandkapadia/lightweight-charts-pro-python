@@ -438,7 +438,9 @@ class SerializableMixin:
             # Step 6: Process field name for serialization
             # Convert snake_case to camelCase and handle special fields
             # like 'time' and 'value'
-            processed_field = self._process_field_name_for_serialization(field_name, config)
+            processed_field = self._process_field_name_for_serialization(
+                field_name, config
+            )
 
             # Step 7: Handle special flattening rules
             # Some fields like 'background_options' should have their
@@ -556,6 +558,7 @@ class SerializableMixin:
             value (Any): The value to process. Can be any Python type.
             config (SerializationConfig): Configuration controlling the
                 conversion behavior.
+            depth (int): Current recursion depth for nested structures.
 
         Returns:
             Any: The processed value ready for JSON serialization. The value
@@ -602,7 +605,11 @@ class SerializableMixin:
         # Step 1: Handle NaN floats - convert to zero for JSON compatibility
         # JSON spec doesn't support NaN, Infinity, or -Infinity
         # JavaScript charts typically treat NaN as zero anyway
-        if isinstance(value, float) and math.isnan(value) and config.convert_nan_to_zero:
+        if (
+            isinstance(value, float)
+            and math.isnan(value)
+            and config.convert_nan_to_zero
+        ):
             return 0.0
 
         # Step 2: Convert NumPy scalar types to Python native types
@@ -658,6 +665,7 @@ class SerializableMixin:
                 enums, dicts, or other lists.
             config (SerializationConfig): Configuration controlling the
                 serialization behavior for each item.
+            depth (int): Current recursion depth for nested structures.
 
         Returns:
             list[Any]: Recursively serialized list with all items processed
@@ -736,6 +744,7 @@ class SerializableMixin:
                 strings (typically in snake_case), values can be any type.
             config (SerializationConfig): Configuration controlling the
                 serialization behavior for values.
+            depth (int): Current recursion depth for nested structures.
 
         Returns:
             dict[str, Any]: Recursively processed dictionary with camelCase
@@ -794,7 +803,9 @@ class SerializableMixin:
             # Step 2: Process value recursively
             # Apply the full serialization pipeline to the value
             # This handles nested objects, enums, lists, dicts, etc.
-            processed_value = self._process_value_for_serialization(value, config, depth)
+            processed_value = self._process_value_for_serialization(
+                value, config, depth
+            )
 
             # Step 3: Add processed key-value pair to result dictionary
             result[processed_key] = processed_value
@@ -864,9 +875,7 @@ class SerializableMixin:
                 # Import inside function to avoid circular import issues
                 # The enum module may depend on this serialization module
                 # pylint: disable=import-outside-toplevel
-                from lightweight_charts_pro.type_definitions.enums import (
-                    ColumnNames,
-                )
+                from lightweight_charts_pro.type_definitions.enums import ColumnNames
             except ImportError:
                 # Fallback to standard camelCase if import fails
                 # This ensures serialization still works even if enums
@@ -883,9 +892,7 @@ class SerializableMixin:
             try:
                 # Import inside function to avoid circular import issues
                 # pylint: disable=import-outside-toplevel
-                from lightweight_charts_pro.type_definitions.enums import (
-                    ColumnNames,
-                )
+                from lightweight_charts_pro.type_definitions.enums import ColumnNames
             except ImportError:
                 # Fallback to standard camelCase if import fails
                 return snake_to_camel(field_name)
@@ -969,7 +976,7 @@ class SimpleSerializableMixin(SerializableMixin):
 def create_serializable_mixin(
     config_override: SerializationConfig | None = None,
 ) -> type:
-    """Factory function to create a configurable SerializableMixin.
+    """Create a configurable SerializableMixin.
 
     This factory allows you to create custom mixin classes with specific
     serialization configurations. It's useful when different parts of your

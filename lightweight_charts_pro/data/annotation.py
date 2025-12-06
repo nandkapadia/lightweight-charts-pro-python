@@ -42,16 +42,13 @@ from typing import Any, Optional
 
 import pandas as pd
 
-from lightweight_charts_pro.exceptions import (
-    TypeValidationError,
-    ValueValidationError,
-)
+from lightweight_charts_pro.exceptions import TypeValidationError, ValueValidationError
 from lightweight_charts_pro.type_definitions import ColumnNames
 from lightweight_charts_pro.type_definitions.enums import (
     AnnotationPosition,
     AnnotationType,
 )
-from lightweight_charts_pro.utils.data_utils import from_utc_timestamp, to_utc_timestamp
+from lightweight_charts_pro.utils.data_utils import from_timestamp, to_timestamp
 
 # Use a null logger by default - can be configured by the consuming package
 logger = logging.getLogger(__name__)
@@ -118,7 +115,27 @@ class Annotation:
         show_time: bool = False,
         tooltip: str | None = None,
     ):
-        # Store time as-is, convert to UTC timestamp in asdict() for consistency
+        """Initialize an annotation with the given parameters.
+
+        Args:
+            time: Time value for the annotation.
+            price: Price level for the annotation.
+            text: Text to display in the annotation.
+            annotation_type: Type of annotation.
+            position: Position relative to the price.
+            color: Annotation color.
+            background_color: Background color.
+            font_size: Font size in pixels.
+            font_weight: Font weight (normal, bold, etc.).
+            text_color: Text color.
+            border_color: Border color.
+            border_width: Border width in pixels.
+            opacity: Opacity from 0.0 to 1.0.
+            show_time: Whether to show time in the annotation.
+            tooltip: Optional tooltip text.
+
+        """
+        # Store time as-is, convert to UNIX timestamp in asdict() for consistency
         self.time = time
 
         # Accept both str and Enum for annotation_type
@@ -145,7 +162,9 @@ class Annotation:
 
         # Validate opacity range
         if opacity < 0 or opacity > 1:
-            raise ValueValidationError("opacity", f"must be between 0 and 1, got {opacity}")
+            raise ValueValidationError(
+                "opacity", f"must be between 0 and 1, got {opacity}"
+            )
         self.opacity = opacity
 
         # Validate font size
@@ -155,7 +174,9 @@ class Annotation:
 
         # Validate border width
         if border_width < 0:
-            raise ValueValidationError("border_width", f"must be non-negative, got {border_width}")
+            raise ValueValidationError(
+                "border_width", f"must be non-negative, got {border_width}"
+            )
         self.border_width = border_width
 
         self.color = color
@@ -168,13 +189,13 @@ class Annotation:
 
     @property
     def timestamp(self) -> int:
-        """Get time as UTC timestamp (converted fresh).
+        """Get time as UNIX timestamp (converted fresh).
 
         Returns:
-            int: UTC timestamp as integer (seconds).
+            int: UNIX timestamp as integer (seconds).
 
         """
-        return to_utc_timestamp(self.time)
+        return to_timestamp(self.time)
 
     @property
     def datetime_value(self) -> pd.Timestamp:
@@ -185,7 +206,7 @@ class Annotation:
                 annotation time.
 
         """
-        return pd.Timestamp(from_utc_timestamp(to_utc_timestamp(self.time)))
+        return pd.Timestamp(from_timestamp(to_timestamp(self.time)))
 
     def asdict(self) -> dict[str, Any]:
         """Convert annotation to dictionary for serialization.
@@ -196,7 +217,7 @@ class Annotation:
 
         """
         return {
-            ColumnNames.TIME: to_utc_timestamp(self.time),
+            ColumnNames.TIME: to_timestamp(self.time),
             "price": self.price,
             "text": self.text,
             "type": self.annotation_type.value,
@@ -271,7 +292,9 @@ class AnnotationLayer:
     def set_opacity(self, opacity: float) -> "AnnotationLayer":
         """Set layer opacity."""
         if not 0 <= opacity <= 1:
-            raise ValueValidationError("opacity", f"must be between 0 and 1, got {opacity}")
+            raise ValueValidationError(
+                "opacity", f"must be between 0 and 1, got {opacity}"
+            )
         self.opacity = opacity
         return self
 
@@ -281,8 +304,8 @@ class AnnotationLayer:
         end_time: pd.Timestamp | datetime | str | int | float,
     ) -> list[Annotation]:
         """Filter annotations by time range."""
-        start_ts = to_utc_timestamp(start_time)
-        end_ts = to_utc_timestamp(end_time)
+        start_ts = to_timestamp(start_time)
+        end_ts = to_timestamp(end_time)
 
         return [
             annotation
@@ -290,7 +313,9 @@ class AnnotationLayer:
             if start_ts <= annotation.timestamp <= end_ts
         ]
 
-    def filter_by_price_range(self, min_price: float, max_price: float) -> list[Annotation]:
+    def filter_by_price_range(
+        self, min_price: float, max_price: float
+    ) -> list[Annotation]:
         """Filter annotations by price range."""
         return [
             annotation
@@ -393,7 +418,11 @@ class AnnotationManager:
 
     def asdict(self) -> dict[str, Any]:
         """Convert manager to dictionary for serialization."""
-        return {"layers": {layer_name: layer.asdict() for layer_name, layer in self.layers.items()}}
+        return {
+            "layers": {
+                layer_name: layer.asdict() for layer_name, layer in self.layers.items()
+            }
+        }
 
 
 def create_text_annotation(

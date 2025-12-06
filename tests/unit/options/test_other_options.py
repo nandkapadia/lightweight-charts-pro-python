@@ -10,24 +10,25 @@ This module contains comprehensive tests for the remaining option classes:
 """
 
 import pytest
-from lightweight_charts_core.charts.options.line_options import LineOptions
-from lightweight_charts_core.charts.options.localization_options import (
+
+from lightweight_charts_pro.charts.options.line_options import LineOptions
+from lightweight_charts_pro.charts.options.localization_options import (
     LocalizationOptions,
 )
-from lightweight_charts_core.charts.options.price_format_options import (
+from lightweight_charts_pro.charts.options.price_format_options import (
     PriceFormatOptions,
 )
-from lightweight_charts_core.charts.options.price_line_options import PriceLineOptions
-from lightweight_charts_core.charts.options.time_scale_options import TimeScaleOptions
-from lightweight_charts_core.charts.options.trade_visualization_options import (
+from lightweight_charts_pro.charts.options.price_line_options import PriceLineOptions
+from lightweight_charts_pro.charts.options.time_scale_options import TimeScaleOptions
+from lightweight_charts_pro.charts.options.trade_visualization_options import (
     TradeVisualizationOptions,
 )
-from lightweight_charts_core.exceptions import (
+from lightweight_charts_pro.exceptions import (
     ColorValidationError,
     TypeValidationError,
     ValueValidationError,
 )
-from lightweight_charts_core.type_definitions.enums import LineStyle, TradeVisualization
+from lightweight_charts_pro.type_definitions.enums import LineStyle, TradeVisualization
 
 
 class TestTimeScaleOptions:
@@ -163,7 +164,9 @@ class TestTimeScaleOptions:
 
     def test_getitem_method(self):
         """Test the __getitem__ method for dictionary-like access."""
-        options = TimeScaleOptions(right_offset=25, bar_spacing=8, border_color="#123456")
+        options = TimeScaleOptions(
+            right_offset=25, bar_spacing=8, border_color="#123456"
+        )
 
         assert options["rightOffset"] == 25
         assert options["barSpacing"] == 8
@@ -238,9 +241,15 @@ class TestTimeScaleOptions:
 
     def test_equality_comparison(self):
         """Test equality comparison for TimeScaleOptions."""
-        options1 = TimeScaleOptions(right_offset=10, bar_spacing=6, border_color="#ff0000")
-        options2 = TimeScaleOptions(right_offset=10, bar_spacing=6, border_color="#ff0000")
-        options3 = TimeScaleOptions(right_offset=20, bar_spacing=6, border_color="#ff0000")
+        options1 = TimeScaleOptions(
+            right_offset=10, bar_spacing=6, border_color="#ff0000"
+        )
+        options2 = TimeScaleOptions(
+            right_offset=10, bar_spacing=6, border_color="#ff0000"
+        )
+        options3 = TimeScaleOptions(
+            right_offset=20, bar_spacing=6, border_color="#ff0000"
+        )
 
         assert options1 == options2
         assert options1 != options3
@@ -760,7 +769,9 @@ class TestTradeVisualizationOptions:
         assert result["annotationFontSize"] == 0
 
         # Test with extreme opacity values
-        options = TradeVisualizationOptions(rectangle_fill_opacity=0.0, zone_opacity=1.0)
+        options = TradeVisualizationOptions(
+            rectangle_fill_opacity=0.0, zone_opacity=1.0
+        )
         result = options.asdict()
 
         assert result["rectangleFillOpacity"] == 0.0
@@ -834,7 +845,9 @@ class TestOtherOptionsIntegration:
             line_style=LineStyle.SOLID,
             title="Support Level",
         )
-        line_options = LineOptions(color="#00ff00", line_width=2, line_style=LineStyle.DOTTED)
+        line_options = LineOptions(
+            color="#00ff00", line_width=2, line_style=LineStyle.DOTTED
+        )
 
         price_result = price_line.asdict()
         line_result = line_options.asdict()

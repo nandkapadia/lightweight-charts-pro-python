@@ -5,8 +5,9 @@ that supports both single and dual trend line modes.
 """
 
 import pandas as pd
-from lightweight_charts_core.charts.series.trend_fill import TrendFillSeries
-from lightweight_charts_core.data.trend_fill import TrendFillData
+
+from lightweight_charts_pro.charts.series.trend_fill import TrendFillSeries
+from lightweight_charts_pro.data.trend_fill import TrendFillData
 
 
 class TestTrendFillData:
@@ -14,7 +15,9 @@ class TestTrendFillData:
 
     def test_single_mode_creation(self):
         """Test creating TrendFillData in single mode."""
-        data = TrendFillData("2024-01-01", trend_line=110.0, base_line=105.0, trend_direction=1)
+        data = TrendFillData(
+            "2024-01-01", trend_line=110.0, base_line=105.0, trend_direction=1
+        )
 
         assert data.trend_line == 110.0
         assert data.base_line == 105.0
@@ -22,8 +25,12 @@ class TestTrendFillData:
 
         """Test asdict output in single mode."""
         data = [
-            TrendFillData("2024-01-01", trend_line=110.0, base_line=105.0, trend_direction=1),
-            TrendFillData("2024-01-02", trend_line=108.0, base_line=113.0, trend_direction=-1),
+            TrendFillData(
+                "2024-01-01", trend_line=110.0, base_line=105.0, trend_direction=1
+            ),
+            TrendFillData(
+                "2024-01-02", trend_line=108.0, base_line=113.0, trend_direction=-1
+            ),
         ]
 
         series = TrendFillSeries(
@@ -43,10 +50,18 @@ class TestTrendFillData:
 
         """Test trend data validation."""
         data = [
-            TrendFillData("2024-01-01", trend_line=110.0, base_line=105.0, trend_direction=1),
-            TrendFillData("2024-01-02", trend_line=112.0, base_line=107.0, trend_direction=1),
-            TrendFillData("2024-01-03", trend_line=108.0, base_line=113.0, trend_direction=-1),
-            TrendFillData("2024-01-04", trend_line=105.0, base_line=110.0, trend_direction=-1),
+            TrendFillData(
+                "2024-01-01", trend_line=110.0, base_line=105.0, trend_direction=1
+            ),
+            TrendFillData(
+                "2024-01-02", trend_line=112.0, base_line=107.0, trend_direction=1
+            ),
+            TrendFillData(
+                "2024-01-03", trend_line=108.0, base_line=113.0, trend_direction=-1
+            ),
+            TrendFillData(
+                "2024-01-04", trend_line=105.0, base_line=110.0, trend_direction=-1
+            ),
         ]
 
         series = TrendFillSeries(
@@ -62,10 +77,18 @@ class TestTrendFillData:
     def test_trend_statistics(self):
         """Test trend statistics calculation."""
         data = [
-            TrendFillData("2024-01-01", trend_line=110.0, base_line=105.0, trend_direction=1),
-            TrendFillData("2024-01-02", trend_line=112.0, base_line=107.0, trend_direction=1),
-            TrendFillData("2024-01-03", trend_line=108.0, base_line=113.0, trend_direction=-1),
-            TrendFillData("2024-01-04", trend_line=110.0, base_line=110.0, trend_direction=0),
+            TrendFillData(
+                "2024-01-01", trend_line=110.0, base_line=105.0, trend_direction=1
+            ),
+            TrendFillData(
+                "2024-01-02", trend_line=112.0, base_line=107.0, trend_direction=1
+            ),
+            TrendFillData(
+                "2024-01-03", trend_line=108.0, base_line=113.0, trend_direction=-1
+            ),
+            TrendFillData(
+                "2024-01-04", trend_line=110.0, base_line=110.0, trend_direction=0
+            ),
         ]
 
         series = TrendFillSeries(

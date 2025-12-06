@@ -10,9 +10,10 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 import pytest
-from lightweight_charts_core.data.baseline_data import BaselineData
-from lightweight_charts_core.data.single_value_data import SingleValueData
-from lightweight_charts_core.exceptions import ColorValidationError
+
+from lightweight_charts_pro.data.baseline_data import BaselineData
+from lightweight_charts_pro.data.single_value_data import SingleValueData
+from lightweight_charts_pro.exceptions import ColorValidationError
 
 
 class TestBaselineDataConstruction:
@@ -89,7 +90,9 @@ class TestBaselineDataConstruction:
 
     def test_construction_with_empty_colors(self):
         """Test BaselineData construction with empty color strings."""
-        data = BaselineData(time=1640995200, value=100.5, top_fill_color1="", bottom_fill_color1="")
+        data = BaselineData(
+            time=1640995200, value=100.5, top_fill_color1="", bottom_fill_color1=""
+        )
         assert data.time == 1640995200
         assert data.value == 100.5
         # Empty color strings are converted to None by centralized validation
@@ -138,17 +141,23 @@ class TestBaselineDataValidation:
 
     def test_validation_invalid_top_fill_color1(self):
         """Test validation with invalid top_fill_color1."""
-        with pytest.raises(ColorValidationError, match="Invalid color format for top_fill_color1"):
+        with pytest.raises(
+            ColorValidationError, match="Invalid color format for top_fill_color1"
+        ):
             BaselineData(time=1640995200, value=100.5, top_fill_color1="invalid_color")
 
     def test_validation_invalid_top_fill_color2(self):
         """Test validation with invalid top_fill_color2."""
-        with pytest.raises(ColorValidationError, match="Invalid color format for top_fill_color2"):
+        with pytest.raises(
+            ColorValidationError, match="Invalid color format for top_fill_color2"
+        ):
             BaselineData(time=1640995200, value=100.5, top_fill_color2="invalid_color")
 
     def test_validation_invalid_top_line_color(self):
         """Test validation with invalid top_line_color."""
-        with pytest.raises(ColorValidationError, match="Invalid color format for top_line_color"):
+        with pytest.raises(
+            ColorValidationError, match="Invalid color format for top_line_color"
+        ):
             BaselineData(time=1640995200, value=100.5, top_line_color="invalid_color")
 
     def test_validation_invalid_bottom_fill_color1(self):
@@ -157,7 +166,9 @@ class TestBaselineDataValidation:
             ColorValidationError,
             match="Invalid color format for bottom_fill_color1",
         ):
-            BaselineData(time=1640995200, value=100.5, bottom_fill_color1="invalid_color")
+            BaselineData(
+                time=1640995200, value=100.5, bottom_fill_color1="invalid_color"
+            )
 
     def test_validation_invalid_bottom_fill_color2(self):
         """Test validation with invalid bottom_fill_color2."""
@@ -165,7 +176,9 @@ class TestBaselineDataValidation:
             ColorValidationError,
             match="Invalid color format for bottom_fill_color2",
         ):
-            BaselineData(time=1640995200, value=100.5, bottom_fill_color2="invalid_color")
+            BaselineData(
+                time=1640995200, value=100.5, bottom_fill_color2="invalid_color"
+            )
 
     def test_validation_invalid_bottom_line_color(self):
         """Test validation with invalid bottom_line_color."""
@@ -173,7 +186,9 @@ class TestBaselineDataValidation:
             ColorValidationError,
             match="Invalid color format for bottom_line_color",
         ):
-            BaselineData(time=1640995200, value=100.5, bottom_line_color="invalid_color")
+            BaselineData(
+                time=1640995200, value=100.5, bottom_line_color="invalid_color"
+            )
 
     def test_validation_none_colors(self):
         """Test validation with None colors (should be allowed)."""
@@ -342,7 +357,9 @@ class TestBaselineDataSerialization:
 
     def test_to_dict_with_empty_colors(self):
         """Test to_dict with empty color strings (should be omitted)."""
-        data = BaselineData(time=1640995200, value=100.5, top_fill_color1="", bottom_fill_color1="")
+        data = BaselineData(
+            time=1640995200, value=100.5, top_fill_color1="", bottom_fill_color1=""
+        )
         result = data.asdict()
         assert result == {"time": 1640995200, "value": 100.5}
 
@@ -432,6 +449,7 @@ class TestBaselineDataInheritance:
             "bottom_fill_color1",
             "bottom_fill_color2",
             "bottom_line_color",
+            "_cached_timestamp",
         }
         assert field_names == expected_fields
 
@@ -483,7 +501,9 @@ class TestBaselineDataEdgeCases:
     def test_very_long_color_string(self):
         """Test with very long color string."""
         long_color = "#" + "A" * 100
-        with pytest.raises(ColorValidationError, match="Invalid color format for top_fill_color1"):
+        with pytest.raises(
+            ColorValidationError, match="Invalid color format for top_fill_color1"
+        ):
             BaselineData(time=1640995200, value=100.5, top_fill_color1=long_color)
 
     def test_mixed_case_hex_colors(self):
@@ -493,12 +513,16 @@ class TestBaselineDataEdgeCases:
 
     def test_rgba_with_spaces(self):
         """Test rgba color with spaces (should be accepted by permissive validator)."""
-        data = BaselineData(time=1640995200, value=100.5, bottom_fill_color1="rgba( 33,150,243,1)")
+        data = BaselineData(
+            time=1640995200, value=100.5, bottom_fill_color1="rgba( 33,150,243,1)"
+        )
         assert data.bottom_fill_color1 == "rgba( 33,150,243,1)"
 
     def test_rgba_with_invalid_alpha(self):
         """Test rgba color with invalid alpha value (should be accepted by permissive validator)."""
-        data = BaselineData(time=1640995200, value=100.5, bottom_fill_color1="rgba(33,150,243,2)")
+        data = BaselineData(
+            time=1640995200, value=100.5, bottom_fill_color1="rgba(33,150,243,2)"
+        )
         assert data.bottom_fill_color1 == "rgba(33,150,243,2)"
 
     def test_rgba_with_negative_alpha(self):
@@ -665,22 +689,30 @@ class TestBaselineDataColorHandling:
 
     def test_color_with_spaces(self):
         """Test color with spaces (should be invalid)."""
-        with pytest.raises(ColorValidationError, match="Invalid color format for top_fill_color1"):
+        with pytest.raises(
+            ColorValidationError, match="Invalid color format for top_fill_color1"
+        ):
             BaselineData(time=1640995200, value=100.5, top_fill_color1="# 2196F3")
 
     def test_color_without_hash(self):
         """Test color without hash (should be invalid)."""
-        with pytest.raises(ColorValidationError, match="Invalid color format for top_fill_color1"):
+        with pytest.raises(
+            ColorValidationError, match="Invalid color format for top_fill_color1"
+        ):
             BaselineData(time=1640995200, value=100.5, top_fill_color1="2196F3")
 
     def test_rgba_with_spaces(self):
         """Test rgba color with spaces (should be accepted by permissive validator)."""
-        data = BaselineData(time=1640995200, value=100.5, bottom_fill_color1="rgba( 33,150,243,1)")
+        data = BaselineData(
+            time=1640995200, value=100.5, bottom_fill_color1="rgba( 33,150,243,1)"
+        )
         assert data.bottom_fill_color1 == "rgba( 33,150,243,1)"
 
     def test_rgba_with_invalid_alpha(self):
         """Test rgba color with invalid alpha value (should be accepted by permissive validator)."""
-        data = BaselineData(time=1640995200, value=100.5, bottom_fill_color1="rgba(33,150,243,2)")
+        data = BaselineData(
+            time=1640995200, value=100.5, bottom_fill_color1="rgba(33,150,243,2)"
+        )
         assert data.bottom_fill_color1 == "rgba(33,150,243,2)"
 
     def test_rgba_with_negative_alpha(self):

@@ -131,16 +131,22 @@ class OhlcvData(OhlcData):
         # Call parent's __post_init__ to validate OHLC data and time normalization
         super().__post_init__()
 
-        # Validate that volume is non-negative (volume cannot be negative)
-        if self.volume < 0:
-            raise ValueValidationError("volume", "must be non-negative")
-
-        # Handle NaN values in volume field - convert to 0.0 for frontend compatibility
+        # Validate NaN and None values in volume field
+        # NaN values are NOT allowed as they represent missing data that could corrupt
+        # volume analysis and create misleading "zero volume" bars
         for field_name in ["volume"]:
             value = getattr(self, field_name)
-            # Check if the value is a float and is NaN
+            # Check if the value is a float and is NaN - raise error instead of coercing
             if isinstance(value, float) and math.isnan(value):
-                setattr(self, field_name, 0.0)
+                raise ValueValidationError(
+                    field_name,
+                    "NaN is not allowed. Missing volume data must be handled upstream "
+                    "(filter, forward-fill, or drop) before creating chart data.",
+                )
             # Validate that the field is not None - volume is required
             elif value is None:
                 raise RequiredFieldError(field_name)
+
+        # Validate that volume is non-negative (volume cannot be negative)
+        if self.volume < 0:
+            raise ValueValidationError("volume", "must be non-negative")

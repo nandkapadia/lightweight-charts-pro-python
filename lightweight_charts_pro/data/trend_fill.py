@@ -1,4 +1,4 @@
-"""Trend fill data classes for lightweight-charts-core.
+"""Trend fill data classes for lightweight-charts-pro.
 
 This module provides TrendFillData class for creating trend-based fill charts
 that display fills between trend lines and base lines, similar to
@@ -85,9 +85,13 @@ class TrendFillData(Data):
             raise ValueValidationError("trend_direction", "must be -1, 0, or 1")
 
         # Validate fill colors if provided
-        if self.uptrend_fill_color is not None and not isinstance(self.uptrend_fill_color, str):
+        if self.uptrend_fill_color is not None and not isinstance(
+            self.uptrend_fill_color, str
+        ):
             raise TypeValidationError("uptrend_fill_color", "string")
-        if self.downtrend_fill_color is not None and not isinstance(self.downtrend_fill_color, str):
+        if self.downtrend_fill_color is not None and not isinstance(
+            self.downtrend_fill_color, str
+        ):
             raise TypeValidationError("downtrend_fill_color", "string")
 
     @property
@@ -122,7 +126,9 @@ class TrendFillData(Data):
     def has_valid_uptrend_fill(self) -> bool:
         """Check if this data point has valid uptrend fill data."""
         return (
-            self.base_line is not None and self.trend_direction == 1 and self.trend_line is not None
+            self.base_line is not None
+            and self.trend_direction == 1
+            and self.trend_line is not None
         )
 
     @property

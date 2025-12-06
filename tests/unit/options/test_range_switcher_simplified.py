@@ -14,7 +14,7 @@ Note: Range filtering is always enabled in the frontend - no configuration neede
 # Standard library imports
 
 # Local imports
-from lightweight_charts_core.charts.options.ui_options import (
+from lightweight_charts_pro.charts.options.ui_options import (
     LegendOptions,
     RangeConfig,
     RangeSwitcherOptions,
@@ -53,7 +53,9 @@ class TestRangeSwitcherOptions:
         ranges = [RangeConfig(text="1D", range=TimeRange.ONE_DAY)]
 
         # Create RangeSwitcherOptions with custom values
-        options = RangeSwitcherOptions(visible=False, ranges=ranges, position="top-left")
+        options = RangeSwitcherOptions(
+            visible=False, ranges=ranges, position="top-left"
+        )
 
         # Verify custom values are set correctly
         assert options.visible is False
@@ -108,7 +110,9 @@ class TestRangeSwitcherOptions:
         """
         # Create RangeSwitcherOptions with configuration
         ranges = [RangeConfig(text="1D", range=TimeRange.ONE_DAY)]
-        options = RangeSwitcherOptions(visible=True, ranges=ranges, position="top-right")
+        options = RangeSwitcherOptions(
+            visible=True, ranges=ranges, position="top-right"
+        )
 
         # Serialize to dictionary
         result = options.asdict()
@@ -138,7 +142,9 @@ class TestRangeSwitcherOptions:
         ]
 
         # Create complete range switcher configuration
-        options = RangeSwitcherOptions(visible=True, ranges=trading_ranges, position="top-right")
+        options = RangeSwitcherOptions(
+            visible=True, ranges=trading_ranges, position="top-right"
+        )
 
         # Verify complete configuration
         assert options.visible is True

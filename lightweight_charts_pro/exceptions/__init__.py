@@ -166,7 +166,9 @@ class ValueValidationError(ValidationError):
         super().__init__(f"{field_name} {message}")
 
     @classmethod
-    def positive_value(cls, field_name: str, value: float | int) -> "ValueValidationError":
+    def positive_value(
+        cls, field_name: str, value: float | int
+    ) -> "ValueValidationError":
         """Create error for non-positive value.
 
         Helper method for validating that a value is positive (> 0).
@@ -731,7 +733,9 @@ class ColumnMappingRequiredError(RequiredFieldError):
     def __init__(self):
         """Initialize ColumnMappingRequiredError with standard message."""
         # Use predefined message for missing column mapping
-        super().__init__("column_mapping is required when providing DataFrame or Series data")
+        super().__init__(
+            "column_mapping is required when providing DataFrame or Series data"
+        )
 
 
 class DataItemsTypeError(TypeValidationError):
@@ -927,7 +931,8 @@ class NpmNotFoundError(ConfigurationError):
         """Initialize NpmNotFoundError with standard message."""
         # Use predefined message for NPM not found errors
         message = (
-            "NPM not found in system PATH. Please install Node.js and NPM to build frontend assets."
+            "NPM not found in system PATH. "
+            "Please install Node.js and NPM to build frontend assets."
         )
         super().__init__(message)
 

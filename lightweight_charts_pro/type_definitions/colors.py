@@ -56,7 +56,6 @@ License: MIT
 # Standard Imports
 from abc import ABC
 from dataclasses import dataclass
-from typing import Union
 
 from lightweight_charts_pro.exceptions import ColorValidationError
 from lightweight_charts_pro.type_definitions.enums import BackgroundStyle
@@ -193,4 +192,4 @@ class BackgroundGradient(Options, ABC):
 
 
 # Union type for all background types
-Background = Union[BackgroundSolid, BackgroundGradient]
+Background = BackgroundSolid | BackgroundGradient

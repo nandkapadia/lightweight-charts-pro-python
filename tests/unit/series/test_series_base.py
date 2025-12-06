@@ -44,41 +44,41 @@ from unittest.mock import Mock
 # Third Party Imports
 import pandas as pd
 import pytest
+from unit.series_utils import _get_enum_value
 
 # Local Imports
-from lightweight_charts_core.charts.options.price_format_options import (
+from lightweight_charts_pro.charts.options.price_format_options import (
     PriceFormatOptions,
 )
-from lightweight_charts_core.charts.options.price_line_options import PriceLineOptions
-from lightweight_charts_core.charts.options.price_scale_options import (
+from lightweight_charts_pro.charts.options.price_line_options import PriceLineOptions
+from lightweight_charts_pro.charts.options.price_scale_options import (
     PriceScaleMargins,
     PriceScaleOptions,
 )
-from lightweight_charts_core.charts.options.ui_options import LegendOptions
-from lightweight_charts_core.charts.series.area import AreaSeries
-from lightweight_charts_core.charts.series.base import Series
-from lightweight_charts_core.charts.series.candlestick import CandlestickSeries
-from lightweight_charts_core.charts.series.line import LineSeries
-from lightweight_charts_core.data.area_data import AreaData
-from lightweight_charts_core.data.candlestick_data import CandlestickData
-from lightweight_charts_core.data.data import classproperty
-from lightweight_charts_core.data.line_data import LineData
-from lightweight_charts_core.data.marker import BarMarker, Marker, MarkerBase
-from lightweight_charts_core.exceptions import (
+from lightweight_charts_pro.charts.options.ui_options import LegendOptions
+from lightweight_charts_pro.charts.series.area import AreaSeries
+from lightweight_charts_pro.charts.series.base import Series
+from lightweight_charts_pro.charts.series.candlestick import CandlestickSeries
+from lightweight_charts_pro.charts.series.line import LineSeries
+from lightweight_charts_pro.data.area_data import AreaData
+from lightweight_charts_pro.data.candlestick_data import CandlestickData
+from lightweight_charts_pro.data.data import classproperty
+from lightweight_charts_pro.data.line_data import LineData
+from lightweight_charts_pro.data.marker import BarMarker, Marker, MarkerBase
+from lightweight_charts_pro.exceptions import (
     ColumnMappingRequiredError,
     DataFrameValidationError,
     DataItemsTypeError,
     NotFoundError,
     ValueValidationError,
 )
-from lightweight_charts_core.type_definitions.enums import (
+from lightweight_charts_pro.type_definitions.enums import (
     ChartType,
     LineStyle,
     MarkerPosition,
     MarkerShape,
     PriceScaleMode,
 )
-from unit.series_utils import _get_enum_value
 
 
 class ConcreteSeries(Series):
@@ -162,7 +162,9 @@ class ConcreteSeries(Series):
                     and processed_data.index.name is None
                 ):
                     processed_data.index.name = col  # Set the column name as index name
-                    processed_data = processed_data.reset_index()  # Convert index to column
+                    processed_data = (
+                        processed_data.reset_index()
+                    )  # Convert index to column
                 # Handle MultiIndex with unnamed DatetimeIndex level
                 elif isinstance(processed_data.index, pd.MultiIndex):
                     # Find the level index that matches the column name
@@ -170,7 +172,9 @@ class ConcreteSeries(Series):
                         if (
                             name is None
                             and i < len(processed_data.index.levels)
-                            and isinstance(processed_data.index.levels[i], pd.DatetimeIndex)
+                            and isinstance(
+                                processed_data.index.levels[i], pd.DatetimeIndex
+                            )
                         ):
                             # Set the name for this level to enable proper reset
                             new_names = list(processed_data.index.names)
@@ -240,9 +244,13 @@ class TestSeriesBase:
 
     def test_construction_with_dataframe(self):
         """Test Series construction with DataFrame."""
-        test_data = pd.DataFrame({"time": [1640995200, 1641081600], "value": [100, 110]})
+        test_data = pd.DataFrame(
+            {"time": [1640995200, 1641081600], "value": [100, 110]}
+        )
 
-        series = ConcreteSeries(data=test_data, column_mapping={"time": "time", "value": "value"})
+        series = ConcreteSeries(
+            data=test_data, column_mapping={"time": "time", "value": "value"}
+        )
 
         assert len(series.data) == 2
         assert all(isinstance(d, LineData) for d in series.data)
@@ -251,7 +259,9 @@ class TestSeriesBase:
         """Test Series construction with custom parameters."""
         data = [LineData(time=1640995200, value=100)]
 
-        series = ConcreteSeries(data=data, visible=False, price_scale_id="left", pane_id=1)
+        series = ConcreteSeries(
+            data=data, visible=False, price_scale_id="left", pane_id=1
+        )
 
         assert series._visible is False
         assert series.price_scale_id == "left"
@@ -437,7 +447,9 @@ class TestSeriesBase:
 
     def test_from_dataframe_classmethod(self):
         """Test the from_dataframe class method."""
-        test_data = pd.DataFrame({"time": [1640995200, 1641081600], "value": [100, 110]})
+        test_data = pd.DataFrame(
+            {"time": [1640995200, 1641081600], "value": [100, 110]}
+        )
 
         series = ConcreteSeries.from_dataframe(
             df=test_data,
@@ -468,7 +480,11 @@ class TestSeriesBase:
         """Test from_dataframe with multi-index."""
         # Create DataFrame with multi-index already as columns
         test_data = pd.DataFrame(
-            {"date": [1640995200, 1641081600], "symbol": ["A", "B"], "value": [100, 110]},
+            {
+                "date": [1640995200, 1641081600],
+                "symbol": ["A", "B"],
+                "value": [100, 110],
+            },
         )
 
         series = ConcreteSeries.from_dataframe(
@@ -596,7 +612,11 @@ class TestSeriesBase:
         series = ConcreteSeries(data=data)
 
         # Test chaining with display_name
-        result = series.set_display_name("Moving Average").set_title("SMA(20)").set_visible(True)
+        result = (
+            series.set_display_name("Moving Average")
+            .set_title("SMA(20)")
+            .set_visible(True)
+        )
 
         assert result is series
         assert series.display_name == "Moving Average"
@@ -673,7 +693,9 @@ class TestSeriesBase:
 
     def test_error_handling_invalid_list_data(self):
         """Test error handling with list containing non-SingleValueData objects."""
-        invalid_data = [{"time": 1640995200, "value": 100}]  # dict instead of SingleValueData
+        invalid_data = [
+            {"time": 1640995200, "value": 100}
+        ]  # dict instead of SingleValueData
 
         with pytest.raises(DataItemsTypeError):
             ConcreteSeries(data=invalid_data)
@@ -827,7 +849,9 @@ class TestSeriesBaseAdvanced:
 
     def test_from_dataframe_with_series_input(self):
         """Test from_dataframe with pandas Series input."""
-        series_data = pd.Series([100, 110], index=pd.to_datetime(["2022-01-01", "2022-01-02"]))
+        series_data = pd.Series(
+            [100, 110], index=pd.to_datetime(["2022-01-01", "2022-01-02"])
+        )
 
         series = ConcreteSeries.from_dataframe(
             df=series_data,
@@ -859,7 +883,9 @@ class TestSeriesBaseAdvanced:
         """Test constructor with pandas Series data."""
         series_data = pd.Series([100, 110], index=[1640995200, 1641081600])
 
-        series = ConcreteSeries(data=series_data, column_mapping={"time": "index", "value": 0})
+        series = ConcreteSeries(
+            data=series_data, column_mapping={"time": "index", "value": 0}
+        )
 
         assert len(series.data) == 2
         assert all(isinstance(d, LineData) for d in series.data)
@@ -1305,9 +1331,12 @@ class TestSeriesPrepareIndexEdgeCases:
         )
         test_data = pd.DataFrame({"value": [10, 20, 30, 40]}, index=index)
 
-        column_mapping = {"time": "0", "value": "value"}  # Use integer string for level position
+        column_mapping = {
+            "time": "0",
+            "value": "value",
+        }  # Use integer string for level position
 
-        result = Series.prepare_index(test_data, column_mapping)
+        result, _ = Series.prepare_index(test_data, column_mapping)
 
         # Should reset the first level (position 0)
         assert "category" in result.columns
@@ -1325,7 +1354,7 @@ class TestSeriesPrepareIndexEdgeCases:
         column_mapping = {"time": "999", "value": "value"}  # Invalid level position
 
         # Should not raise error, just pass through
-        result = Series.prepare_index(test_data, column_mapping)
+        result, _ = Series.prepare_index(test_data, column_mapping)
         assert result.equals(test_data)
 
     def test_prepare_index_multiindex_named_level(self):
@@ -1338,7 +1367,7 @@ class TestSeriesPrepareIndexEdgeCases:
 
         column_mapping = {"time": "category", "value": "value"}
 
-        result = Series.prepare_index(test_data, column_mapping)
+        result, _ = Series.prepare_index(test_data, column_mapping)
 
         # Should reset the 'category' level
         assert "category" in result.columns
@@ -1355,7 +1384,7 @@ class TestSeriesPrepareIndexEdgeCases:
 
         column_mapping = {"time": "index", "value": "value"}
 
-        result = Series.prepare_index(test_data, column_mapping)
+        result, _ = Series.prepare_index(test_data, column_mapping)
 
         # Should reset the first unnamed level
         assert "level_0" in result.columns or "level" in result.columns
@@ -1371,7 +1400,7 @@ class TestSeriesPrepareIndexEdgeCases:
 
         column_mapping = {"time": "index", "value": "value"}
 
-        result = Series.prepare_index(test_data, column_mapping)
+        result, _ = Series.prepare_index(test_data, column_mapping)
 
         # Should reset the first level when all are named
         assert "category" in result.columns
@@ -1385,7 +1414,7 @@ class TestSeriesPrepareIndexEdgeCases:
 
         column_mapping = {"time": "timestamp", "value": "value"}
 
-        result = Series.prepare_index(test_data, column_mapping)
+        result, _ = Series.prepare_index(test_data, column_mapping)
 
         # Should reset the index
         assert "timestamp" in result.columns
@@ -1398,7 +1427,7 @@ class TestSeriesPrepareIndexEdgeCases:
 
         column_mapping = {"time": "index", "value": "value"}
 
-        result = Series.prepare_index(test_data, column_mapping)
+        result, _ = Series.prepare_index(test_data, column_mapping)
 
         # Should reset the index and create 'index' column
         assert "index" in result.columns
@@ -1411,7 +1440,7 @@ class TestSeriesPrepareIndexEdgeCases:
 
         column_mapping = {"time": "index", "value": "value"}
 
-        result = Series.prepare_index(test_data, column_mapping)
+        result, _ = Series.prepare_index(test_data, column_mapping)
 
         # Should reset the index
         assert "timestamp" in result.columns
@@ -1431,9 +1460,13 @@ class TestSeriesProcessDataframeInput:
                 return LineData
 
         # Create Series input
-        series_data = pd.Series([10, 20, 30, 40], index=pd.date_range("2023-01-01", periods=4))
+        series_data = pd.Series(
+            [10, 20, 30, 40], index=pd.date_range("2023-01-01", periods=4)
+        )
 
-        series = MockSeries(data=series_data, column_mapping={"time": "index", "value": 0})
+        series = MockSeries(
+            data=series_data, column_mapping={"time": "index", "value": 0}
+        )
 
         # The method should convert Series to DataFrame internally
         assert len(series.data) == 4
@@ -1465,7 +1498,9 @@ class TestSeriesProcessDataframeInput:
 
         # Column mapping references non-existent column
         with pytest.raises(NotFoundError):
-            MockSeries(data=test_data, column_mapping={"time": "nonexistent", "value": "value"})
+            MockSeries(
+                data=test_data, column_mapping={"time": "nonexistent", "value": "value"}
+            )
 
 
 class TestSeriesUpdateMethods:
@@ -1796,7 +1831,9 @@ class TestSeriesFromDataframeEdgeCases:
                 return LineData
 
         # Create Series input
-        series_data = pd.Series([10, 20, 30, 40], index=pd.date_range("2023-01-01", periods=4))
+        series_data = pd.Series(
+            [10, 20, 30, 40], index=pd.date_range("2023-01-01", periods=4)
+        )
 
         result = MockSeries.from_dataframe(
             series_data,
@@ -2028,7 +2065,9 @@ class TestSeriesLegendMethodChaining:
         legend = LegendOptions(position="top-left")
 
         # Chain multiple property setters
-        result = series.set_visible(False).set_legend(legend).set_price_scale_id("right")
+        result = (
+            series.set_visible(False).set_legend(legend).set_price_scale_id("right")
+        )
 
         # Should return self for chaining
         assert result is series
@@ -2044,7 +2083,11 @@ class TestSeriesLegendMethodChaining:
         legend = LegendOptions()
 
         # Chain legend property with legend methods
-        result = series.set_legend(legend).legend.set_visible(False).set_position("bottom-right")
+        result = (
+            series.set_legend(legend)
+            .legend.set_visible(False)
+            .set_position("bottom-right")
+        )
 
         # Should return the legend object for further chaining
         assert result is legend
@@ -2121,7 +2164,8 @@ class TestSeriesLegendEdgeCases:
         assert config["legend"]["text"] == unicode_text
 
     def test_legend_property_immutability(self):
-        """Test that legend property changes affect the original legend object
+        """Test that legend property changes affect the original legend object.
+
         (shared reference).
         """
         series = LineSeries(data=[])
@@ -2169,7 +2213,9 @@ class TestSeriesLegendIntegration:
 
     def test_candlestick_series_legend_integration(self):
         """Test legend integration with CandlestickSeries."""
-        data = [CandlestickData(time="2023-01-01", open=100, high=105, low=95, close=102)]
+        data = [
+            CandlestickData(time="2023-01-01", open=100, high=105, low=95, close=102)
+        ]
         series = CandlestickSeries(data=data)
         legend = LegendOptions(position="top-left")
         series.legend = legend

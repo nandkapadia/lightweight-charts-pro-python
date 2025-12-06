@@ -8,12 +8,13 @@ which represents candlestick chart series with styling options.
 
 import pandas as pd
 import pytest
-from lightweight_charts_core.charts.options.price_line_options import PriceLineOptions
-from lightweight_charts_core.charts.series.base import Series
-from lightweight_charts_core.charts.series.candlestick import CandlestickSeries
-from lightweight_charts_core.data.candlestick_data import CandlestickData
-from lightweight_charts_core.data.marker import BarMarker
-from lightweight_charts_core.exceptions import (
+
+from lightweight_charts_pro.charts.options.price_line_options import PriceLineOptions
+from lightweight_charts_pro.charts.series.base import Series
+from lightweight_charts_pro.charts.series.candlestick import CandlestickSeries
+from lightweight_charts_pro.data.candlestick_data import CandlestickData
+from lightweight_charts_pro.data.marker import BarMarker
+from lightweight_charts_pro.exceptions import (
     ColorValidationError,
     ColumnMappingRequiredError,
     DataFrameValidationError,
@@ -21,7 +22,7 @@ from lightweight_charts_core.exceptions import (
     TypeValidationError,
     ValueValidationError,
 )
-from lightweight_charts_core.type_definitions import (
+from lightweight_charts_pro.type_definitions import (
     ChartType,
     MarkerPosition,
     MarkerShape,
@@ -48,7 +49,9 @@ class TestCandlestickSeriesConstruction:
     def test_construction_with_custom_parameters(self):
         """Test construction with custom parameters."""
         data = [CandlestickData(time=1640995200, open=100, high=105, low=98, close=103)]
-        series = CandlestickSeries(data=data, visible=False, price_scale_id="left", pane_id=1)
+        series = CandlestickSeries(
+            data=data, visible=False, price_scale_id="left", pane_id=1
+        )
 
         assert series.visible is False
         assert series.price_scale_id == "left"
@@ -83,7 +86,13 @@ class TestCandlestickSeriesConstruction:
         """Test construction with pandas Series."""
         # Create a DataFrame instead of Series for simpler testing
         test_dataframe = pd.DataFrame(
-            {"time": [1640995200], "open": [100], "high": [105], "low": [98], "close": [103]},
+            {
+                "time": [1640995200],
+                "open": [100],
+                "high": [105],
+                "low": [98],
+                "close": [103],
+            },
         )
         series = CandlestickSeries(
             data=test_dataframe,
@@ -109,7 +118,9 @@ class TestCandlestickSeriesConstruction:
     def test_construction_with_custom_parameters_duplicate(self):
         """Test construction with custom parameters."""
         data = [CandlestickData(time=1640995200, open=100, high=105, low=98, close=103)]
-        series = CandlestickSeries(data=data, visible=False, price_scale_id="left", pane_id=1)
+        series = CandlestickSeries(
+            data=data, visible=False, price_scale_id="left", pane_id=1
+        )
 
         assert series._visible is False
         assert series.price_scale_id == "left"
@@ -483,7 +494,12 @@ class TestCandlestickSeriesDataHandling:
     def test_from_dataframe_with_index_columns(self):
         """Test from_dataframe with index columns."""
         test_dataframe = pd.DataFrame(
-            {"open": [100, 103], "high": [105, 108], "low": [98, 102], "close": [103, 106]},
+            {
+                "open": [100, 103],
+                "high": [105, 108],
+                "low": [98, 102],
+                "close": [103, 106],
+            },
             index=pd.to_datetime(["2022-01-01", "2022-01-02"]),
         )
 
@@ -504,7 +520,12 @@ class TestCandlestickSeriesDataHandling:
     def test_from_dataframe_with_multi_index(self):
         """Test from_dataframe with multi-index."""
         test_dataframe = pd.DataFrame(
-            {"open": [100, 103], "high": [105, 108], "low": [98, 102], "close": [103, 106]},
+            {
+                "open": [100, 103],
+                "high": [105, 108],
+                "low": [98, 102],
+                "close": [103, 106],
+            },
         )
         test_dataframe.index = pd.MultiIndex.from_tuples(
             [(1640995200, "A"), (1641081600, "B")],
@@ -571,7 +592,13 @@ class TestCandlestickSeriesValidation:
     def test_error_handling_dataframe_without_column_mapping(self):
         """Test error handling with DataFrame without column mapping."""
         test_dataframe = pd.DataFrame(
-            {"time": [1640995200], "open": [100], "high": [105], "low": [98], "close": [103]},
+            {
+                "time": [1640995200],
+                "open": [100],
+                "high": [105],
+                "low": [98],
+                "close": [103],
+            },
         )
 
         with pytest.raises(ColumnMappingRequiredError):
@@ -646,7 +673,9 @@ class TestCandlestickSeriesEdgeCases:
     def test_very_large_values(self):
         """Test handling of very large values."""
         data = [
-            CandlestickData(time=1640995200, open=1000000, high=1000001, low=999999, close=1000000),
+            CandlestickData(
+                time=1640995200, open=1000000, high=1000001, low=999999, close=1000000
+            ),
         ]
         series = CandlestickSeries(data=data)
 

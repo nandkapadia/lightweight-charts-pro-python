@@ -1,4 +1,4 @@
-"""Base Chart Manager for lightweight-charts-core.
+"""Base Chart Manager for lightweight-charts-pro.
 
 This module provides the BaseChartManager class containing all framework-agnostic
 chart management logic. Framework-specific implementations should extend this class
@@ -47,7 +47,9 @@ class BaseChartManager:
         self.symbol: str | None = None
         self.display_interval: str | None = None
 
-    def add_chart(self, chart: BaseChart, chart_id: str | None = None) -> "BaseChartManager":
+    def add_chart(
+        self, chart: BaseChart, chart_id: str | None = None
+    ) -> "BaseChartManager":
         """Add a chart to the manager.
 
         Args:
@@ -156,7 +158,9 @@ class BaseChartManager:
         """
         return self.sync_groups.get(str(group_id))
 
-    def enable_crosshair_sync(self, group_id: int | str | None = None) -> "BaseChartManager":
+    def enable_crosshair_sync(
+        self, group_id: int | str | None = None
+    ) -> "BaseChartManager":
         """Enable crosshair synchronization.
 
         Args:
@@ -175,7 +179,9 @@ class BaseChartManager:
             self.default_sync.enable_crosshair()
         return self
 
-    def disable_crosshair_sync(self, group_id: int | str | None = None) -> "BaseChartManager":
+    def disable_crosshair_sync(
+        self, group_id: int | str | None = None
+    ) -> "BaseChartManager":
         """Disable crosshair synchronization.
 
         Args:
@@ -193,7 +199,9 @@ class BaseChartManager:
             self.default_sync.disable_crosshair()
         return self
 
-    def enable_time_range_sync(self, group_id: int | str | None = None) -> "BaseChartManager":
+    def enable_time_range_sync(
+        self, group_id: int | str | None = None
+    ) -> "BaseChartManager":
         """Enable time range synchronization.
 
         Args:
@@ -212,7 +220,9 @@ class BaseChartManager:
             self.default_sync.enable_time_range()
         return self
 
-    def disable_time_range_sync(self, group_id: int | str | None = None) -> "BaseChartManager":
+    def disable_time_range_sync(
+        self, group_id: int | str | None = None
+    ) -> "BaseChartManager":
         """Disable time range synchronization.
 
         Args:

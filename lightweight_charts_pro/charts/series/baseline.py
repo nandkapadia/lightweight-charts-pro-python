@@ -47,7 +47,7 @@ from lightweight_charts_pro.utils.data_utils import is_valid_color
 
 
 def _validate_base_value_static(base_value) -> dict[str, Any]:
-    """Static version of base_value validator for decorator use."""
+    """Validate base_value for decorator use with static function."""
     if isinstance(base_value, (int, float)):
         return {"type": "price", "price": float(base_value)}
     if isinstance(base_value, dict):
@@ -79,6 +79,16 @@ class BaselineSeries(Series):
         price_scale_id: str = "right",
         pane_id: int | None = 0,
     ):
+        """Initialize a baseline series with the given data and configuration.
+
+        Args:
+            data: Baseline data as list, DataFrame, or Series.
+            column_mapping: Optional mapping of column names.
+            visible: Whether the series is initially visible.
+            price_scale_id: ID of the price scale to use.
+            pane_id: ID of the pane to display the series in.
+
+        """
         super().__init__(
             data=data,
             column_mapping=column_mapping,
@@ -100,14 +110,19 @@ class BaselineSeries(Series):
         self._bottom_fill_color2 = BASELINE_BOTTOM_FILL_COLOR2
         self._bottom_line_color = BASELINE_BOTTOM_LINE_COLOR
 
-    def _validate_base_value(self, base_value: int | float | dict[str, Any]) -> dict[str, Any]:
+    def _validate_base_value(
+        self, base_value: int | float | dict[str, Any]
+    ) -> dict[str, Any]:
         """Validate and normalize base_value."""
         if isinstance(base_value, (int, float)):
             return {"type": "price", "price": float(base_value)}
         if isinstance(base_value, dict):
             if "type" not in base_value or "price" not in base_value:
                 raise BaseValueFormatError()
-            return {"type": str(base_value["type"]), "price": float(base_value["price"])}
+            return {
+                "type": str(base_value["type"]),
+                "price": float(base_value["price"]),
+            }
         raise BaseValueFormatError()
 
     def _validate_color(self, color: str, property_name: str) -> str:

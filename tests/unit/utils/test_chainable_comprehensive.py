@@ -9,16 +9,16 @@ method chaining, type validation, edge cases, and error handling.
 # mypy: disable-error-code=attr-defined
 
 from dataclasses import dataclass
-from typing import Optional, Union
 
 import pytest
-from lightweight_charts_core.data.marker import MarkerBase
-from lightweight_charts_core.exceptions import (
+
+from lightweight_charts_pro.data.marker import MarkerBase
+from lightweight_charts_pro.exceptions import (
     ColorValidationError,
     TypeValidationError,
     ValueValidationError,
 )
-from lightweight_charts_core.utils.chainable import (
+from lightweight_charts_pro.utils.chainable import (
     _is_list_of_markers,
     _validate_list_of_markers,
     chainable_field,
@@ -84,7 +84,7 @@ class TestChainableProperty:
     def test_chainable_property_with_none_support(self):
         """Test chainable property with None support."""
 
-        @chainable_property("optional_field", Optional[str], allow_none=True)
+        @chainable_property("optional_field", str | None, allow_none=True)
         class TestConfig:
             def __init__(self):
                 self._optional_field = "default"
@@ -215,7 +215,7 @@ class TestChainableField:
         """Test chainable field with Union types."""
 
         @dataclass
-        @chainable_field("value", Union[int, float])
+        @chainable_field("value", int | float)
         class TestOptions:
             value: int | float = 0
 
@@ -233,7 +233,7 @@ class TestChainableField:
         """Test chainable field with Optional type."""
 
         @dataclass
-        @chainable_field("optional_value", Optional[int])
+        @chainable_field("optional_value", int | None)
         class TestOptions:
             optional_value: int | None = None
 
@@ -775,13 +775,13 @@ class TestMarkerValidation:
     def test_is_list_of_markers_with_union_type(self):
         """Test _is_list_of_markers with Union type containing MarkerBase."""
         # Union type with MarkerBase should not be considered a list of markers
-        result = _is_list_of_markers(Union[MarkerBase, str])
+        result = _is_list_of_markers(MarkerBase | str)
         assert result is False
 
     def test_is_list_of_markers_with_optional_marker(self):
         """Test _is_list_of_markers with Optional[MarkerBase]."""
         # Optional type should not be considered a list of markers
-        result = _is_list_of_markers(Optional[MarkerBase])
+        result = _is_list_of_markers(MarkerBase | None)
         assert result is False
 
     def test_is_list_of_markers_with_nested_list(self):

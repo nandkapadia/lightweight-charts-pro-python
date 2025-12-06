@@ -10,13 +10,11 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 import pytest
-from lightweight_charts_core.charts.series.bar_series import BarSeries
-from lightweight_charts_core.data.bar_data import BarData
-from lightweight_charts_core.data.ohlc_data import OhlcData
-from lightweight_charts_core.exceptions import (
-    ColorValidationError,
-    ValueValidationError,
-)
+
+from lightweight_charts_pro.charts.series.bar_series import BarSeries
+from lightweight_charts_pro.data.bar_data import BarData
+from lightweight_charts_pro.data.ohlc_data import OhlcData
+from lightweight_charts_pro.exceptions import ColorValidationError, ValueValidationError
 
 
 class TestBarDataConstruction:
@@ -87,7 +85,9 @@ class TestBarDataConstruction:
         assert isinstance(result["time"], int)
         # The actual timestamp depends on timezone, so we'll check it's a reasonable value
         assert result["time"] > 1640970000  # Should be around 2022-01-01
-        assert result["time"] < 1641020000  # Should be around 2022-01-01 (accounting for timezone)
+        assert (
+            result["time"] < 1641020000
+        )  # Should be around 2022-01-01 (accounting for timezone)
 
     def test_construction_with_pandas_timestamp(self):
         """Test BarData construction with pandas timestamp."""
@@ -103,7 +103,9 @@ class TestBarDataConstruction:
 
     def test_construction_with_float_values(self):
         """Test BarData construction with float values."""
-        data = BarData(time=1640995200, open=100.5, high=110.75, low=95.25, close=105.125)
+        data = BarData(
+            time=1640995200, open=100.5, high=110.75, low=95.25, close=105.125
+        )
 
         assert data.open == 100.5
         assert data.high == 110.75
@@ -137,7 +139,9 @@ class TestBarDataValidation:
         assert data.high == data.low
 
         # Invalid case: high < low
-        with pytest.raises(ValueValidationError, match="high must be greater than or equal to low"):
+        with pytest.raises(
+            ValueValidationError, match="high must be greater than or equal to low"
+        ):
             BarData(time=1640995200, open=100.0, high=95.0, low=110.0, close=105.0)
 
     def test_validation_non_negative_values(self):
@@ -153,19 +157,27 @@ class TestBarDataValidation:
         assert all(val >= 0 for val in [data.open, data.high, data.low, data.close])
 
         # Invalid case: negative open
-        with pytest.raises(ValueValidationError, match="all OHLC values must be non-negative"):
+        with pytest.raises(
+            ValueValidationError, match="all OHLC values must be non-negative"
+        ):
             BarData(time=1640995200, open=-100.0, high=110.0, low=95.0, close=105.0)
 
-        # Invalid case: negative high (but high < low, so different error)
-        with pytest.raises(ValueValidationError, match="high must be greater than or equal to low"):
+        # Invalid case: negative high (non-negative check happens first)
+        with pytest.raises(
+            ValueValidationError, match="all OHLC values must be non-negative"
+        ):
             BarData(time=1640995200, open=100.0, high=-110.0, low=95.0, close=105.0)
 
         # Invalid case: negative low
-        with pytest.raises(ValueValidationError, match="all OHLC values must be non-negative"):
+        with pytest.raises(
+            ValueValidationError, match="all OHLC values must be non-negative"
+        ):
             BarData(time=1640995200, open=100.0, high=110.0, low=-95.0, close=105.0)
 
         # Invalid case: negative close
-        with pytest.raises(ValueValidationError, match="all OHLC values must be non-negative"):
+        with pytest.raises(
+            ValueValidationError, match="all OHLC values must be non-negative"
+        ):
             BarData(time=1640995200, open=100.0, high=110.0, low=95.0, close=-105.0)
 
     def test_validation_none_values(self):
@@ -225,7 +237,9 @@ class TestBarDataValidation:
     def test_validation_empty_color(self):
         """Test validation of empty color."""
         # Empty string color should be allowed
-        data = BarData(time=1640995200, open=100.0, high=110.0, low=95.0, close=105.0, color="")
+        data = BarData(
+            time=1640995200, open=100.0, high=110.0, low=95.0, close=105.0, color=""
+        )
         # Empty color string is converted to None by centralized validation
         assert data.color is None
 
@@ -268,7 +282,9 @@ class TestBarDataSerialization:
 
     def test_to_dict_with_empty_color(self):
         """Test to_dict with empty color."""
-        data = BarData(time=1640995200, open=100.0, high=110.0, low=95.0, close=105.0, color="")
+        data = BarData(
+            time=1640995200, open=100.0, high=110.0, low=95.0, close=105.0, color=""
+        )
 
         result = data.asdict()
 
@@ -280,16 +296,12 @@ class TestBarDataSerialization:
         assert "color" not in result  # empty string should be omitted
 
     def test_to_dict_nan_handling(self):
-        """Test to_dict with NaN values."""
-        data = BarData(time=1640995200, open=float("nan"), high=110.0, low=95.0, close=105.0)
-
-        result = data.asdict()
-
-        assert result["time"] == 1640995200
-        assert result["open"] == 0.0  # NaN should be converted to 0.0
-        assert result["high"] == 110.0
-        assert result["low"] == 95.0
-        assert result["close"] == 105.0
+        """Test that NaN values raise error."""
+        # NaN should raise ValueValidationError
+        with pytest.raises(ValueValidationError):
+            BarData(
+                time=1640995200, open=float("nan"), high=110.0, low=95.0, close=105.0
+            )
 
 
 class TestBarDataInheritance:
@@ -324,20 +336,16 @@ class TestBarDataEdgeCases:
     """Test BarData edge cases."""
 
     def test_nan_values_handling(self):
-        """Test handling of NaN values."""
-        data = BarData(
-            time=1640995200,
-            open=float("nan"),
-            high=float("nan"),
-            low=float("nan"),
-            close=float("nan"),
-        )
-
-        # NaN values should be converted to 0.0
-        assert data.open == 0.0
-        assert data.high == 0.0
-        assert data.low == 0.0
-        assert data.close == 0.0
+        """Test handling of NaN values - should raise error."""
+        # NaN values should raise ValueValidationError
+        with pytest.raises(ValueValidationError):
+            BarData(
+                time=1640995200,
+                open=float("nan"),
+                high=float("nan"),
+                low=float("nan"),
+                close=float("nan"),
+            )
 
     def test_zero_values(self):
         """Test handling of zero values."""
@@ -366,7 +374,9 @@ class TestBarDataEdgeCases:
 
     def test_small_decimals(self):
         """Test handling of small decimal numbers."""
-        data = BarData(time=1640995200, open=0.000001, high=0.000002, low=0.000000, close=0.0000015)
+        data = BarData(
+            time=1640995200, open=0.000001, high=0.000002, low=0.000000, close=0.0000015
+        )
 
         assert data.open == 0.000001
         assert data.high == 0.000002
@@ -376,7 +386,9 @@ class TestBarDataEdgeCases:
     def test_time_normalization_edge_cases(self):
         """Test time normalization edge cases."""
         # Test with numpy int64 (common in pandas) - stored as-is
-        data = BarData(time=np.int64(1640995200), open=100.0, high=110.0, low=95.0, close=105.0)
+        data = BarData(
+            time=np.int64(1640995200), open=100.0, high=110.0, low=95.0, close=105.0
+        )
 
         assert isinstance(data.time, np.int64)  # Stored as-is
         # Time is normalized in asdict()

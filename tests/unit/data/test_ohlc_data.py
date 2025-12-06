@@ -5,8 +5,9 @@ construction, validation, and serialization.
 """
 
 import pytest
-from lightweight_charts_core.data.ohlc_data import OhlcData
-from lightweight_charts_core.exceptions import ValueValidationError
+
+from lightweight_charts_pro.data.ohlc_data import OhlcData
+from lightweight_charts_pro.exceptions import ValueValidationError
 
 
 class TestOhlcData:
@@ -63,13 +64,17 @@ class TestOhlcData:
         assert data.time == 1640995200
 
         # Valid string time - stored as-is, normalized in asdict()
-        data = OhlcData(time="2022-01-01", open=100.0, high=105.0, low=95.0, close=102.0)
+        data = OhlcData(
+            time="2022-01-01", open=100.0, high=105.0, low=95.0, close=102.0
+        )
         assert data.time == "2022-01-01"  # Stored as-is
         result = data.asdict()
         assert isinstance(result["time"], int)  # Normalized in asdict()
 
         # Valid float time - stored as-is, normalized in asdict()
-        data = OhlcData(time=1640995200.5, open=100.0, high=105.0, low=95.0, close=102.0)
+        data = OhlcData(
+            time=1640995200.5, open=100.0, high=105.0, low=95.0, close=102.0
+        )
         assert data.time == 1640995200.5  # Stored as-is
         result = data.asdict()
         assert result["time"] == 1640995200  # Normalized to int in asdict()
@@ -103,18 +108,17 @@ class TestOhlcData:
 
     def test_nan_handling(self):
         """Test handling of NaN values."""
-        # NaN values should be converted to 0.0
-        data = OhlcData(
-            time=1640995200,
-            open=float("nan"),
-            high=float("nan"),
-            low=float("nan"),
-            close=float("nan"),
-        )
-        assert data.open == 0.0
-        assert data.high == 0.0
-        assert data.low == 0.0
-        assert data.close == 0.0
+        # NaN values should raise ValueValidationError (not be coerced to 0)
+        # This prevents silent data corruption in backtests/PnL calculations
+        with pytest.raises(ValueValidationError) as exc_info:
+            OhlcData(
+                time=1640995200,
+                open=float("nan"),
+                high=float("nan"),
+                low=float("nan"),
+                close=float("nan"),
+            )
+        assert "NaN is not allowed" in str(exc_info.value)
 
         # Infinity values are not handled by the class (they remain as inf)
         data = OhlcData(
@@ -145,7 +149,9 @@ class TestOhlcData:
         assert data.close == 999999.99
 
         # Very small numbers
-        data = OhlcData(time=1640995200, open=0.0001, high=0.0001, low=0.0001, close=0.0001)
+        data = OhlcData(
+            time=1640995200, open=0.0001, high=0.0001, low=0.0001, close=0.0001
+        )
         assert data.open == 0.0001
         assert data.high == 0.0001
         assert data.low == 0.0001
@@ -170,7 +176,9 @@ class TestOhlcData:
 
     def test_time_modification_after_construction(self):
         """Test that time can be modified after construction."""
-        data = OhlcData(time="2024-01-01", open=100.0, high=105.0, low=95.0, close=102.0)
+        data = OhlcData(
+            time="2024-01-01", open=100.0, high=105.0, low=95.0, close=102.0
+        )
         result1 = data.asdict()
         time1 = result1["time"]
 
@@ -184,7 +192,9 @@ class TestOhlcData:
 
     def test_copy_method(self):
         """Test the copy method creates a new instance with same values."""
-        original = OhlcData(time=1640995200, open=100.0, high=105.0, low=95.0, close=102.0)
+        original = OhlcData(
+            time=1640995200, open=100.0, high=105.0, low=95.0, close=102.0
+        )
 
         # Since OhlcData doesn't have a copy method, we'll test that
         # we can create a new instance with the same values
@@ -248,7 +258,13 @@ class TestOhlcData:
 
     def test_from_dict_method(self):
         """Test creating OhlcData from dictionary using unpacking."""
-        data_dict = {"time": 1640995200, "open": 100.0, "high": 105.0, "low": 95.0, "close": 102.0}
+        data_dict = {
+            "time": 1640995200,
+            "open": 100.0,
+            "high": 105.0,
+            "low": 95.0,
+            "close": 102.0,
+        }
 
         data = OhlcData(**data_dict)
 
@@ -275,19 +291,27 @@ class TestOhlcData:
     def test_candlestick_scenarios(self):
         """Test various candlestick scenarios."""
         # Bullish candle (close > open)
-        bullish_data = OhlcData(time=1640995200, open=100.0, high=105.0, low=98.0, close=102.0)
+        bullish_data = OhlcData(
+            time=1640995200, open=100.0, high=105.0, low=98.0, close=102.0
+        )
         assert bullish_data.close > bullish_data.open
 
         # Bearish candle (close < open)
-        bearish_data = OhlcData(time=1640995200, open=102.0, high=105.0, low=98.0, close=100.0)
+        bearish_data = OhlcData(
+            time=1640995200, open=102.0, high=105.0, low=98.0, close=100.0
+        )
         assert bearish_data.close < bearish_data.open
 
         # Doji candle (close == open)
-        doji_data = OhlcData(time=1640995200, open=100.0, high=105.0, low=95.0, close=100.0)
+        doji_data = OhlcData(
+            time=1640995200, open=100.0, high=105.0, low=95.0, close=100.0
+        )
         assert doji_data.close == doji_data.open
 
         # Hammer candle (long lower shadow)
-        hammer_data = OhlcData(time=1640995200, open=100.0, high=101.0, low=95.0, close=100.5)
+        hammer_data = OhlcData(
+            time=1640995200, open=100.0, high=101.0, low=95.0, close=100.5
+        )
         assert hammer_data.low < hammer_data.open
         assert hammer_data.low < hammer_data.close
 

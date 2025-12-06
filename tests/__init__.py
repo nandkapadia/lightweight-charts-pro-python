@@ -1,1 +1,1 @@
-"""Tests for lightweight-charts-core package."""
+"""Tests for lightweight-charts-pro package."""

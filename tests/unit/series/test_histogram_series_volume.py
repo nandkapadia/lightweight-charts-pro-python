@@ -12,11 +12,12 @@ import numpy as np
 import pandas as pd
 import psutil
 import pytest
-from lightweight_charts_core.charts.series.histogram import HistogramSeries
-from lightweight_charts_core.constants import HISTOGRAM_UP_COLOR_DEFAULT
-from lightweight_charts_core.data.histogram_data import HistogramData
-from lightweight_charts_core.data.ohlcv_data import OhlcvData
-from lightweight_charts_core.exceptions import ColorValidationError
+
+from lightweight_charts_pro.charts.series.histogram import HistogramSeries
+from lightweight_charts_pro.constants import HISTOGRAM_UP_COLOR_DEFAULT
+from lightweight_charts_pro.data.histogram_data import HistogramData
+from lightweight_charts_pro.data.ohlcv_data import OhlcvData
+from lightweight_charts_pro.exceptions import ColorValidationError
 
 
 class TestHistogramSeriesCreateVolumeSeries:
@@ -35,7 +36,12 @@ class TestHistogramSeriesCreateVolumeSeries:
 
         volume_series = HistogramSeries.create_volume_series(
             test_dataframe,
-            column_mapping={"time": "time", "volume": "volume", "open": "open", "close": "close"},
+            column_mapping={
+                "time": "time",
+                "volume": "volume",
+                "open": "open",
+                "close": "close",
+            },
             up_color="rgba(76,175,80,0.5)",
             down_color="rgba(244,67,54,0.5)",
         )
@@ -59,7 +65,12 @@ class TestHistogramSeriesCreateVolumeSeries:
 
         volume_series = HistogramSeries.create_volume_series(
             test_dataframe,
-            column_mapping={"time": "time", "volume": "volume", "open": "open", "close": "close"},
+            column_mapping={
+                "time": "time",
+                "volume": "volume",
+                "open": "open",
+                "close": "close",
+            },
             up_color="rgba(76,175,80,0.5)",
             down_color="rgba(244,67,54,0.5)",
         )
@@ -81,7 +92,12 @@ class TestHistogramSeriesCreateVolumeSeries:
 
         volume_series = HistogramSeries.create_volume_series(
             test_dataframe,
-            column_mapping={"time": "time", "volume": "volume", "open": "open", "close": "close"},
+            column_mapping={
+                "time": "time",
+                "volume": "volume",
+                "open": "open",
+                "close": "close",
+            },
             up_color="rgba(76,175,80,0.5)",
             down_color="rgba(244,67,54,0.5)",
         )
@@ -126,7 +142,12 @@ class TestHistogramSeriesCreateVolumeSeries:
 
         volume_series = HistogramSeries.create_volume_series(
             test_dataframe,
-            column_mapping={"time": "datetime", "volume": "vol", "open": "o", "close": "c"},
+            column_mapping={
+                "time": "datetime",
+                "volume": "vol",
+                "open": "o",
+                "close": "c",
+            },
             up_color="rgba(76,175,80,0.5)",
             down_color="rgba(244,67,54,0.5)",
         )
@@ -139,34 +160,58 @@ class TestHistogramSeriesCreateVolumeSeries:
     def test_default_colors(self):
         """Test with default colors."""
         test_dataframe = pd.DataFrame(
-            {"time": ["2024-01-01"], "volume": [1000], "open": [100], "close": [105]},  # Bullish
+            {
+                "time": ["2024-01-01"],
+                "volume": [1000],
+                "open": [100],
+                "close": [105],
+            },  # Bullish
         )
 
         volume_series = HistogramSeries.create_volume_series(
             test_dataframe,
-            column_mapping={"time": "time", "volume": "volume", "open": "open", "close": "close"},
+            column_mapping={
+                "time": "time",
+                "volume": "volume",
+                "open": "open",
+                "close": "close",
+            },
         )
 
         assert isinstance(volume_series, HistogramSeries)
         assert len(volume_series.data) == 1
-        assert volume_series.data[0].color == HISTOGRAM_UP_COLOR_DEFAULT  # Default up color
+        assert (
+            volume_series.data[0].color == HISTOGRAM_UP_COLOR_DEFAULT
+        )  # Default up color
 
     def test_equal_open_close(self):
         """Test when open equals close (should be treated as bullish)."""
         test_dataframe = pd.DataFrame(
-            {"time": ["2024-01-01"], "volume": [1000], "open": [100], "close": [100]},  # Equal
+            {
+                "time": ["2024-01-01"],
+                "volume": [1000],
+                "open": [100],
+                "close": [100],
+            },  # Equal
         )
 
         volume_series = HistogramSeries.create_volume_series(
             test_dataframe,
-            column_mapping={"time": "time", "volume": "volume", "open": "open", "close": "close"},
+            column_mapping={
+                "time": "time",
+                "volume": "volume",
+                "open": "open",
+                "close": "close",
+            },
             up_color="rgba(76,175,80,0.5)",
             down_color="rgba(244,67,54,0.5)",
         )
 
         assert isinstance(volume_series, HistogramSeries)
         assert len(volume_series.data) == 1
-        assert volume_series.data[0].color == "rgba(76,175,80,0.5)"  # Treated as bullish
+        assert (
+            volume_series.data[0].color == "rgba(76,175,80,0.5)"
+        )  # Treated as bullish
 
     def test_series_properties(self):
         """Test that the returned series has correct properties."""
@@ -176,7 +221,12 @@ class TestHistogramSeriesCreateVolumeSeries:
 
         volume_series = HistogramSeries.create_volume_series(
             test_dataframe,
-            column_mapping={"time": "time", "volume": "volume", "open": "open", "close": "close"},
+            column_mapping={
+                "time": "time",
+                "volume": "volume",
+                "open": "open",
+                "close": "close",
+            },
             pane_id=1,
             price_scale_id="left",
         )
@@ -203,7 +253,12 @@ class TestHistogramSeriesCreateVolumeSeries:
 
         volume_series = HistogramSeries.create_volume_series(
             test_dataframe,
-            column_mapping={"time": "time", "volume": "volume", "open": "open", "close": "close"},
+            column_mapping={
+                "time": "time",
+                "volume": "volume",
+                "open": "open",
+                "close": "close",
+            },
             up_color="rgba(76,175,80,0.5)",
             down_color="rgba(244,67,54,0.5)",
         )
@@ -236,7 +291,12 @@ class TestHistogramSeriesCreateVolumeSeries:
 
         volume_series = HistogramSeries.create_volume_series(
             test_dataframe,
-            column_mapping={"time": "time", "volume": "volume", "open": "open", "close": "close"},
+            column_mapping={
+                "time": "time",
+                "volume": "volume",
+                "open": "open",
+                "close": "close",
+            },
             up_color="rgba(76,175,80,0.5)",
             down_color="rgba(244,67,54,0.5)",
         )
@@ -265,7 +325,12 @@ class TestHistogramSeriesCreateVolumeSeries:
 
         volume_series = HistogramSeries.create_volume_series(
             test_dataframe,
-            column_mapping={"time": "time", "volume": "volume", "open": "open", "close": "close"},
+            column_mapping={
+                "time": "time",
+                "volume": "volume",
+                "open": "open",
+                "close": "close",
+            },
         )
 
         # All should be valid timestamps when serialized
@@ -291,7 +356,12 @@ class TestHistogramSeriesCreateVolumeSeries:
 
         volume_series = HistogramSeries.create_volume_series(
             test_dataframe,
-            column_mapping={"time": "time", "volume": "volume", "open": "open", "close": "close"},
+            column_mapping={
+                "time": "time",
+                "volume": "volume",
+                "open": "open",
+                "close": "close",
+            },
             up_color="rgba(76,175,80,0.5)",
             down_color="rgba(244,67,54,0.5)",
         )
@@ -386,7 +456,12 @@ class TestHistogramSeriesCreateVolumeSeries:
 
         volume_series = HistogramSeries.create_volume_series(
             test_dataframe,
-            column_mapping={"time": "time", "volume": "volume", "open": "open", "close": "close"},
+            column_mapping={
+                "time": "time",
+                "volume": "volume",
+                "open": "open",
+                "close": "close",
+            },
             up_color="rgba(76,175,80,0.5)",
             down_color="rgba(244,67,54,0.5)",
         )
@@ -415,7 +490,12 @@ class TestHistogramSeriesCreateVolumeSeries:
 
         volume_series = HistogramSeries.create_volume_series(
             test_dataframe,
-            column_mapping={"time": "time", "volume": "volume", "open": "open", "close": "close"},
+            column_mapping={
+                "time": "time",
+                "volume": "volume",
+                "open": "open",
+                "close": "close",
+            },
             up_color="rgba(76,175,80,0.5)",
             down_color="rgba(244,67,54,0.5)",
         )
@@ -440,7 +520,12 @@ class TestHistogramSeriesCreateVolumeSeries:
 
         volume_series = HistogramSeries.create_volume_series(
             test_dataframe,
-            column_mapping={"time": "time", "volume": "volume", "open": "open", "close": "close"},
+            column_mapping={
+                "time": "time",
+                "volume": "volume",
+                "open": "open",
+                "close": "close",
+            },
             up_color="rgba(76,175,80,0.5)",
             down_color="rgba(244,67,54,0.5)",
         )
@@ -484,7 +569,12 @@ class TestHistogramSeriesCreateVolumeSeries:
         # Create volume series
         volume_series = HistogramSeries.create_volume_series(
             test_dataframe,
-            column_mapping={"time": "time", "volume": "volume", "open": "open", "close": "close"},
+            column_mapping={
+                "time": "time",
+                "volume": "volume",
+                "open": "open",
+                "close": "close",
+            },
             up_color="rgba(76,175,80,0.5)",
             down_color="rgba(244,67,54,0.5)",
         )

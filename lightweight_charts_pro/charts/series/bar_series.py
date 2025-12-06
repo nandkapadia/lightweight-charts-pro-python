@@ -105,6 +105,16 @@ class BarSeries(Series):
         price_scale_id: str = "right",
         pane_id: int | None = 0,
     ):
+        """Initialize a bar series with the given data and configuration.
+
+        Args:
+            data: Bar data as list, DataFrame, or Series.
+            column_mapping: Optional mapping of column names.
+            visible: Whether the series is initially visible.
+            price_scale_id: ID of the price scale to use.
+            pane_id: ID of the pane to display the series in.
+
+        """
         super().__init__(
             data=data,
             column_mapping=column_mapping,

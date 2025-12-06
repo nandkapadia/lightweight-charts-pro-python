@@ -30,9 +30,9 @@ License: MIT
 import pytest
 
 # Local Imports
-from lightweight_charts_core.charts.options.line_options import LineOptions
-from lightweight_charts_core.exceptions import ColorValidationError, TypeValidationError
-from lightweight_charts_core.type_definitions.enums import (
+from lightweight_charts_pro.charts.options.line_options import LineOptions
+from lightweight_charts_pro.exceptions import ColorValidationError, TypeValidationError
+from lightweight_charts_pro.type_definitions.enums import (
     LastPriceAnimationMode,
     LineStyle,
     LineType,
@@ -80,13 +80,20 @@ def test_standard_construction():
     assert opts.point_markers_radius == 6  # Verify point marker size
     assert not opts.crosshair_marker_visible  # Verify crosshair visibility (False)
     assert opts.crosshair_marker_radius == 5  # Verify crosshair marker size
-    assert opts.crosshair_marker_border_color == "#FFFFFF"  # Verify crosshair border color
-    assert opts.crosshair_marker_background_color == "#000000"  # Verify crosshair background
+    assert (
+        opts.crosshair_marker_border_color == "#FFFFFF"
+    )  # Verify crosshair border color
+    assert (
+        opts.crosshair_marker_background_color == "#000000"
+    )  # Verify crosshair background
     assert opts.crosshair_marker_border_width == 3  # Verify crosshair border width
-    assert opts.last_price_animation == LastPriceAnimationMode.CONTINUOUS  # Verify animation mode
+    assert (
+        opts.last_price_animation == LastPriceAnimationMode.CONTINUOUS
+    )  # Verify animation mode
 
 
 def test_default_values():
+    """Test LineOptions default values."""
     opts = LineOptions()
     assert opts.color == "#2196f3"
     assert opts.line_style == LineStyle.SOLID
@@ -258,6 +265,7 @@ def test_both_property_styles_work():
 
 
 def test_optional_fields_omitted():
+    """Test optional fields are properly initialized."""
     opts = LineOptions()
     assert opts.point_markers_radius is None
     assert opts.crosshair_marker_border_color == ""
@@ -277,7 +285,11 @@ def test_update_method():
 
     # Test with camelCase
     opts.update(
-        {"lineStyle": LineStyle.DASHED, "lineType": LineType.CURVED, "pointMarkersVisible": True},
+        {
+            "lineStyle": LineStyle.DASHED,
+            "lineType": LineType.CURVED,
+            "pointMarkersVisible": True,
+        },
     )
 
     assert opts.line_style == LineStyle.DASHED
@@ -289,7 +301,10 @@ def test_static_color_validator():
     """Test the static color validator method."""
     # Valid colors
     assert LineOptions._validate_color_static("#123456", "test") == "#123456"
-    assert LineOptions._validate_color_static("rgba(1,2,3,0.5)", "test") == "rgba(1,2,3,0.5)"
+    assert (
+        LineOptions._validate_color_static("rgba(1,2,3,0.5)", "test")
+        == "rgba(1,2,3,0.5)"
+    )
 
     # Invalid colors
     with pytest.raises(ColorValidationError):

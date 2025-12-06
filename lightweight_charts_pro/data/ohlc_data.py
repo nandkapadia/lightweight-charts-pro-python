@@ -43,10 +43,7 @@ from typing import ClassVar
 # (None in this module)
 # Local Imports
 from lightweight_charts_pro.data.data import Data
-from lightweight_charts_pro.exceptions import (
-    RequiredFieldError,
-    ValueValidationError,
-)
+from lightweight_charts_pro.exceptions import RequiredFieldError, ValueValidationError
 
 
 @dataclass
@@ -156,12 +153,18 @@ class OhlcData(Data):
         if self.close < self.low:
             raise ValueValidationError("close", "must be greater than or equal to low")
 
-        # Handle NaN values in all OHLC fields - convert to 0.0 for frontend compatibility
+        # Validate NaN and None values in all OHLC fields
+        # NaN values are NOT allowed as they represent missing data that could corrupt
+        # backtests, PnL calculations, and create artificial limit-down bars
         for field_name in ["open", "high", "low", "close"]:
             value = getattr(self, field_name)
-            # Check if the value is a float and is NaN
+            # Check if the value is a float and is NaN - raise error instead of coercing
             if isinstance(value, float) and math.isnan(value):
-                setattr(self, field_name, 0.0)
+                raise ValueValidationError(
+                    field_name,
+                    "NaN is not allowed. Missing OHLC data must be handled upstream "
+                    "(filter, forward-fill, or drop) before creating chart data.",
+                )
             # Validate that the field is not None - all OHLC fields are required
             elif value is None:
                 raise RequiredFieldError(field_name)

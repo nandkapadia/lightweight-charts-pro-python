@@ -1,4 +1,4 @@
-"""Data models for lightweight-charts-core.
+"""Data models for lightweight-charts-pro.
 
 This module provides data classes for all chart data types including:
 - Base data classes (Data, SingleValueData)

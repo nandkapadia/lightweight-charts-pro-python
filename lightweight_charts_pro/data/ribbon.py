@@ -1,4 +1,4 @@
-"""Ribbon data classes for lightweight-charts-core.
+"""Ribbon data classes for lightweight-charts-pro.
 
 This module provides data classes for ribbon data points used in
 ribbon charts that display upper and lower bands with fill areas.
@@ -60,6 +60,7 @@ class RibbonData(Data):
     lower_line_color: str | None = None
 
     def __post_init__(self):
+        """Validate and normalize ribbon data after initialization."""
         # Normalize time
         super().__post_init__()  # Call parent's __post_init__
 

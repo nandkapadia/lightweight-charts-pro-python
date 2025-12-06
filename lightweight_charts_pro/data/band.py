@@ -1,4 +1,4 @@
-"""Band data classes for lightweight-charts-core.
+"""Band data classes for lightweight-charts-pro.
 
 This module provides data classes for band data points used in
 band charts such as Bollinger Bands and other envelope indicators.
@@ -79,6 +79,7 @@ class BandData(Data):
     lower_fill_color: str | None = None
 
     def __post_init__(self):
+        """Validate and normalize band data after initialization."""
         # Normalize time
         super().__post_init__()  # Call parent's __post_init__
         # Handle NaN in value

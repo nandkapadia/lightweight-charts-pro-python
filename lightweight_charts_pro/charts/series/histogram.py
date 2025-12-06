@@ -164,15 +164,17 @@ class HistogramSeries(Series):
         """Create a histogram series for volume data with colors based on price movement.
 
         This factory method processes OHLCV data and creates a HistogramSeries
-        with volume bars colored based on whether the candle is bullish (close >= open)
-        or bearish (close < open). This provides visual context for volume analysis
-        by showing whether volume occurred during price increases or decreases.
+        with volume bars colored based on price movement. For full OHLC data,
+        colors are based on candle direction (close >= open). For line charts
+        (close-only), colors are based on price change direction (close >= previous close).
 
         Args:
             data (Union[Sequence[OhlcvData], pd.DataFrame]): OHLCV data as DataFrame
                 or sequence of OhlcvData objects containing price and volume information.
             column_mapping (dict): Mapping of required fields to column names.
-                Must include "open", "close", and "volume" mappings.
+                Must include "close" and "volume". "open" is optional:
+                - With "open": colors based on open vs close (candlestick style)
+                - Without "open": colors based on close price change (line chart style)
             up_color (str, optional): Color for bullish candles (close >= open).
                 Defaults to HISTOGRAM_UP_COLOR_DEFAULT (teal with transparency).
             down_color (str, optional): Color for bearish candles (close < open).
@@ -219,16 +221,28 @@ class HistogramSeries(Series):
             volume_dataframe = data.copy()
 
             # Extract column names for open and close prices from mapping
-            open_col = column_mapping.get("open", "open")
+            open_col = column_mapping.get("open")
             close_col = column_mapping.get("close", "close")
 
-            # Use NumPy vectorized operations to assign colors based on price movement
-            # Bullish: close >= open (green/up_color), Bearish: close < open (red/down_color)
-            colors = np.where(
-                volume_dataframe[close_col] >= volume_dataframe[open_col],
-                up_color,
-                down_color,
-            )
+            # Determine coloring strategy based on available data
+            if open_col and open_col in volume_dataframe.columns:
+                # Full OHLC data: color based on open vs close
+                colors = np.where(
+                    volume_dataframe[close_col] >= volume_dataframe[open_col],
+                    up_color,
+                    down_color,
+                )
+            else:
+                # Line chart (close-only): color based on close price change
+                # Use shift to compare current close with previous close
+                price_diff = volume_dataframe[close_col].diff()
+                colors = np.where(
+                    price_diff >= 0,
+                    up_color,
+                    down_color,
+                )
+                # First bar has no previous value, default to up_color
+                colors[0] = up_color
 
             # Add color column to DataFrame for histogram visualization
             volume_dataframe["color"] = colors
@@ -237,7 +251,9 @@ class HistogramSeries(Series):
             volume_col = column_mapping.get("volume", "volume")
             updated_mapping = column_mapping.copy()
             updated_mapping["color"] = "color"  # Map color field to DataFrame column
-            updated_mapping["value"] = volume_col  # Map volume to value for HistogramSeries
+            updated_mapping["value"] = (
+                volume_col  # Map volume to value for HistogramSeries
+            )
 
             # Use from_dataframe factory method to create the series
             return cls.from_dataframe(volume_dataframe, column_mapping=updated_mapping, **kwargs)  # type: ignore[return-value]
@@ -252,7 +268,11 @@ class HistogramSeries(Series):
         for item in data:
             if isinstance(item, dict):
                 # Determine color based on price movement for dictionary input
-                color = up_color if item.get("close", 0) >= item.get("open", 0) else down_color
+                color = (
+                    up_color
+                    if item.get("close", 0) >= item.get("open", 0)
+                    else down_color
+                )
                 processed_item = item.copy()
                 processed_item["color"] = color  # Add color information
                 processed_data.append(processed_item)

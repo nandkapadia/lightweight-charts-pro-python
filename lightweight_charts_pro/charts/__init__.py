@@ -1,4 +1,4 @@
-"""Charts module for lightweight-charts-core.
+"""Charts module for lightweight-charts-pro.
 
 This module provides all chart-related classes including series types,
 options, managers, and validators.

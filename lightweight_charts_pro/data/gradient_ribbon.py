@@ -1,4 +1,4 @@
-"""Gradient ribbon data classes for lightweight-charts-core.
+"""Gradient ribbon data classes for lightweight-charts-pro.
 
 This module provides data classes for gradient ribbon data points used in
 ribbon charts that display upper and lower bands with gradient fill areas.
@@ -36,6 +36,7 @@ class GradientRibbonData(RibbonData):
     gradient: float | None = None
 
     def __post_init__(self):
+        """Validate and normalize gradient ribbon data after initialization."""
         # Call parent's __post_init__ for time normalization and NaN handling
         super().__post_init__()
 

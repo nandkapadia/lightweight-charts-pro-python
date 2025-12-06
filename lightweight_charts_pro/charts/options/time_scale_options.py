@@ -132,7 +132,9 @@ class TimeScaleOptions(Options):
     lock_visible_time_range_on_resize: bool = False  # Lock visible range on resize
     right_bar_stays_on_scroll: bool = False  # Keep rightmost bar visible during scroll
     shift_visible_range_on_new_bar: bool = False  # Shift range when new bar is added
-    allow_shift_visible_range_on_whitespace_access: bool = False  # Allow shifting on whitespace
+    allow_shift_visible_range_on_whitespace_access: bool = (
+        False  # Allow shifting on whitespace
+    )
 
     # Formatting settings
     tick_mark_formatter: Callable | None = None  # Custom formatter for tick marks

@@ -22,7 +22,6 @@ import ast
 import re
 import sys
 from pathlib import Path
-from typing import List, Tuple
 
 
 class DocstringValidator:
@@ -40,8 +39,8 @@ class DocstringValidator:
 
     def __init__(self):
         """Initialize the docstring validator."""
-        self.errors: List[str] = []
-        self.warnings: List[str] = []
+        self.errors: list[str] = []
+        self.warnings: list[str] = []
 
     def validate_file(self, filepath: Path) -> bool:
         """Validate all docstrings in a Python file.
@@ -54,7 +53,7 @@ class DocstringValidator:
 
         """
         try:
-            with open(filepath, "r", encoding="utf-8") as f:
+            with open(filepath, encoding="utf-8") as f:
                 content = f.read()
 
             # Parse the Python file
@@ -88,7 +87,9 @@ class DocstringValidator:
 
         # Recursively visit child nodes
         for child in ast.iter_child_nodes(node):
-            child_parent = f"{parent_name}.{node.name}" if hasattr(node, "name") else parent_name
+            child_parent = (
+                f"{parent_name}.{node.name}" if hasattr(node, "name") else parent_name
+            )
             self._visit_node(child, filepath, child_parent)
 
     def _validate_class(self, node: ast.ClassDef, filepath: Path, parent_name: str):
@@ -109,14 +110,21 @@ class DocstringValidator:
         # Check for docstring
         docstring = ast.get_docstring(node)
         if not docstring:
-            self.errors.append(f"{filepath}:{node.lineno}: Class {full_name} missing docstring")
+            self.errors.append(
+                f"{filepath}:{node.lineno}: Class {full_name} missing docstring"
+            )
             return
 
         # Validate docstring format
-        self._validate_docstring_format(docstring, full_name, filepath, node.lineno, is_class=True)
+        self._validate_docstring_format(
+            docstring, full_name, filepath, node.lineno, is_class=True
+        )
 
     def _validate_function(
-        self, node: ast.FunctionDef | ast.AsyncFunctionDef, filepath: Path, parent_name: str
+        self,
+        node: ast.FunctionDef | ast.AsyncFunctionDef,
+        filepath: Path,
+        parent_name: str,
     ):
         """Validate a function/method docstring.
 
@@ -135,15 +143,13 @@ class DocstringValidator:
         # Check for docstring
         docstring = ast.get_docstring(node)
         if not docstring:
-            self.errors.append(f"{filepath}:{node.lineno}: Function {full_name} missing docstring")
+            self.errors.append(
+                f"{filepath}:{node.lineno}: Function {full_name} missing docstring"
+            )
             return
 
         # Get function arguments (excluding 'self' and 'cls')
-        args = [
-            arg.arg
-            for arg in node.args.args
-            if arg.arg not in ("self", "cls")
-        ]
+        args = [arg.arg for arg in node.args.args if arg.arg not in ("self", "cls")]
 
         # Check if function has return statement
         has_return = self._has_return_statement(node)
@@ -165,7 +171,7 @@ class DocstringValidator:
         filepath: Path,
         lineno: int,
         is_class: bool = False,
-        args: List[str] = None,
+        args: list[str] = None,
         has_return: bool = False,
     ):
         """Validate Google-style docstring format.
@@ -193,31 +199,34 @@ class DocstringValidator:
         if args and not is_class:
             if not re.search(r"^\s*Args:\s*$", docstring, re.MULTILINE):
                 self.errors.append(
-                    f"{filepath}:{lineno}: {name} - Missing 'Args:' section for function with arguments"
+                    f"{filepath}:{lineno}: {name} - Missing 'Args:' section"
                 )
             else:
                 # Validate that all args are documented
                 for arg in args:
                     if not re.search(rf"^\s*{arg}\s*\(.*?\):", docstring, re.MULTILINE):
                         self.warnings.append(
-                            f"{filepath}:{lineno}: {name} - Argument '{arg}' not documented in Args section"
+                            f"{filepath}:{lineno}: {name} - Argument '{arg}' not documented"
                         )
 
         # Check for Returns section if function returns something
-        if has_return and not is_class:
-            if not re.search(r"^\s*Returns:\s*$", docstring, re.MULTILINE):
-                self.warnings.append(
-                    f"{filepath}:{lineno}: {name} - Missing 'Returns:' section for function with return statement"
-                )
+        if (
+            has_return
+            and not is_class
+            and not re.search(r"^\s*Returns:\s*$", docstring, re.MULTILINE)
+        ):
+            self.warnings.append(
+                f"{filepath}:{lineno}: {name} - Missing 'Returns:' section"
+            )
 
         # Check for Attributes section in classes
-        if is_class:
-            # This is optional but good practice
-            if not re.search(r"^\s*Attributes:\s*$", docstring, re.MULTILINE):
-                # Not an error, just informational
-                pass
+        if is_class and not re.search(r"^\s*Attributes:\s*$", docstring, re.MULTILINE):
+            # Not an error, just informational
+            pass
 
-    def _has_return_statement(self, node: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
+    def _has_return_statement(
+        self, node: ast.FunctionDef | ast.AsyncFunctionDef
+    ) -> bool:
         """Check if a function has a return statement with a value.
 
         Args:
@@ -249,7 +258,7 @@ class DocstringValidator:
 
 
 def main():
-    """Main entry point for docstring validation script.
+    """Validate docstrings in validation script.
 
     Returns:
         int: Exit code (0 for success, 1 for errors).

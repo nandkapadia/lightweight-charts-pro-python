@@ -9,20 +9,21 @@ import json
 
 import pandas as pd
 import pytest
-from lightweight_charts_core.charts.options.line_options import LineOptions
-from lightweight_charts_core.charts.options.price_line_options import PriceLineOptions
-from lightweight_charts_core.charts.series.area import AreaSeries
-from lightweight_charts_core.charts.series.base import Series
-from lightweight_charts_core.data.marker import BarMarker
-from lightweight_charts_core.data.single_value_data import SingleValueData
-from lightweight_charts_core.exceptions import (
+
+from lightweight_charts_pro.charts.options.line_options import LineOptions
+from lightweight_charts_pro.charts.options.price_line_options import PriceLineOptions
+from lightweight_charts_pro.charts.series.area import AreaSeries
+from lightweight_charts_pro.charts.series.base import Series
+from lightweight_charts_pro.data.marker import BarMarker
+from lightweight_charts_pro.data.single_value_data import SingleValueData
+from lightweight_charts_pro.exceptions import (
     ColumnMappingRequiredError,
     DataFrameValidationError,
     DataItemsTypeError,
     TypeValidationError,
     ValueValidationError,
 )
-from lightweight_charts_core.type_definitions.enums import (
+from lightweight_charts_pro.type_definitions.enums import (
     LineStyle,
     MarkerPosition,
     MarkerShape,
@@ -76,7 +77,9 @@ class TestAreaSeriesConstruction:
 
     def test_construction_with_dataframe(self):
         """Test AreaSeries construction with DataFrame."""
-        test_dataframe = pd.DataFrame({"datetime": [1640995200, 1641081600], "value": [100, 105]})
+        test_dataframe = pd.DataFrame(
+            {"datetime": [1640995200, 1641081600], "value": [100, 105]}
+        )
 
         series = AreaSeries(
             data=test_dataframe,
@@ -93,7 +96,9 @@ class TestAreaSeriesConstruction:
         """Test AreaSeries construction with pandas Series."""
         series_data = pd.Series([100, 105], index=[1640995200, 1641081600])
 
-        area_series = AreaSeries(data=series_data, column_mapping={"time": "index", "value": 0})
+        area_series = AreaSeries(
+            data=series_data, column_mapping={"time": "index", "value": 0}
+        )
 
         assert len(area_series.data) == 2
         assert area_series.data[0].time == 1640995200
@@ -334,7 +339,9 @@ class TestAreaSeriesMethods:
             text="Test",
             size=10,
         )
-        series.add_marker(marker).add_price_line(PriceLineOptions(price=100, color="#ff0000"))
+        series.add_marker(marker).add_price_line(
+            PriceLineOptions(price=100, color="#ff0000")
+        )
 
         assert len(series.markers) == 1
         assert len(series.price_lines) == 1
@@ -345,7 +352,9 @@ class TestAreaSeriesDataHandling:
 
     def test_from_dataframe_classmethod(self):
         """Test from_dataframe class method."""
-        test_dataframe = pd.DataFrame({"datetime": [1640995200, 1641081600], "value": [100, 105]})
+        test_dataframe = pd.DataFrame(
+            {"datetime": [1640995200, 1641081600], "value": [100, 105]}
+        )
 
         series = AreaSeries.from_dataframe(
             test_dataframe,
@@ -360,7 +369,9 @@ class TestAreaSeriesDataHandling:
 
     def test_from_dataframe_with_index_columns(self):
         """Test from_dataframe with index columns."""
-        test_dataframe = pd.DataFrame({"value": [100, 105]}, index=[1640995200, 1641081600])
+        test_dataframe = pd.DataFrame(
+            {"value": [100, 105]}, index=[1640995200, 1641081600]
+        )
         test_dataframe.index.name = "time"  # Name the index
 
         series = AreaSeries.from_dataframe(
@@ -418,7 +429,9 @@ class TestAreaSeriesValidation:
 
     def test_error_handling_invalid_list_data(self):
         """Test error handling with invalid list data."""
-        invalid_data = [{"time": 1640995200, "value": 100}]  # Not SingleValueData objects
+        invalid_data = [
+            {"time": 1640995200, "value": 100}
+        ]  # Not SingleValueData objects
 
         with pytest.raises(DataItemsTypeError):
             AreaSeries(data=invalid_data)
@@ -447,7 +460,9 @@ class TestAreaSeriesEdgeCases:
 
     def test_large_dataset(self):
         """Test handling of large dataset."""
-        data = [SingleValueData(time=1640995200 + i, value=100 + i) for i in range(1000)]
+        data = [
+            SingleValueData(time=1640995200 + i, value=100 + i) for i in range(1000)
+        ]
         series = AreaSeries(data=data)
 
         assert len(series.data) == 1000
@@ -873,7 +888,9 @@ class TestAreaSeriesConstructorEdgeCases:
 
     def test_constructor_with_invalid_list_data(self):
         """Test AreaSeries constructor with invalid list data."""
-        invalid_data = [{"time": 1640995200, "value": 100}]  # Dict instead of SingleValueData
+        invalid_data = [
+            {"time": 1640995200, "value": 100}
+        ]  # Dict instead of SingleValueData
 
         with pytest.raises(DataItemsTypeError):
             AreaSeries(data=invalid_data)

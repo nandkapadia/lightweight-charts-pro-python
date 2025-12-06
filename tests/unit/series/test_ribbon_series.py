@@ -8,12 +8,13 @@ ensuring proper functionality, data handling, and configuration options.
 
 import numpy as np
 import pandas as pd
-from lightweight_charts_core.charts.series.band import BandSeries
-from lightweight_charts_core.charts.series.base import Series
-from lightweight_charts_core.charts.series.ribbon import RibbonSeries
-from lightweight_charts_core.data.ribbon import RibbonData
-from lightweight_charts_core.type_definitions import ChartType
-from lightweight_charts_core.type_definitions.enums import LineStyle
+
+from lightweight_charts_pro.charts.series.band import BandSeries
+from lightweight_charts_pro.charts.series.base import Series
+from lightweight_charts_pro.charts.series.ribbon import RibbonSeries
+from lightweight_charts_pro.data.ribbon import RibbonData
+from lightweight_charts_pro.type_definitions import ChartType
+from lightweight_charts_pro.type_definitions.enums import LineStyle
 
 
 class TestRibbonSeries:

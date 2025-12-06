@@ -8,22 +8,23 @@ from datetime import datetime
 
 import pandas as pd
 import pytest
-from lightweight_charts_core.charts.options.line_options import LineOptions
-from lightweight_charts_core.charts.series.line import LineSeries
-from lightweight_charts_core.data.data import Data
-from lightweight_charts_core.data.line_data import LineData
-from lightweight_charts_core.data.marker import (
+
+from lightweight_charts_pro.charts.options.line_options import LineOptions
+from lightweight_charts_pro.charts.series.line import LineSeries
+from lightweight_charts_pro.data.data import Data
+from lightweight_charts_pro.data.line_data import LineData
+from lightweight_charts_pro.data.marker import (
     BarMarker,
     Marker,
     MarkerBase,
     PriceMarker,
 )
-from lightweight_charts_core.exceptions import (
+from lightweight_charts_pro.exceptions import (
     RequiredFieldError,
     TimeValidationError,
     UnsupportedTimeTypeError,
 )
-from lightweight_charts_core.type_definitions.enums import MarkerPosition, MarkerShape
+from lightweight_charts_pro.type_definitions.enums import MarkerPosition, MarkerShape
 
 
 class TestMarkerBaseConstruction:
@@ -85,7 +86,9 @@ class TestMarkerBaseConstruction:
 
     def test_construction_with_string_enums(self):
         """Test Marker construction with string enum values."""
-        marker = Marker(time=1640995200, position="aboveBar", color="#ff0000", shape="circle")
+        marker = Marker(
+            time=1640995200, position="aboveBar", color="#ff0000", shape="circle"
+        )
 
         assert marker.position == MarkerPosition.ABOVE_BAR
         assert marker.shape == MarkerShape.CIRCLE
@@ -125,7 +128,9 @@ class TestMarkerBaseConstruction:
         assert isinstance(result["time"], int)
         # The actual timestamp depends on timezone, so we'll check it's a reasonable value
         assert result["time"] > 1640970000  # Should be around 2022-01-01
-        assert result["time"] < 1641020000  # Should be around 2022-01-01 (accounting for timezone)
+        assert (
+            result["time"] < 1641020000
+        )  # Should be around 2022-01-01 (accounting for timezone)
 
     def test_construction_with_pandas_timestamp(self):
         """Test Marker construction with pandas Timestamp."""
@@ -243,7 +248,11 @@ class TestMarkerValidation:
 
     def test_valid_rgba_colors(self):
         """Test Marker construction with valid rgba colors."""
-        valid_colors = ["rgba(255, 0, 0, 1)", "rgba(0, 255, 0, 0.5)", "rgba(0, 0, 255, 0.8)"]
+        valid_colors = [
+            "rgba(255, 0, 0, 1)",
+            "rgba(0, 255, 0, 0.5)",
+            "rgba(0, 0, 255, 0.8)",
+        ]
 
         for color in valid_colors:
             marker = Marker(
@@ -717,7 +726,9 @@ class TestMarkerEdgeCases:
 
     def test_long_text(self):
         """Test Marker with long text."""
-        long_text = "This is a very long text that might be used for detailed annotations"
+        long_text = (
+            "This is a very long text that might be used for detailed annotations"
+        )
         marker = Marker(
             time=1640995200,
             position=MarkerPosition.ABOVE_BAR,

@@ -6,12 +6,13 @@ This module contains comprehensive tests for price scale-related option classes:
 """
 
 import pytest
-from lightweight_charts_core.charts.options.price_scale_options import (
+
+from lightweight_charts_pro.charts.options.price_scale_options import (
     PriceScaleMargins,
     PriceScaleOptions,
 )
-from lightweight_charts_core.exceptions import TypeValidationError
-from lightweight_charts_core.type_definitions.enums import PriceScaleMode
+from lightweight_charts_pro.exceptions import TypeValidationError
+from lightweight_charts_pro.type_definitions.enums import PriceScaleMode
 
 
 class TestPriceScaleMargins:
@@ -496,7 +497,9 @@ class TestPriceScaleOptionsEdgeCases:
     def test_price_scale_options_with_unicode_colors(self):
         """Test PriceScaleOptions with unicode characters in colors."""
         unicode_color = "rgba(255, 0, 0, 0.5) 🎨"
-        options = PriceScaleOptions(border_color=unicode_color, text_color=unicode_color)
+        options = PriceScaleOptions(
+            border_color=unicode_color, text_color=unicode_color
+        )
         result = options.asdict()
 
         assert result["borderColor"] == unicode_color

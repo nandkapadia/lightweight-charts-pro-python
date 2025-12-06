@@ -7,8 +7,9 @@ for creating signal-based background coloring in financial charts.
 from datetime import datetime
 
 import pytest
-from lightweight_charts_core.data.signal_data import SignalData
-from lightweight_charts_core.exceptions import ColorValidationError
+
+from lightweight_charts_pro.data.signal_data import SignalData
+from lightweight_charts_pro.exceptions import ColorValidationError
 
 
 class TestSignalData:

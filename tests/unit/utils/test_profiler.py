@@ -9,7 +9,7 @@ Tests performance profiling utilities including:
 
 import time
 
-from lightweight_charts_core.utils.profiler import (
+from lightweight_charts_pro.utils.profiler import (
     MemoryMonitor,
     PerformanceProfile,
     PerformanceProfiler,

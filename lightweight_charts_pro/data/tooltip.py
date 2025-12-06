@@ -209,8 +209,12 @@ class TooltipConfig:
             placeholder = f"{{{key}}}"
             if placeholder in result:
                 # Format the value based on field configuration
-                field_config = next((f for f in self.fields if f.value_key == key), None)
-                formatted_value = field_config.format_value(value) if field_config else str(value)
+                field_config = next(
+                    (f for f in self.fields if f.value_key == key), None
+                )
+                formatted_value = (
+                    field_config.format_value(value) if field_config else str(value)
+                )
                 result = result.replace(placeholder, formatted_value)
 
         # Add date/time if configured
@@ -338,7 +342,9 @@ class TooltipManager:
             return True
         return False
 
-    def add_custom_formatter(self, name: str, formatter: Callable[[Any], str]) -> "TooltipManager":
+    def add_custom_formatter(
+        self, name: str, formatter: Callable[[Any], str]
+    ) -> "TooltipManager":
         """Add a custom formatter function."""
         self.custom_formatters[name] = formatter
         return self
@@ -371,7 +377,9 @@ class TooltipManager:
         self.add_config(name, config)
         return config
 
-    def create_custom_tooltip(self, template: str, name: str = "custom") -> TooltipConfig:
+    def create_custom_tooltip(
+        self, template: str, name: str = "custom"
+    ) -> TooltipConfig:
         """Create a custom tooltip configuration with template."""
         config = TooltipConfig(type=TooltipType.CUSTOM, template=template)
         self.add_config(name, config)

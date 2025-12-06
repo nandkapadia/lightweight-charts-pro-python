@@ -7,11 +7,12 @@ covering construction, validation, serialization, edge cases, and integration sc
 import time
 
 import pytest
-from lightweight_charts_core.charts.options import ChartOptions
-from lightweight_charts_core.charts.options.trade_visualization_options import (
+
+from lightweight_charts_pro.charts.options import ChartOptions
+from lightweight_charts_pro.charts.options.trade_visualization_options import (
     TradeVisualizationOptions,
 )
-from lightweight_charts_core.type_definitions.enums import TradeVisualization
+from lightweight_charts_pro.type_definitions.enums import TradeVisualization
 
 
 class TestTradeVisualizationOptionsConstruction:
@@ -127,12 +128,16 @@ class TestTradeVisualizationOptionsValidation:
 
     def test_validation_invalid_style_string(self):
         """Test validation of invalid style string."""
-        with pytest.raises(ValueError, match="'invalid' is not a valid TradeVisualization"):
+        with pytest.raises(
+            ValueError, match="'invalid' is not a valid TradeVisualization"
+        ):
             TradeVisualizationOptions(style="invalid")
 
     def test_validation_invalid_style_type(self):
         """Test validation of invalid style type."""
-        with pytest.raises(ValueError, match="'invalid' is not a valid TradeVisualization"):
+        with pytest.raises(
+            ValueError, match="'invalid' is not a valid TradeVisualization"
+        ):
             TradeVisualizationOptions(style="invalid")
 
     def test_validation_style_case_insensitive(self):
@@ -386,7 +391,9 @@ class TestTradeVisualizationOptionsLineOptions:
 
     def test_line_colors(self):
         """Test line color options."""
-        options = TradeVisualizationOptions(line_color_profit="#00FF00", line_color_loss="#FF0000")
+        options = TradeVisualizationOptions(
+            line_color_profit="#00FF00", line_color_loss="#FF0000"
+        )
         result = options.asdict()
 
         assert result["lineColorProfit"] == "#00FF00"
@@ -455,7 +462,9 @@ class TestTradeVisualizationOptionsZoneOptions:
 
     def test_zone_colors(self):
         """Test zone color options."""
-        options = TradeVisualizationOptions(zone_color_long="#0000FF", zone_color_short="#FF0000")
+        options = TradeVisualizationOptions(
+            zone_color_long="#0000FF", zone_color_short="#FF0000"
+        )
         result = options.asdict()
 
         assert result["zoneColorLong"] == "#0000FF"
@@ -564,7 +573,9 @@ class TestTradeVisualizationOptionsEdgeCases:
 
     def test_extreme_opacity_values(self):
         """Test with extreme opacity values."""
-        options = TradeVisualizationOptions(rectangle_fill_opacity=0.0, zone_opacity=1.0)
+        options = TradeVisualizationOptions(
+            rectangle_fill_opacity=0.0, zone_opacity=1.0
+        )
         result = options.asdict()
 
         assert result["rectangleFillOpacity"] == 0.0
@@ -907,6 +918,7 @@ class TestTradeVisualizationOptionsComprehensive:
             for key, value in config.items():
                 # Convert snake_case to camelCase for dictionary keys
                 camel_key = "".join(
-                    word.capitalize() if i > 0 else word for i, word in enumerate(key.split("_"))
+                    word.capitalize() if i > 0 else word
+                    for i, word in enumerate(key.split("_"))
                 )
                 assert result[camel_key] == value

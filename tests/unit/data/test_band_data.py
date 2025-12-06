@@ -9,9 +9,10 @@ from datetime import datetime
 
 import pandas as pd
 import pytest
-from lightweight_charts_core.data.band import BandData
-from lightweight_charts_core.data.data import Data
-from lightweight_charts_core.exceptions import (
+
+from lightweight_charts_pro.data.band import BandData
+from lightweight_charts_pro.data.data import Data
+from lightweight_charts_pro.exceptions import (
     ColorValidationError,
     UnsupportedTimeTypeError,
     ValueValidationError,
@@ -20,6 +21,7 @@ from lightweight_charts_core.exceptions import (
 
 @pytest.fixture
 def valid_time() -> int:
+    """Provide a valid Unix timestamp for testing."""
     return 1704067200  # 2024-01-01 00:00:00 UTC
 
 
@@ -204,7 +206,9 @@ class TestBandDataEdgeCases:
 
     def test_large_values(self, valid_time):
         """Test construction with large values."""
-        data = BandData(time=valid_time, upper=1000000.0, middle=999999.0, lower=999998.0)
+        data = BandData(
+            time=valid_time, upper=1000000.0, middle=999999.0, lower=999998.0
+        )
         assert data.upper == 1000000.0
         assert data.middle == 999999.0
         assert data.lower == 999998.0
@@ -255,7 +259,12 @@ class TestBandDataIntegration:
     def test_with_dataframe_conversion(self, valid_time):
         """Test BandData creation from DataFrame row."""
         test_dataframe = pd.DataFrame(
-            {"time": [valid_time], "upper": [110.0], "middle": [105.0], "lower": [100.0]},
+            {
+                "time": [valid_time],
+                "upper": [110.0],
+                "middle": [105.0],
+                "lower": [100.0],
+            },
         )
 
         row = test_dataframe.iloc[0]
@@ -273,7 +282,9 @@ class TestBandDataIntegration:
 
     def test_serialization_round_trip(self, valid_time):
         """Test serialization and deserialization round trip."""
-        original_data = BandData(time=valid_time, upper=110.0, middle=105.0, lower=100.0)
+        original_data = BandData(
+            time=valid_time, upper=110.0, middle=105.0, lower=100.0
+        )
         serialized = original_data.asdict()
 
         # Simulate reconstruction from serialized data

@@ -5,35 +5,36 @@ ensuring proper construction, validation, and serialization.
 """
 
 import pytest
-from lightweight_charts_core.charts.options.chart_options import ChartOptions
-from lightweight_charts_core.charts.options.interaction_options import (
+
+from lightweight_charts_pro.charts.options.chart_options import ChartOptions
+from lightweight_charts_pro.charts.options.interaction_options import (
     CrosshairMode,
     CrosshairOptions,
     KineticScrollOptions,
     TrackingModeOptions,
 )
-from lightweight_charts_core.charts.options.layout_options import (
+from lightweight_charts_pro.charts.options.layout_options import (
     GridLineOptions,
     GridOptions,
     LayoutOptions,
 )
-from lightweight_charts_core.charts.options.localization_options import (
+from lightweight_charts_pro.charts.options.localization_options import (
     LocalizationOptions,
 )
-from lightweight_charts_core.charts.options.price_scale_options import (
+from lightweight_charts_pro.charts.options.price_scale_options import (
     PriceScaleMargins,
     PriceScaleOptions,
 )
-from lightweight_charts_core.charts.options.time_scale_options import TimeScaleOptions
-from lightweight_charts_core.charts.options.trade_visualization_options import (
+from lightweight_charts_pro.charts.options.time_scale_options import TimeScaleOptions
+from lightweight_charts_pro.charts.options.trade_visualization_options import (
     TradeVisualizationOptions,
 )
-from lightweight_charts_core.exceptions import (
+from lightweight_charts_pro.exceptions import (
     PriceScaleOptionsTypeError,
     TypeValidationError,
 )
-from lightweight_charts_core.type_definitions.colors import BackgroundSolid
-from lightweight_charts_core.type_definitions.enums import LineStyle
+from lightweight_charts_pro.type_definitions.colors import BackgroundSolid
+from lightweight_charts_pro.type_definitions.enums import LineStyle
 
 
 class TestChartOptionsConstruction:
@@ -127,7 +128,9 @@ class TestChartOptionsValidation:
         """Test valid price scale values are accepted."""
         left_scale = PriceScaleOptions()
         right_scale = PriceScaleOptions()
-        options = ChartOptions(left_price_scale=left_scale, right_price_scale=right_scale)
+        options = ChartOptions(
+            left_price_scale=left_scale, right_price_scale=right_scale
+        )
         assert options.left_price_scale == left_scale
         assert options.right_price_scale == right_scale
 
@@ -393,7 +396,9 @@ class TestChartOptionsIntegration:
         options = ChartOptions(layout=custom_layout)
         result = options.asdict()
         # Fix: expect flattened background properties instead of nested backgroundOptions
-        assert result["layout"]["color"] == "#000000"  # Flattened from background_options
+        assert (
+            result["layout"]["color"] == "#000000"
+        )  # Flattened from background_options
         assert result["layout"]["textColor"] == "#ffffff"
         assert result["layout"]["fontSize"] == 14
 
@@ -550,7 +555,9 @@ class TestChartOptionsPriceScaleValidation:
         right_scale = PriceScaleOptions(visible=False)
 
         # Should not raise any errors
-        options = ChartOptions(left_price_scale=left_scale, right_price_scale=right_scale)
+        options = ChartOptions(
+            left_price_scale=left_scale, right_price_scale=right_scale
+        )
 
         assert options.left_price_scale == left_scale
         assert options.right_price_scale == right_scale

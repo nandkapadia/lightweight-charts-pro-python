@@ -82,10 +82,11 @@ def normalize_time(time_value: Any) -> int:
     including integers, floats, strings, datetime objects, and pandas
     Timestamps, providing a unified interface for time data processing.
 
-    The function is designed to be robust and handle edge cases such as
-    numpy types and various string formats that pandas can parse, ensuring
-    compatibility with different data sources and formats commonly used
-    in financial applications.
+    **Important**: This function does NOT perform timezone conversions.
+    It passes through timestamps as-is and treats naive datetimes according
+    to Python's default behavior (system local timezone). Users are
+    responsible for ensuring their input data has the correct timezone
+    information before calling this function.
 
     Args:
         time_value (Any): Time value to convert. Supported types:
@@ -97,14 +98,31 @@ def normalize_time(time_value: Any) -> int:
             - date objects: Converted to midnight on that date
 
     Returns:
-        int: UNIX timestamp in seconds since epoch (January 1, 1970 UTC),
-            suitable for chart rendering.
+        int: UNIX timestamp in seconds since epoch (January 1, 1970).
 
     Raises:
         TimeValidationError: If the input string cannot be parsed as a
             valid date/time.
         UnsupportedTimeTypeError: If the input type is not supported or
             cannot be converted.
+
+    Important:
+        **Millisecond Precision Loss**: This function truncates timestamps to
+        second-level precision by converting floats to integers. Sub-second
+        precision (milliseconds, microseconds) is lost during conversion.
+
+        - Input: 1640995200.567 (567ms) → Output: 1640995200 (0ms)
+        - This aligns with TradingView Lightweight Charts' second-based time axis
+
+        **Impact on use cases**:
+        - ✅ OHLC/Candlestick charts (minute+ bars): No impact
+        - ✅ Daily/weekly charts: No impact
+        - ⚠️ Intraday second-bars: Acceptable (aligns to second boundaries)
+        - ❌ High-frequency/tick data: Precision loss may alias multiple bars
+
+        If you need millisecond precision for high-frequency data, consider:
+        1. Pre-aggregating ticks to second-level bars before charting
+        2. Using specialized tick visualization tools instead of this library
 
     Example:
         Convert various formats::
@@ -116,23 +134,30 @@ def normalize_time(time_value: Any) -> int:
             >>> normalize_time(1640995200)
             1640995200
 
-            # ISO format string
+            # ISO format string (naive, uses system timezone)
             >>> normalize_time("2024-01-01T00:00:00")
             1704067200
 
-            # Python datetime
+            # Python datetime (naive, uses system timezone)
             >>> normalize_time(datetime(2024, 1, 1))
             1704067200
 
-            # Pandas timestamp
+            # Pandas timestamp (naive, uses system timezone)
             >>> normalize_time(pd.Timestamp("2024-01-01"))
             1704067200
 
-    Note:
-        String inputs are parsed using pandas.to_datetime(), which supports
-        a wide variety of date/time formats including ISO format, common
-        date formats, and relative dates. This ensures maximum compatibility
-        with different data sources.
+    Warning:
+        For timezone-aware applications, ensure your datetime inputs include
+        explicit timezone information. Naive datetimes will be interpreted
+        according to the system's local timezone, which may cause inconsistent
+        results across different machines or deployments.
+
+        Good practice::
+
+            # Timezone-aware (recommended for production)
+            >>> from datetime import datetime, timezone
+            >>> normalize_time(datetime(2024, 1, 1, tzinfo=timezone.utc))
+            1704067200
 
     """
     # Step 1: Handle numpy types by converting to Python native types first
@@ -152,7 +177,9 @@ def normalize_time(time_value: Any) -> int:
         except (ValueError, TypeError):
             # If item() fails, try type-specific conversion
             # Check if object can be converted to int (has __int__ method)
-            time_value = int(time_value) if hasattr(time_value, "__int__") else float(time_value)
+            time_value = (
+                int(time_value) if hasattr(time_value, "__int__") else float(time_value)
+            )
 
     # Step 2: Handle already-converted integer timestamps
     # If value is already an int, it's assumed to be a UNIX timestamp
@@ -161,8 +188,9 @@ def normalize_time(time_value: Any) -> int:
         return time_value
 
     # Step 3: Handle float timestamps (may have fractional seconds)
-    # Convert to int by truncating fractional part
-    # This rounds towards zero, so 1.9 becomes 1
+    # Convert to int by truncating fractional part (PRECISION LOSS)
+    # This rounds towards zero, so 1640995200.567 becomes 1640995200
+    # Milliseconds/microseconds are intentionally discarded
     if isinstance(time_value, float):
         return int(time_value)
 
@@ -177,7 +205,8 @@ def normalize_time(time_value: Any) -> int:
             dt = pd.to_datetime(time_value)
 
             # Convert pandas Timestamp to UNIX seconds
-            # timestamp() returns float, we convert to int
+            # timestamp() returns float, we convert to int (PRECISION LOSS)
+            # Sub-second precision is intentionally discarded
             return int(dt.timestamp())
 
         except (ValueError, TypeError) as exc:
@@ -188,13 +217,15 @@ def normalize_time(time_value: Any) -> int:
     # Step 5: Handle Python datetime objects
     # datetime.timestamp() returns float seconds since epoch
     if isinstance(time_value, datetime):
-        # Convert to UNIX timestamp and truncate to integer seconds
+        # Convert to UNIX timestamp and truncate to integer seconds (PRECISION LOSS)
+        # Sub-second precision (milliseconds, microseconds) is intentionally discarded
         return int(time_value.timestamp())
 
     # Step 6: Handle pandas Timestamp objects
     # Similar to datetime but pandas-specific type
     if isinstance(time_value, pd.Timestamp):
-        # Convert to UNIX timestamp and truncate to integer seconds
+        # Convert to UNIX timestamp and truncate to integer seconds (PRECISION LOSS)
+        # Sub-second precision (milliseconds, microseconds, nanoseconds) is intentionally discarded
         return int(time_value.timestamp())
 
     # Step 7: Handle datetime.date objects (date without time)
@@ -213,12 +244,15 @@ def normalize_time(time_value: Any) -> int:
     raise UnsupportedTimeTypeError(type(time_value))
 
 
-def to_utc_timestamp(time_value: Any) -> int:
+def to_timestamp(time_value: Any) -> int:
     """Convert time input to UNIX seconds.
 
-    This is an alias for normalize_time() maintained for backward
-    compatibility. It provides exactly the same functionality as
-    normalize_time() and delegates all work to that function.
+    This function normalizes various time formats to UNIX timestamps (seconds since epoch).
+    It does NOT perform timezone conversions - naive datetimes are treated according
+    to the system's local timezone.
+
+    For timezone-aware applications, ensure your input data includes explicit
+    timezone information (e.g., datetime with tzinfo, timezone-aware pd.Timestamp).
 
     Args:
         time_value (Any): Time value to convert. Supported types are:
@@ -231,61 +265,77 @@ def to_utc_timestamp(time_value: Any) -> int:
         TimeValidationError: If the input cannot be parsed.
         UnsupportedTimeTypeError: If the input type is not supported.
 
-    Example:
-        >>> to_utc_timestamp("2024-01-01")
-        1704067200
+    Note:
+        This function is timezone-agnostic. It preserves timezone information
+        from timezone-aware inputs and uses system local timezone for naive inputs.
 
     See Also:
-        normalize_time: The main function that performs the conversion.
+        normalize_time: The underlying normalization function.
+        from_timestamp: Convert UNIX timestamp back to ISO format string.
 
-    Note:
-        This function exists for backward compatibility with older code.
-        New code should use normalize_time() directly.
+    Example:
+        ```python
+        from datetime import datetime, timezone
+
+        # Integer timestamp (pass-through)
+        to_timestamp(1640995200)  # 1640995200
+
+        # Timezone-aware datetime (preserves timezone)
+        dt_utc = datetime(2024, 1, 1, tzinfo=timezone.utc)
+        to_timestamp(dt_utc)  # 1704067200
+
+        # Naive datetime (uses system local timezone)
+        dt_naive = datetime(2024, 1, 1)
+        to_timestamp(dt_naive)  # Result depends on system timezone
+        ```
 
     """
-    # Simply delegate to normalize_time()
-    # This maintains backward compatibility while keeping single source of truth
     return normalize_time(time_value)
 
 
-def from_utc_timestamp(timestamp: int) -> str:
+def from_timestamp(timestamp: int) -> str:
     """Convert UNIX timestamp to ISO format string.
 
-    This function converts a UNIX timestamp (seconds since epoch) to an
-    ISO format datetime string. The output is always in UTC timezone,
-    making it suitable for consistent time display across timezones.
+    This function converts a UNIX timestamp to an ISO format datetime string.
+    The timestamp is interpreted as UTC time, and the output is a naive
+    datetime string (without explicit timezone suffix).
 
     Args:
         timestamp (int): UNIX timestamp in seconds since epoch
             (January 1, 1970 00:00:00 UTC).
 
     Returns:
-        str: ISO format datetime string in UTC timezone.
+        str: ISO format datetime string WITHOUT timezone suffix.
             Format: "YYYY-MM-DDTHH:MM:SS"
+
+    Note:
+        The returned string represents UTC time but does not include the
+        timezone suffix (no 'Z' or '+00:00'). This is intentional for
+        compatibility with JavaScript/frontend parsing.
 
     Example:
         Convert timestamps to readable format::
 
-            >>> from_utc_timestamp(1640995200)
+            >>> from_timestamp(1640995200)
             '2022-01-01T00:00:00'
 
-            >>> from_utc_timestamp(1704067200)
+            >>> from_timestamp(1704067200)
             '2024-01-01T00:00:00'
 
+    Warning:
+        The output is a NAIVE datetime string (no timezone indicator).
+        This can be ambiguous. For production use, consider using
+        datetime.fromtimestamp() directly with explicit timezone handling.
+
     Note:
-        The function uses datetime.fromtimestamp() with UTC timezone to ensure
-        the output is always in UTC timezone, regardless of the system's local
-        timezone. This is important for consistent time display in web applications.
+        This function interprets the input as UTC but returns a naive string.
+        Users are responsible for timezone handling in their applications.
 
     """
-    # Convert UNIX timestamp to UTC datetime object
-    # Using fromtimestamp() with explicit UTC timezone (recommended approach)
-    # This replaces the deprecated utcfromtimestamp() method
+    # Interpret timestamp as UTC and convert to datetime
     dt = datetime.fromtimestamp(timestamp, tz=timezone.utc)
 
-    # Convert datetime to ISO format string without timezone info
-    # isoformat() returns "YYYY-MM-DDTHH:MM:SS+00:00" with timezone
-    # We use replace to remove timezone for backward compatibility
+    # Return naive ISO string (strip timezone info for backward compatibility)
     return dt.replace(tzinfo=None).isoformat()
 
 

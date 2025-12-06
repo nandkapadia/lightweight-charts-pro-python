@@ -45,7 +45,7 @@ License: MIT
 # Standard Imports
 from abc import ABC
 from dataclasses import dataclass, fields
-from typing import Any
+from typing import Any, get_args, get_origin
 
 # Local Imports
 from lightweight_charts_pro.logging_config import get_logger
@@ -197,8 +197,10 @@ class Options(SerializableMixin, ABC):
                 continue
 
             # Handle nested Options objects and complex type annotations
-            contains_options, options_class, is_dict_type = self._analyze_type_for_options(
-                field_info.type,
+            contains_options, options_class, is_dict_type = (
+                self._analyze_type_for_options(
+                    field_info.type,
+                )
             )
 
             if contains_options and isinstance(value, dict):
@@ -259,13 +261,16 @@ class Options(SerializableMixin, ABC):
             return data.asdict()
         if isinstance(data, dict):
             return {
-                snake_to_camel(str(k)): self._process_dict_recursively(v) for k, v in data.items()
+                snake_to_camel(str(k)): self._process_dict_recursively(v)
+                for k, v in data.items()
             }
         if isinstance(data, list):
             return [self._process_dict_recursively(item) for item in data]
         return data
 
-    def _analyze_type_for_options(self, field_type: Any) -> tuple[bool, type | None, bool]:
+    def _analyze_type_for_options(
+        self, field_type: Any
+    ) -> tuple[bool, type | None, bool]:
         """Analyze a type annotation to determine if it contains Options objects.
 
         Args:
@@ -282,18 +287,21 @@ class Options(SerializableMixin, ABC):
         if isinstance(field_type, type) and issubclass(field_type, Options):
             return True, field_type, False
 
-        # Check if it's a generic type with origin
-        if not hasattr(field_type, "__origin__") or field_type.__origin__ is None:
-            return False, None, False
+        # Use get_origin and get_args to handle both old and new union syntax
+        origin = get_origin(field_type)
+        args = get_args(field_type)
 
-        origin = field_type.__origin__
-        args = getattr(field_type, "__args__", ())
+        # Check if it's a generic type with origin
+        if origin is None:
+            return False, None, False
 
         # Dict type
         if origin is dict and args and len(args) >= 2:
             # Safely access args[1] after explicit length check
             if len(args) > 1:
-                contains_options, options_class, _ = self._analyze_type_for_options(args[1])
+                contains_options, options_class, _ = self._analyze_type_for_options(
+                    args[1]
+                )
                 if contains_options:
                     return True, options_class, True
         elif origin is dict and len(args) == 1:
@@ -306,22 +314,32 @@ class Options(SerializableMixin, ABC):
             if contains_options:
                 return True, options_class, False
 
-        # Union type (Optional)
-        elif origin is not None:  # Union types
-            # Check if any non-None arg is a Dict type
-            is_dict_type = any(
-                hasattr(arg, "__origin__") and arg.__origin__ is dict
-                for arg in args
-                if arg is not type(None)
+        # Union type (Optional) - handle both typing.Union and types.UnionType (X | Y syntax)
+        else:
+            # Import types module to check for UnionType
+            import types
+            from typing import Union
+
+            # Check if it's a Union type (old or new syntax)
+            is_union = origin is Union or (
+                hasattr(types, "UnionType") and origin is types.UnionType
             )
 
-            # Check each non-None argument
-            for arg in args:
-                if arg is type(None):
-                    continue
-                contains_options, options_class, _ = self._analyze_type_for_options(arg)
-                if contains_options:
-                    return True, options_class, is_dict_type
+            if is_union and args:
+                # Check if any non-None arg is a Dict type
+                is_dict_type = any(
+                    get_origin(arg) is dict for arg in args if arg is not type(None)
+                )
+
+                # Check each non-None argument
+                for arg in args:
+                    if arg is type(None):
+                        continue
+                    contains_options, options_class, _ = self._analyze_type_for_options(
+                        arg
+                    )
+                    if contains_options:
+                        return True, options_class, is_dict_type
 
         return False, None, False
 

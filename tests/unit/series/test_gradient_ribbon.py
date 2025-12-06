@@ -7,9 +7,10 @@ gradient bounds calculation, normalization, and data handling.
 import time
 
 import pandas as pd
-from lightweight_charts_core.charts.series.gradient_ribbon import GradientRibbonSeries
-from lightweight_charts_core.data.gradient_ribbon import GradientRibbonData
-from lightweight_charts_core.type_definitions.enums import ChartType
+
+from lightweight_charts_pro.charts.series.gradient_ribbon import GradientRibbonSeries
+from lightweight_charts_pro.data.gradient_ribbon import GradientRibbonData
+from lightweight_charts_pro.type_definitions.enums import ChartType
 
 
 class TestGradientRibbonSeries:
@@ -96,7 +97,9 @@ class TestGradientRibbonSeries:
         """Test gradient bounds calculation with invalid gradient values."""
         data = [
             GradientRibbonData("2024-01-01", upper=110, lower=100, gradient=5.0),
-            GradientRibbonData("2024-01-02", upper=112, lower=102, gradient=None),  # No gradient
+            GradientRibbonData(
+                "2024-01-02", upper=112, lower=102, gradient=None
+            ),  # No gradient
             GradientRibbonData("2024-01-03", upper=114, lower=104, gradient=10.0),
         ]
 
@@ -153,7 +156,9 @@ class TestGradientRibbonSeries:
         """Test asdict method with gradient normalization edge cases."""
         data = [
             GradientRibbonData("2024-01-01", upper=110, lower=100, gradient=5.0),
-            GradientRibbonData("2024-01-02", upper=112, lower=102, gradient=5.0),  # Same value
+            GradientRibbonData(
+                "2024-01-02", upper=112, lower=102, gradient=5.0
+            ),  # Same value
         ]
 
         series = GradientRibbonSeries(data=data, normalize_gradients=True)

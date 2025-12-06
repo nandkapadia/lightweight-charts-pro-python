@@ -4,12 +4,14 @@ This module tests the RibbonData class with per-point color override functionali
 """
 
 import pytest
-from lightweight_charts_core.data.ribbon import RibbonData
-from lightweight_charts_core.exceptions import ColorValidationError
+
+from lightweight_charts_pro.data.ribbon import RibbonData
+from lightweight_charts_pro.exceptions import ColorValidationError
 
 
 @pytest.fixture
 def valid_time() -> int:
+    """Provide a valid Unix timestamp for testing."""
     return 1704067200  # 2024-01-01 00:00:00 UTC
 
 
