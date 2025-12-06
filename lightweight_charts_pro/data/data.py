@@ -101,11 +101,11 @@ class Data(SerializableMixin, ABC):
 
     Time normalization happens during serialization (asdict()) rather than at construction,
     allowing users to modify time values after creating data objects. This provides
-    flexibility while ensuring all serialized data uses consistent UTC timestamps.
+    flexibility while ensuring all serialized data uses consistent timestamps.
 
     Attributes:
         time (Union[pd.Timestamp, datetime, str, int, float]): Time value in various
-            formats. Converted to UTC timestamp during serialization.
+            formats. Converted to UNIX timestamp during serialization.
 
     Class Attributes:
         REQUIRED_COLUMNS (set): Set of required column names for DataFrame conversion.
@@ -140,7 +140,7 @@ class Data(SerializableMixin, ABC):
     Note:
         - All imports must be at the top of the file unless justified.
         - Use specific exceptions and lazy string formatting for logging.
-        - Time values are normalized to UTC timestamps during serialization.
+        - Time values are normalized to UNIX timestamps during serialization.
         - NaN values are converted to 0.0 for frontend compatibility.
 
     """

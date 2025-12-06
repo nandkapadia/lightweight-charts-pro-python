@@ -448,10 +448,14 @@ class BaseChart:
         if tooltip_configs:
             chart_obj["tooltips"] = tooltip_configs
 
-        # Build complete config
+        # Build complete config with sync support
         config = {
             "charts": [chart_obj],
-            "syncConfig": {"enabled": False},
+            "syncConfig": {
+                "enabled": self._chart_group_id is not None
+                and self._chart_group_id != 0,
+                "chartGroupId": self._chart_group_id if self._chart_group_id else 0,
+            },
         }
 
         if self.force_reinit:

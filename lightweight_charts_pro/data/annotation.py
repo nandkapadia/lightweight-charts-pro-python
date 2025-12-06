@@ -135,7 +135,7 @@ class Annotation:
             tooltip: Optional tooltip text.
 
         """
-        # Store time as-is, convert to UTC timestamp in asdict() for consistency
+        # Store time as-is, convert to UNIX timestamp in asdict() for consistency
         self.time = time
 
         # Accept both str and Enum for annotation_type
@@ -189,10 +189,10 @@ class Annotation:
 
     @property
     def timestamp(self) -> int:
-        """Get time as UTC timestamp (converted fresh).
+        """Get time as UNIX timestamp (converted fresh).
 
         Returns:
-            int: UTC timestamp as integer (seconds).
+            int: UNIX timestamp as integer (seconds).
 
         """
         return to_utc_timestamp(self.time)
