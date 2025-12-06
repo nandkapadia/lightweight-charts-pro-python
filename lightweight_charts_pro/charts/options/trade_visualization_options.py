@@ -80,7 +80,6 @@ from lightweight_charts_pro.utils import chainable_field
 @chainable_field("rectangle_text_color", str, validator="color")
 @chainable_field("rectangle_text_background", str, validator="color")
 @chainable_field("tooltip_template", str)
-@chainable_field("marker_template", str)
 @chainable_field("entry_marker_template", str)
 @chainable_field("exit_marker_template", str)
 @chainable_field("entry_marker_shape", str)
@@ -132,7 +131,6 @@ class TradeVisualizationOptions(Options):
         rectangle_text_color: Color for rectangle text
         rectangle_text_background: Background color for rectangle text
         tooltip_template: Custom HTML template for tooltips with placeholders
-        marker_template: Deprecated - use entry_marker_template and exit_marker_template
         entry_marker_template: Custom HTML template for entry marker text
         exit_marker_template: Custom HTML template for exit marker text
         entry_marker_shape: Shape for entry markers (arrow_up, arrow_down, circle, square)
@@ -216,7 +214,6 @@ class TradeVisualizationOptions(Options):
 
     # Template options
     tooltip_template: str = ""  # Custom HTML template for tooltips
-    marker_template: str = ""  # Deprecated - use entry/exit templates
     entry_marker_template: str = ""  # Custom HTML template for entry markers
     exit_marker_template: str = ""  # Custom HTML template for exit markers
 

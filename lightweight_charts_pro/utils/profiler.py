@@ -535,12 +535,12 @@ class PerformanceProfiler:
 
         # Define the decorator that will wrap the target function
         def decorator(func: Callable) -> Callable:
-            """Decorator function that wraps the target function with profiling."""
+            """Wrap the target function with profiling."""
 
             # Use functools.wraps to preserve function metadata
             @wraps(func)
             def wrapper(*args, **kwargs):
-                """Wrapper function that executes profiling around the original function."""
+                """Execute profiling around the original function."""
                 # Profile the function execution using measure_operation
                 with self.measure_operation(operation_name, data_size):
                     # Call the original function and return its result

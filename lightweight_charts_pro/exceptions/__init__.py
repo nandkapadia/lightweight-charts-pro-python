@@ -930,7 +930,10 @@ class NpmNotFoundError(ConfigurationError):
     def __init__(self):
         """Initialize NpmNotFoundError with standard message."""
         # Use predefined message for NPM not found errors
-        message = "NPM not found in system PATH. Please install Node.js and NPM to build frontend assets."
+        message = (
+            "NPM not found in system PATH. "
+            "Please install Node.js and NPM to build frontend assets."
+        )
         super().__init__(message)
 
 

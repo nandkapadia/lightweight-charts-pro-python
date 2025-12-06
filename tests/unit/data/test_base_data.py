@@ -15,7 +15,7 @@ from lightweight_charts_pro.exceptions import (
     RequiredFieldError,
     TimeValidationError,
 )
-from lightweight_charts_pro.utils.data_utils import from_utc_timestamp, to_utc_timestamp
+from lightweight_charts_pro.utils.data_utils import from_timestamp, to_timestamp
 
 
 class TestSingleValueData:
@@ -64,51 +64,51 @@ class TestSingleValueData:
 class TestTimeNormalization:
     """Test cases for time normalization functions."""
 
-    def test_to_utc_timestamp_from_int(self):
-        """Test to_utc_timestamp with integer."""
-        result = to_utc_timestamp(1640995200)
+    def test_to_timestamp_from_int(self):
+        """Test to_timestamp with integer."""
+        result = to_timestamp(1640995200)
         assert result == 1640995200
 
-    def test_to_utc_timestamp_from_float(self):
-        """Test to_utc_timestamp with float."""
-        result = to_utc_timestamp(1640995200.0)
+    def test_to_timestamp_from_float(self):
+        """Test to_timestamp with float."""
+        result = to_timestamp(1640995200.0)
         assert result == 1640995200
 
-    def test_to_utc_timestamp_from_string_iso(self):
-        """Test to_utc_timestamp with ISO string."""
-        result = to_utc_timestamp("2022-01-01T00:00:00")
+    def test_to_timestamp_from_string_iso(self):
+        """Test to_timestamp with ISO string."""
+        result = to_timestamp("2022-01-01T00:00:00")
         assert result == 1640995200
 
-    def test_to_utc_timestamp_from_string_date(self):
-        """Test to_utc_timestamp with date string."""
-        result = to_utc_timestamp("2022-01-01")
+    def test_to_timestamp_from_string_date(self):
+        """Test to_timestamp with date string."""
+        result = to_timestamp("2022-01-01")
         assert result == 1640995200
 
-    def test_to_utc_timestamp_from_datetime(self):
-        """Test to_utc_timestamp with datetime object."""
+    def test_to_timestamp_from_datetime(self):
+        """Test to_timestamp with datetime object."""
         dt = datetime(2022, 1, 1, tzinfo=timezone.utc)
-        result = to_utc_timestamp(dt)
+        result = to_timestamp(dt)
         assert result == 1640995200
 
-    def test_to_utc_timestamp_from_pandas_timestamp(self):
-        """Test to_utc_timestamp with pandas Timestamp."""
+    def test_to_timestamp_from_pandas_timestamp(self):
+        """Test to_timestamp with pandas Timestamp."""
         ts = pd.Timestamp("2022-01-01T00:00:00Z")
-        result = to_utc_timestamp(ts)
+        result = to_timestamp(ts)
         assert result == 1640995200
 
-    def test_to_utc_timestamp_invalid_input(self):
-        """Test to_utc_timestamp with invalid input."""
+    def test_to_timestamp_invalid_input(self):
+        """Test to_timestamp with invalid input."""
         with pytest.raises(TimeValidationError):
-            to_utc_timestamp("invalid_date")
+            to_timestamp("invalid_date")
 
-    def test_from_utc_timestamp(self):
-        """Test from_utc_timestamp function."""
-        result = from_utc_timestamp(1640995200)
+    def test_from_timestamp(self):
+        """Test from_timestamp function."""
+        result = from_timestamp(1640995200)
         assert result == "2022-01-01T00:00:00"
 
-    def test_from_utc_timestamp_zero(self):
-        """Test from_utc_timestamp with zero timestamp."""
-        result = from_utc_timestamp(0)
+    def test_from_timestamp_zero(self):
+        """Test from_timestamp with zero timestamp."""
+        result = from_timestamp(0)
         assert result == "1970-01-01T00:00:00"
 
 

@@ -1,4 +1,4 @@
-"""Base Chart Manager for lightweight-charts-core.
+"""Base Chart Manager for lightweight-charts-pro.
 
 This module provides the BaseChartManager class containing all framework-agnostic
 chart management logic. Framework-specific implementations should extend this class

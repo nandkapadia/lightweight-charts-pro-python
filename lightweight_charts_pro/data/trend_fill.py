@@ -1,4 +1,4 @@
-"""Trend fill data classes for lightweight-charts-core.
+"""Trend fill data classes for lightweight-charts-pro.
 
 This module provides TrendFillData class for creating trend-based fill charts
 that display fills between trend lines and base lines, similar to

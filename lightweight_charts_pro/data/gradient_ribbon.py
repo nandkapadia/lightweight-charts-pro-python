@@ -1,4 +1,4 @@
-"""Gradient ribbon data classes for lightweight-charts-core.
+"""Gradient ribbon data classes for lightweight-charts-pro.
 
 This module provides data classes for gradient ribbon data points used in
 ribbon charts that display upper and lower bands with gradient fill areas.

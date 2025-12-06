@@ -1,4 +1,4 @@
-"""Base Chart implementation for lightweight-charts-core.
+"""Base Chart implementation for lightweight-charts-pro.
 
 This module provides the BaseChart class containing all framework-agnostic chart logic.
 Framework-specific implementations (Streamlit, FastAPI, etc.) should extend this class

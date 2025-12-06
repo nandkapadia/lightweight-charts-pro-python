@@ -19,11 +19,11 @@ from lightweight_charts_pro.exceptions import (
     ValueValidationError,
 )
 from lightweight_charts_pro.utils.data_utils import (
-    from_utc_timestamp,
+    from_timestamp,
     is_valid_color,
     normalize_time,
     snake_to_camel,
-    to_utc_timestamp,
+    to_timestamp,
     validate_min_move,
     validate_precision,
     validate_price_format_type,
@@ -109,14 +109,14 @@ class TestNormalizeTime:
             pytest.skip("NumPy not available")
 
 
-class TestToUtcTimestamp:
-    """Tests for to_utc_timestamp function."""
+class TestToTimestamp:
+    """Tests for to_timestamp function."""
 
     def test_alias_functionality(self):
-        """Test that to_utc_timestamp is an alias for normalize_time."""
+        """Test that to_timestamp is an alias for normalize_time."""
         input_value = 1640995200
         result1 = normalize_time(input_value)
-        result2 = to_utc_timestamp(input_value)
+        result2 = to_timestamp(input_value)
         assert result1 == result2
 
     def test_various_inputs(self):
@@ -130,35 +130,35 @@ class TestToUtcTimestamp:
         ]
 
         for inp in inputs:
-            result = to_utc_timestamp(inp)
+            result = to_timestamp(inp)
             assert isinstance(result, int)
             assert result > 0
 
 
-class TestFromUtcTimestamp:
-    """Tests for from_utc_timestamp function."""
+class TestFromTimestamp:
+    """Tests for from_timestamp function."""
 
     def test_valid_timestamp(self):
         """Test with valid timestamp."""
-        result = from_utc_timestamp(1640995200)
+        result = from_timestamp(1640995200)
         assert isinstance(result, str)
         assert "2022" in result
 
     def test_zero_timestamp(self):
         """Test with epoch timestamp."""
-        result = from_utc_timestamp(0)
+        result = from_timestamp(0)
         assert isinstance(result, str)
         assert "1970" in result
 
     def test_recent_timestamp(self):
         """Test with recent timestamp."""
-        result = from_utc_timestamp(1704067200)  # 2024-01-01
+        result = from_timestamp(1704067200)  # 2024-01-01
         assert isinstance(result, str)
         assert "2024" in result
 
     def test_iso_format(self):
         """Test that output is in ISO format."""
-        result = from_utc_timestamp(1640995200)
+        result = from_timestamp(1640995200)
         assert "T" in result  # ISO format includes T separator
         assert ":" in result  # ISO format includes time
 
@@ -415,7 +415,7 @@ class TestDataUtilsIntegration:
         """Test converting time back and forth."""
         original_dt = datetime(2024, 1, 1, 12, 30, 45)
         timestamp = normalize_time(original_dt)
-        iso_string = from_utc_timestamp(timestamp)
+        iso_string = from_timestamp(timestamp)
 
         assert isinstance(timestamp, int)
         assert isinstance(iso_string, str)

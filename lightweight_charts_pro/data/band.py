@@ -1,4 +1,4 @@
-"""Band data classes for lightweight-charts-core.
+"""Band data classes for lightweight-charts-pro.
 
 This module provides data classes for band data points used in
 band charts such as Bollinger Bands and other envelope indicators.

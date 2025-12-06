@@ -162,8 +162,8 @@ class OhlcData(Data):
             if isinstance(value, float) and math.isnan(value):
                 raise ValueValidationError(
                     field_name,
-                    f"NaN is not allowed. Missing OHLC data must be handled upstream "
-                    f"(filter, forward-fill, or drop) before creating chart data.",
+                    "NaN is not allowed. Missing OHLC data must be handled upstream "
+                    "(filter, forward-fill, or drop) before creating chart data.",
                 )
             # Validate that the field is not None - all OHLC fields are required
             elif value is None:

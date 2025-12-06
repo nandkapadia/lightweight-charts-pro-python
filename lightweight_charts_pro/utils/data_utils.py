@@ -293,30 +293,6 @@ def to_timestamp(time_value: Any) -> int:
     return normalize_time(time_value)
 
 
-# Backward compatibility alias (deprecated)
-def to_utc_timestamp(time_value: Any) -> int:
-    """[DEPRECATED] Convert time input to UNIX seconds.
-
-    **This function is deprecated**. Use `to_timestamp()` instead.
-
-    The name "to_utc_timestamp" is misleading because this function does NOT
-    convert to UTC. It normalizes time values to UNIX timestamps while preserving
-    timezone information (or using system local timezone for naive datetimes).
-
-    Args:
-        time_value (Any): Time value to convert.
-
-    Returns:
-        int: UNIX timestamp in seconds since epoch.
-
-    Deprecated:
-        Use `to_timestamp()` instead for clarity. This alias will be removed
-        in a future version.
-
-    """
-    return to_timestamp(time_value)
-
-
 def from_timestamp(timestamp: int) -> str:
     """Convert UNIX timestamp to ISO format string.
 
@@ -361,30 +337,6 @@ def from_timestamp(timestamp: int) -> str:
 
     # Return naive ISO string (strip timezone info for backward compatibility)
     return dt.replace(tzinfo=None).isoformat()
-
-
-# Backward compatibility alias (deprecated)
-def from_utc_timestamp(timestamp: int) -> str:
-    """[DEPRECATED] Convert UNIX timestamp to ISO format string.
-
-    **This function is deprecated**. Use `from_timestamp()` instead.
-
-    The name "from_utc_timestamp" is misleading because while it interprets
-    the timestamp as UTC, it returns a naive datetime string without timezone
-    information.
-
-    Args:
-        timestamp (int): UNIX timestamp in seconds since epoch.
-
-    Returns:
-        str: ISO format datetime string WITHOUT timezone suffix.
-
-    Deprecated:
-        Use `from_timestamp()` instead for clarity. This alias will be removed
-        in a future version.
-
-    """
-    return from_timestamp(timestamp)
 
 
 def snake_to_camel(snake_str: str) -> str:

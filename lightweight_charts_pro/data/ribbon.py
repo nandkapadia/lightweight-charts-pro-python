@@ -1,4 +1,4 @@
-"""Ribbon data classes for lightweight-charts-core.
+"""Ribbon data classes for lightweight-charts-pro.
 
 This module provides data classes for ribbon data points used in
 ribbon charts that display upper and lower bands with fill areas.

@@ -199,29 +199,30 @@ class DocstringValidator:
         if args and not is_class:
             if not re.search(r"^\s*Args:\s*$", docstring, re.MULTILINE):
                 self.errors.append(
-                    f"{filepath}:{lineno}: {name} - Missing 'Args:' section for function with arguments"
+                    f"{filepath}:{lineno}: {name} - Missing 'Args:' section"
                 )
             else:
                 # Validate that all args are documented
                 for arg in args:
                     if not re.search(rf"^\s*{arg}\s*\(.*?\):", docstring, re.MULTILINE):
                         self.warnings.append(
-                            f"{filepath}:{lineno}: {name} - Argument '{arg}' not documented in Args section"
+                            f"{filepath}:{lineno}: {name} - Argument '{arg}' not documented"
                         )
 
         # Check for Returns section if function returns something
-        if has_return and not is_class:
-            if not re.search(r"^\s*Returns:\s*$", docstring, re.MULTILINE):
-                self.warnings.append(
-                    f"{filepath}:{lineno}: {name} - Missing 'Returns:' section for function with return statement"
-                )
+        if (
+            has_return
+            and not is_class
+            and not re.search(r"^\s*Returns:\s*$", docstring, re.MULTILINE)
+        ):
+            self.warnings.append(
+                f"{filepath}:{lineno}: {name} - Missing 'Returns:' section"
+            )
 
         # Check for Attributes section in classes
-        if is_class:
-            # This is optional but good practice
-            if not re.search(r"^\s*Attributes:\s*$", docstring, re.MULTILINE):
-                # Not an error, just informational
-                pass
+        if is_class and not re.search(r"^\s*Attributes:\s*$", docstring, re.MULTILINE):
+            # Not an error, just informational
+            pass
 
     def _has_return_statement(
         self, node: ast.FunctionDef | ast.AsyncFunctionDef

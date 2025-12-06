@@ -97,7 +97,7 @@ class TestTradeDataTimeFormats:
         assert result["exitTime"] == 1641081600
 
     def test_unix_timestamp_milliseconds(self):
-        """Test with Unix timestamp in milliseconds (handled by to_utc_timestamp)."""
+        """Test with Unix timestamp in milliseconds (handled by normalize_time)."""
         trade = TradeData(
             entry_time=1640995200000,  # Milliseconds
             entry_price=100.0,
