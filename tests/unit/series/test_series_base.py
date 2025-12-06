@@ -1336,7 +1336,7 @@ class TestSeriesPrepareIndexEdgeCases:
             "value": "value",
         }  # Use integer string for level position
 
-        result = Series.prepare_index(test_data, column_mapping)
+        result, _ = Series.prepare_index(test_data, column_mapping)
 
         # Should reset the first level (position 0)
         assert "category" in result.columns
@@ -1354,7 +1354,7 @@ class TestSeriesPrepareIndexEdgeCases:
         column_mapping = {"time": "999", "value": "value"}  # Invalid level position
 
         # Should not raise error, just pass through
-        result = Series.prepare_index(test_data, column_mapping)
+        result, _ = Series.prepare_index(test_data, column_mapping)
         assert result.equals(test_data)
 
     def test_prepare_index_multiindex_named_level(self):
@@ -1367,7 +1367,7 @@ class TestSeriesPrepareIndexEdgeCases:
 
         column_mapping = {"time": "category", "value": "value"}
 
-        result = Series.prepare_index(test_data, column_mapping)
+        result, _ = Series.prepare_index(test_data, column_mapping)
 
         # Should reset the 'category' level
         assert "category" in result.columns
@@ -1384,7 +1384,7 @@ class TestSeriesPrepareIndexEdgeCases:
 
         column_mapping = {"time": "index", "value": "value"}
 
-        result = Series.prepare_index(test_data, column_mapping)
+        result, _ = Series.prepare_index(test_data, column_mapping)
 
         # Should reset the first unnamed level
         assert "level_0" in result.columns or "level" in result.columns
@@ -1400,7 +1400,7 @@ class TestSeriesPrepareIndexEdgeCases:
 
         column_mapping = {"time": "index", "value": "value"}
 
-        result = Series.prepare_index(test_data, column_mapping)
+        result, _ = Series.prepare_index(test_data, column_mapping)
 
         # Should reset the first level when all are named
         assert "category" in result.columns
@@ -1414,7 +1414,7 @@ class TestSeriesPrepareIndexEdgeCases:
 
         column_mapping = {"time": "timestamp", "value": "value"}
 
-        result = Series.prepare_index(test_data, column_mapping)
+        result, _ = Series.prepare_index(test_data, column_mapping)
 
         # Should reset the index
         assert "timestamp" in result.columns
@@ -1427,7 +1427,7 @@ class TestSeriesPrepareIndexEdgeCases:
 
         column_mapping = {"time": "index", "value": "value"}
 
-        result = Series.prepare_index(test_data, column_mapping)
+        result, _ = Series.prepare_index(test_data, column_mapping)
 
         # Should reset the index and create 'index' column
         assert "index" in result.columns
@@ -1440,7 +1440,7 @@ class TestSeriesPrepareIndexEdgeCases:
 
         column_mapping = {"time": "index", "value": "value"}
 
-        result = Series.prepare_index(test_data, column_mapping)
+        result, _ = Series.prepare_index(test_data, column_mapping)
 
         # Should reset the index
         assert "timestamp" in result.columns

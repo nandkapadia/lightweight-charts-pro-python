@@ -248,7 +248,7 @@ class Series(ABC):  # noqa: B024
     @staticmethod
     def prepare_index(
         data_frame: pd.DataFrame, column_mapping: dict[str, str]
-    ) -> pd.DataFrame:
+    ) -> tuple[pd.DataFrame, dict[str, str]]:
         """Prepare index for column mapping.
 
         Handles all index-related column mapping cases:
@@ -263,12 +263,19 @@ class Series(ABC):  # noqa: B024
             column_mapping: Mapping of required fields to column names
 
         Returns:
-            DataFrame with prepared index
+            Tuple of (prepared DataFrame, updated column mapping).
+            The column mapping is a new dict; the input is not modified.
 
         Raises:
             ValueError: If time column is not found and no DatetimeIndex is available
 
+        Note:
+            This method does not modify the input column_mapping dict.
+            A new dict with adjusted mappings is returned.
+
         """
+        # Copy column_mapping to avoid mutating caller's dict
+        column_mapping = column_mapping.copy()
         # Handle time column mapping first (special case for DatetimeIndex)
         if "time" in column_mapping:
             time_col = column_mapping["time"]
@@ -386,7 +393,7 @@ class Series(ABC):  # noqa: B024
                     column_mapping[field] = new_col_name
                     continue
 
-        return data_frame
+        return data_frame, column_mapping
 
     def _process_dataframe_input(
         self,
@@ -450,7 +457,7 @@ class Series(ABC):  # noqa: B024
             )
 
         # Prepare index for all column mappings
-        data_frame = self.prepare_index(data, column_mapping)
+        data_frame, column_mapping = self.prepare_index(data, column_mapping)
 
         # Check if all required columns are present in the DataFrame
         mapped_columns = set(column_mapping.values())
@@ -463,24 +470,28 @@ class Series(ABC):  # noqa: B024
                 f"is missing required column: {missing_columns}",
             )
 
-        # Create data objects
-        result = []
-        for _, row in data_frame.iterrows():
-            kwargs = {}
-            # Process both required and optional columns
-            for key in required.union(optional):
-                # Find the corresponding column mapping key (handle both snake_case and camelCase)
-                mapped_key = None
-                for mapping_key in column_mapping:
-                    if normalize_key(mapping_key) == normalize_key(key):
-                        mapped_key = mapping_key
-                        break
-
-                if mapped_key:
-                    col_name = column_mapping[mapped_key]
+        # Create data objects using more efficient iteration
+        # Build reverse mapping once (dataclass field -> DataFrame column)
+        field_to_column = {}
+        for key in required.union(optional):
+            # Find the corresponding column mapping key (handle both snake_case and camelCase)
+            for mapping_key in column_mapping:
+                if normalize_key(mapping_key) == normalize_key(key):
+                    col_name = column_mapping[mapping_key]
                     if col_name in data_frame.columns:
-                        value = row[col_name]
-                        kwargs[key] = value
+                        field_to_column[key] = col_name
+                    break
+
+        # Use itertuples for better performance than iterrows
+        # Convert to records dict for flexible field access
+        records = data_frame.to_dict(orient="records")
+        result = []
+
+        for record in records:
+            kwargs = {}
+            for field, col_name in field_to_column.items():
+                if col_name in record:
+                    kwargs[field] = record[col_name]
             data_obj = data_class(**kwargs)
             result.append(data_obj)
 
@@ -1083,7 +1094,7 @@ class Series(ABC):  # noqa: B024
         # Removed print
 
         # Prepare index for all column mappings
-        data_frame = cls.prepare_index(dataframe, column_mapping)
+        data_frame, column_mapping = cls.prepare_index(dataframe, column_mapping)
 
         # Check required columns in DataFrame (including index) - after processing
         for key in required:
