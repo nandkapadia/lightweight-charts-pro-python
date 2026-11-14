@@ -38,8 +38,9 @@ from dataclasses import dataclass, field
 
 # Local Imports
 from lightweight_charts_pro.charts.options.base_options import Options
+from lightweight_charts_pro.exceptions import TypeValidationError, ValueValidationError
 from lightweight_charts_pro.type_definitions.enums import PriceScaleMode
-from lightweight_charts_pro.utils import chainable_field
+from lightweight_charts_pro.utils import chainable_field, validated_field
 
 
 @dataclass
@@ -75,6 +76,27 @@ class PriceScaleMargins(Options):
     bottom: float = 0.1  # Bottom margin as percentage of visible price range
 
 
+def _validate_tick_mark_density(value: float) -> float:
+    """Reject tick mark densities that are not strictly positive.
+
+    Args:
+        value (float): Spacing multiplier between price scale labels.
+
+    Returns:
+        float: The unchanged density.
+
+    Raises:
+        TypeValidationError: If the density is not a number (bool is rejected).
+        ValueValidationError: If the density is zero or negative.
+
+    """
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise TypeValidationError("tick_mark_density", "a number", type(value).__name__)
+    if value <= 0:
+        raise ValueValidationError.positive_value("tick_mark_density", value)
+    return value
+
+
 @dataclass
 @chainable_field("visible", bool)
 @chainable_field("auto_scale", bool)
@@ -89,6 +111,12 @@ class PriceScaleMargins(Options):
 @chainable_field("entire_text_only", bool)
 @chainable_field("minimum_width", int)
 @chainable_field("scale_margins", PriceScaleMargins)
+@validated_field(
+    "tick_mark_density",
+    (int, float),
+    validator=_validate_tick_mark_density,
+    allow_none=True,
+)
 class PriceScaleOptions(Options):
     """Comprehensive configuration options for price scales in financial charts.
 
@@ -121,6 +149,8 @@ class PriceScaleOptions(Options):
             Defaults to 72 pixels.
         scale_margins (PriceScaleMargins): Margin configuration for the price scale.
             Defaults to 10% margins on top and bottom.
+        tick_mark_density (Optional[float]): Spacing between price labels. Higher values
+            mean fewer labels. None leaves the library default (2.5) in place.
 
     Example:
         ```python
@@ -171,3 +201,4 @@ class PriceScaleOptions(Options):
     scale_margins: PriceScaleMargins = field(
         default_factory=PriceScaleMargins,
     )  # Margin configuration
+    tick_mark_density: float | None = None  # Label spacing; None keeps library default

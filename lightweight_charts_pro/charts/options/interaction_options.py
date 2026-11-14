@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 
 from lightweight_charts_pro.charts.options.base_options import Options
 from lightweight_charts_pro.type_definitions.enums import CrosshairMode, LineStyle
-from lightweight_charts_pro.utils import chainable_field
+from lightweight_charts_pro.utils import chainable_field, validated_field
 
 
 @dataclass
@@ -41,12 +41,24 @@ class CrosshairSyncOptions(Options):
 @chainable_field("mode", CrosshairMode)
 @chainable_field("vert_line", CrosshairLineOptions)
 @chainable_field("horz_line", CrosshairLineOptions)
+@validated_field("do_not_snap_to_hidden_series_indices", bool, allow_none=True)
 class CrosshairOptions(Options):
-    """Crosshair configuration for chart."""
+    """Crosshair configuration for chart.
+
+    Attributes:
+        mode (CrosshairMode): How the crosshair follows the mouse.
+        vert_line (CrosshairLineOptions): Vertical crosshair line styling.
+        horz_line (CrosshairLineOptions): Horizontal crosshair line styling.
+        do_not_snap_to_hidden_series_indices (Optional[bool]): Whether the crosshair skips
+            data points that exist only in hidden series. None leaves the frontend
+            default (True) in place.
+
+    """
 
     mode: CrosshairMode = CrosshairMode.NORMAL
     vert_line: CrosshairLineOptions = field(default_factory=CrosshairLineOptions)
     horz_line: CrosshairLineOptions = field(default_factory=CrosshairLineOptions)
+    do_not_snap_to_hidden_series_indices: bool | None = None
 
 
 @dataclass

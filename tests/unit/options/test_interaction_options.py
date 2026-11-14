@@ -433,3 +433,45 @@ class TestInteractionOptionsEdgeCases:
 
         assert options1 == options2
         assert options1 != options3
+
+
+class TestCrosshairHiddenSeriesSnapping:
+    """Test the do_not_snap_to_hidden_series_indices crosshair option."""
+
+    def test_omitted_from_serialization_by_default(self):
+        """Unset, the frontend default applies, so nothing is sent."""
+        result = CrosshairOptions().asdict()
+
+        assert "doNotSnapToHiddenSeriesIndices" not in result
+
+    @pytest.mark.parametrize("value", [True, False])
+    def test_serialized_when_set(self, value):
+        """Both True and False are sent so users can override the frontend default."""
+        options = CrosshairOptions(do_not_snap_to_hidden_series_indices=value)
+
+        assert options.asdict()["doNotSnapToHiddenSeriesIndices"] is value
+
+    def test_chainable_setter(self):
+        """The setter returns the instance and stores the value."""
+        options = CrosshairOptions()
+
+        assert options.set_do_not_snap_to_hidden_series_indices(True) is options
+        assert options.do_not_snap_to_hidden_series_indices is True
+
+    def test_setter_rejects_non_bool(self):
+        """Non-boolean values are rejected."""
+        with pytest.raises(TypeValidationError):
+            CrosshairOptions().set_do_not_snap_to_hidden_series_indices("yes")
+
+    def test_constructor_rejects_non_bool(self):
+        """Constructor values get the same check as the setter."""
+        with pytest.raises(TypeValidationError):
+            CrosshairOptions(do_not_snap_to_hidden_series_indices="yes")
+
+    def test_setter_accepts_none_to_restore_default(self):
+        """None clears the override so the frontend default applies again."""
+        options = CrosshairOptions(do_not_snap_to_hidden_series_indices=False)
+
+        options.set_do_not_snap_to_hidden_series_indices(None)
+
+        assert "doNotSnapToHiddenSeriesIndices" not in options.asdict()

@@ -11,7 +11,7 @@ from lightweight_charts_pro.charts.options.price_scale_options import (
     PriceScaleMargins,
     PriceScaleOptions,
 )
-from lightweight_charts_pro.exceptions import TypeValidationError
+from lightweight_charts_pro.exceptions import TypeValidationError, ValueValidationError
 from lightweight_charts_pro.type_definitions.enums import PriceScaleMode
 
 
@@ -530,3 +530,55 @@ class TestPriceScaleOptionsEdgeCases:
         assert "scaleMargins" in result
         assert result["scaleMargins"]["top"] == 0.5
         assert result["scaleMargins"]["bottom"] == 0.5
+
+
+class TestPriceScaleTickMarkDensity:
+    """Test the tick_mark_density price scale option."""
+
+    def test_omitted_from_serialization_by_default(self):
+        """Unset, the library default (2.5) applies, so nothing is sent."""
+        assert "tickMarkDensity" not in PriceScaleOptions().asdict()
+
+    def test_serialized_when_set(self):
+        """A configured density is sent as tickMarkDensity."""
+        options = PriceScaleOptions(tick_mark_density=4.0)
+
+        assert options.asdict()["tickMarkDensity"] == 4.0
+
+    def test_chainable_setter_accepts_int(self):
+        """Integers are accepted as densities."""
+        options = PriceScaleOptions().set_tick_mark_density(3)
+
+        assert options.tick_mark_density == 3
+
+    def test_setter_rejects_non_number(self):
+        """Non-numeric densities are rejected."""
+        with pytest.raises(TypeValidationError):
+            PriceScaleOptions().set_tick_mark_density("dense")
+
+    def test_setter_rejects_non_positive(self):
+        """A density of zero or less is meaningless and rejected."""
+        with pytest.raises(ValueValidationError):
+            PriceScaleOptions().set_tick_mark_density(0)
+
+    def test_setter_rejects_bool(self):
+        """Booleans subclass int in Python but are not meaningful densities."""
+        with pytest.raises(TypeValidationError):
+            PriceScaleOptions().set_tick_mark_density(True)
+
+    @pytest.mark.parametrize(
+        ("value", "error"),
+        [(-1, ValueValidationError), (0, ValueValidationError), (True, TypeValidationError)],
+    )
+    def test_constructor_rejects_invalid(self, value, error):
+        """Constructor values get the same checks as the setter."""
+        with pytest.raises(error):
+            PriceScaleOptions(tick_mark_density=value)
+
+    def test_setter_accepts_none_to_restore_default(self):
+        """None clears the override so the library default applies again."""
+        options = PriceScaleOptions(tick_mark_density=4.0)
+
+        options.set_tick_mark_density(None)
+
+        assert "tickMarkDensity" not in options.asdict()

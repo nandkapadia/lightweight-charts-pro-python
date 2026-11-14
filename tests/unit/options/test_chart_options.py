@@ -32,6 +32,7 @@ from lightweight_charts_pro.charts.options.trade_visualization_options import (
 from lightweight_charts_pro.exceptions import (
     PriceScaleOptionsTypeError,
     TypeValidationError,
+    ValueValidationError,
 )
 from lightweight_charts_pro.type_definitions.colors import BackgroundSolid
 from lightweight_charts_pro.type_definitions.enums import LineStyle
@@ -569,3 +570,50 @@ class TestChartOptionsPriceScaleValidation:
 
         assert options.left_price_scale is None
         assert options.right_price_scale is None
+
+
+class TestChartOptionsHoverAndDefaultScale:
+    """Test hovered_series_on_top and default_visible_price_scale_id."""
+
+    def test_omitted_from_serialization_by_default(self):
+        """Unset, the library defaults apply, so neither key is sent."""
+        result = ChartOptions().asdict()
+
+        assert "hoveredSeriesOnTop" not in result
+        assert "defaultVisiblePriceScaleId" not in result
+
+    def test_hovered_series_on_top_false_is_serialized(self):
+        """False must be sent, since it overrides the library default of True."""
+        result = ChartOptions(hovered_series_on_top=False).asdict()
+
+        assert result["hoveredSeriesOnTop"] is False
+
+    @pytest.mark.parametrize("scale_id", ["left", "right"])
+    def test_default_visible_price_scale_id_serialized(self, scale_id):
+        """A configured default scale is sent as defaultVisiblePriceScaleId."""
+        result = ChartOptions(default_visible_price_scale_id=scale_id).asdict()
+
+        assert result["defaultVisiblePriceScaleId"] == scale_id
+
+    def test_default_visible_price_scale_id_rejected_at_construction(self):
+        """Only 'left' and 'right' are valid, checked on construction."""
+        with pytest.raises(ValueValidationError):
+            ChartOptions(default_visible_price_scale_id="middle")
+
+    def test_default_visible_price_scale_id_rejected_by_setter(self):
+        """The setter applies the same 'left'/'right' check."""
+        options = ChartOptions()
+
+        assert options.set_default_visible_price_scale_id("left") is options
+        with pytest.raises(ValueValidationError):
+            options.set_default_visible_price_scale_id("middle")
+
+    def test_hovered_series_on_top_setter_rejects_non_bool(self):
+        """Non-boolean values are rejected."""
+        with pytest.raises(TypeValidationError):
+            ChartOptions().set_hovered_series_on_top("no")
+
+    def test_hovered_series_on_top_constructor_rejects_non_bool(self):
+        """Constructor values get the same check as the setter."""
+        with pytest.raises(TypeValidationError):
+            ChartOptions(hovered_series_on_top="no")
