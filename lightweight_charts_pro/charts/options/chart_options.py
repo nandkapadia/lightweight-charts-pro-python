@@ -55,8 +55,30 @@ from lightweight_charts_pro.charts.options.trade_visualization_options import (
     TradeVisualizationOptions,
 )
 from lightweight_charts_pro.charts.options.ui_options import RangeSwitcherOptions
-from lightweight_charts_pro.exceptions import PriceScaleOptionsTypeError
-from lightweight_charts_pro.utils import chainable_field
+from lightweight_charts_pro.exceptions import PriceScaleOptionsTypeError, ValueValidationError
+from lightweight_charts_pro.utils import chainable_field, validated_field
+
+_VISIBLE_PRICE_SCALE_IDS = ("left", "right")
+
+
+def _validate_default_visible_price_scale_id(value: str) -> str:
+    """Accept only the price scale ids the library can prefer by default.
+
+    Args:
+        value (str): Requested default price scale id.
+
+    Returns:
+        str: The unchanged id.
+
+    Raises:
+        ValueValidationError: If the id is not 'left' or 'right'.
+
+    """
+    if value not in _VISIBLE_PRICE_SCALE_IDS:
+        raise ValueValidationError(
+            "default_visible_price_scale_id", f"must be 'left' or 'right', got {value!r}"
+        )
+    return value
 
 
 @dataclass
@@ -78,6 +100,13 @@ from lightweight_charts_pro.utils import chainable_field
 @chainable_field("add_default_pane", bool)
 @chainable_field("trade_visualization", TradeVisualizationOptions)
 @chainable_field("range_switcher", RangeSwitcherOptions)
+@validated_field("hovered_series_on_top", bool, allow_none=True)
+@validated_field(
+    "default_visible_price_scale_id",
+    str,
+    validator=_validate_default_visible_price_scale_id,
+    allow_none=True,
+)
 class ChartOptions(Options):
     """Configuration options for chart display and behavior in financial visualization.
 
@@ -125,6 +154,11 @@ class ChartOptions(Options):
             configuration options for displaying trade markers and annotations.
         range_switcher (Optional[RangeSwitcherOptions]): Range switcher configuration
             for time range selection buttons and presets.
+        hovered_series_on_top (Optional[bool]): Whether the series under the mouse is drawn
+            above the others in its pane. None leaves the library default (True) in place.
+        default_visible_price_scale_id (Optional[str]): Which price scale, 'left' or
+            'right', the chart prefers when both are visible. None leaves the library
+            default ('right') in place.
 
     Raises:
         TypeError: If any attribute is assigned an invalid type during initialization.
@@ -177,6 +211,10 @@ class ChartOptions(Options):
 
     # UI options
     range_switcher: RangeSwitcherOptions | None = None
+
+    # Hover and price scale preferences (None keeps the library defaults)
+    hovered_series_on_top: bool | None = None
+    default_visible_price_scale_id: str | None = None
 
     # Synchronization options (reserved for future use)
 

@@ -1,7 +1,11 @@
 import pytest
 
 from lightweight_charts_pro.charts.options.price_line_options import PriceLineOptions
-from lightweight_charts_pro.exceptions import ColorValidationError, TypeValidationError
+from lightweight_charts_pro.exceptions import (
+    ColorValidationError,
+    TypeValidationError,
+    ValueValidationError,
+)
 from lightweight_charts_pro.type_definitions.enums import LineStyle
 
 
@@ -231,3 +235,38 @@ def test_static_color_validator():
         PriceLineOptions._validate_color_static("notacolor", "test")
 
     # Note: rgb(255,0,0) is now a valid color
+
+
+def test_hit_test_tolerance_omitted_by_default():
+    """Unset, the library default (7px) applies, so nothing is sent."""
+    assert "hitTestTolerance" not in PriceLineOptions(price=10.0).asdict()
+
+
+def test_hit_test_tolerance_serialized_when_set():
+    """A configured tolerance is sent as hitTestTolerance, including zero."""
+    assert PriceLineOptions(hit_test_tolerance=3).asdict()["hitTestTolerance"] == 3
+    assert PriceLineOptions(hit_test_tolerance=0).asdict()["hitTestTolerance"] == 0
+
+
+def test_hit_test_tolerance_setter_validation():
+    """The setter rejects non-numbers and negative tolerances."""
+    opts = PriceLineOptions()
+
+    assert opts.set_hit_test_tolerance(2.5) is opts
+    assert opts.hit_test_tolerance == 2.5
+    with pytest.raises(TypeValidationError):
+        opts.set_hit_test_tolerance("wide")
+    with pytest.raises(ValueValidationError):
+        opts.set_hit_test_tolerance(-1)
+    with pytest.raises(TypeValidationError):
+        opts.set_hit_test_tolerance(True)
+
+
+@pytest.mark.parametrize(
+    ("value", "error"),
+    [(-5, ValueValidationError), (False, TypeValidationError), ("wide", TypeValidationError)],
+)
+def test_hit_test_tolerance_constructor_validation(value, error):
+    """Constructor values get the same checks as the setter."""
+    with pytest.raises(error):
+        PriceLineOptions(hit_test_tolerance=value)
