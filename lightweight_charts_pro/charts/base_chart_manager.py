@@ -336,10 +336,19 @@ class BaseChartManager:
 
         chart_configs = []
         for chart_id, chart in self.charts.items():
-            chart_config = chart.to_frontend_config()
+            # Prefer stable chart_id when the chart implementation accepts it
+            # (Streamlit Chart); fall back for BaseChart which has no parameter.
+            try:
+                chart_config = chart.to_frontend_config(chart_id=chart_id)
+            except TypeError:
+                chart_config = chart.to_frontend_config()
             if "charts" in chart_config and len(chart_config["charts"]) > 0:
                 chart_obj = chart_config["charts"][0]
                 chart_obj["chartId"] = chart_id
+                # Ensure per-chart group id reaches the frontend sync path
+                group_id = getattr(chart, "chart_group_id", None)
+                if group_id is not None:
+                    chart_obj["chartGroupId"] = group_id
                 chart_configs.append(chart_obj)
 
         # Build sync configuration
