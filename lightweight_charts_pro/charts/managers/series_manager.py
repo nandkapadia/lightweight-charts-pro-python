@@ -429,8 +429,11 @@ class SeriesManager:
                 series_by_pane[0].append(series_config)
                 continue
 
-            # Note: paneId is now in the options object after API restructuring
-            pane_id = series_config.get("options", {}).get("paneId", 0)
+            # paneId is emitted top-level (top_level=True on Series.pane_id); fall back to
+            # options for older payloads.
+            pane_id = series_config.get(
+                "paneId", series_config.get("options", {}).get("paneId", 0)
+            )
 
             if pane_id not in series_by_pane:
                 series_by_pane[pane_id] = []

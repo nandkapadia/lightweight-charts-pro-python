@@ -476,7 +476,9 @@ class BaseChart:
         }
 
         if trades_config:
-            chart_obj["trades"] = trades_config
+            # TradeManager returns {"trades": [...], "tradeVisualizationOptions": {...}}.
+            # Frontend expects those as sibling keys on the chart object, not nested.
+            chart_obj.update(trades_config)
 
         if tooltip_configs:
             chart_obj["tooltips"] = tooltip_configs

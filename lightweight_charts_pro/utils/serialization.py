@@ -602,21 +602,24 @@ class SerializableMixin:
         if depth > MAX_SERIALIZATION_DEPTH:
             return f"<max depth {MAX_SERIALIZATION_DEPTH} exceeded>"
 
-        # Step 1: Handle NaN floats - convert to zero for JSON compatibility
+        # Step 1: Convert NumPy scalars first so NaN/inf checks see native floats.
+        # np.float32(nan) is not a Python float, so checking isnan before unwrap leaked NaN.
+        if hasattr(value, "item") and not isinstance(value, (bytes, str)):
+            try:
+                scalar = value.item()
+                if isinstance(scalar, (int, float, bool, complex)) or scalar is None:
+                    value = scalar
+            except (ValueError, AttributeError, TypeError):
+                pass
+
+        # Step 2: Handle NaN/inf floats - convert to zero for JSON compatibility
         # JSON spec doesn't support NaN, Infinity, or -Infinity
-        # JavaScript charts typically treat NaN as zero anyway
         if (
             isinstance(value, float)
-            and math.isnan(value)
             and config.convert_nan_to_zero
+            and (math.isnan(value) or math.isinf(value))
         ):
             return 0.0
-
-        # Step 2: Convert NumPy scalar types to Python native types
-        # NumPy types like np.int64, np.float32 aren't JSON-serializable
-        # The .item() method extracts the Python scalar value
-        if hasattr(value, "item"):  # NumPy scalar types have .item() method
-            value = value.item()
 
         # Step 3: Convert enums to their values
         # JavaScript doesn't understand Python enum types

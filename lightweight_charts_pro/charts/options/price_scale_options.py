@@ -34,6 +34,7 @@ License: MIT
 """
 
 # Standard Imports
+import math
 from dataclasses import dataclass, field
 
 # Local Imports
@@ -92,7 +93,7 @@ def _validate_tick_mark_density(value: float) -> float:
     """
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise TypeValidationError("tick_mark_density", "a number", type(value).__name__)
-    if value <= 0:
+    if not math.isfinite(value) or value <= 0:
         raise ValueValidationError.positive_value("tick_mark_density", value)
     return value
 

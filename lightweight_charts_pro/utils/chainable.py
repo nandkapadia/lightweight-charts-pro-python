@@ -80,6 +80,27 @@ from .data_utils import (
 )
 
 
+def _matches_value_type(value: Any, value_type: Any) -> bool:
+    """Return whether value matches value_type, including parameterized generics.
+
+    ``isinstance(value, list[MarkerBase])`` raises TypeError on Python 3.9+ because
+    parameterized generics are not valid for isinstance. Unwrap via get_origin so
+    ``list[...]`` / ``dict[...]`` check against the origin collection type.
+
+    Union types (``int | float``, ``Optional[str]``) are left to isinstance, which
+    accepts them directly — do not reduce them to ``types.UnionType``.
+    """
+    if value_type is None:
+        return True
+    try:
+        return isinstance(value, value_type)
+    except TypeError:
+        origin = get_origin(value_type)
+        if origin is None:
+            return False
+        return isinstance(value, origin)
+
+
 def _is_list_of_markers(value_type) -> bool:
     """Check if the type is List[MarkerBase] or similar.
 
@@ -288,7 +309,9 @@ def chainable_property(
                     # Only accept actual True/False, not 1/0 or other truthy values
                     if not isinstance(value, bool):
                         raise TypeValidationError(attr_name, "boolean")
-                elif not isinstance(value, value_type):
+                elif _is_list_of_markers(value_type):
+                    _validate_list_of_markers(value, attr_name)
+                elif not _matches_value_type(value, value_type):
                     # Case 2: Type mismatch - create user-friendly error messages
                     # Provide specific error messages for common types
                     if value_type is str:
@@ -299,7 +322,7 @@ def chainable_property(
                         raise TypeValidationError(attr_name, "number")
                     if value_type is bool:
                         raise TypeValidationError(attr_name, "boolean")
-                    if hasattr(value_type, "__name__"):
+                    if hasattr(value_type, "__name__") and get_origin(value_type) is None:
                         # Case 3: Complex types (classes, custom types)
                         # Indicate whether None is allowed in the error message
                         if allow_none:
@@ -322,6 +345,7 @@ def chainable_property(
                         ):
                             raise TypeValidationError(attr_name, "number")
                         raise TypeMismatchError(attr_name, value_type, type(value))
+                    raise TypeValidationError(attr_name, "invalid type")
 
             # Step 3: Apply custom validation if specified
             # Custom validators can transform values or perform additional checks
@@ -397,7 +421,7 @@ def chainable_property(
                     # Case 2a: Special handling for List[MarkerBase] and similar types
                     # Markers require special validation due to their complex structure
                     _validate_list_of_markers(value, attr_name)
-                elif not isinstance(value, value_type):
+                elif not _matches_value_type(value, value_type):
                     # Case 2b: Type mismatch - create user-friendly error messages
                     # Provide specific error messages for common types
                     if value_type is str:
@@ -408,7 +432,7 @@ def chainable_property(
                         raise TypeValidationError(attr_name, "number")
                     if value_type is bool:
                         raise TypeValidationError(attr_name, "boolean")
-                    if hasattr(value_type, "__name__"):
+                    if hasattr(value_type, "__name__") and get_origin(value_type) is None:
                         # For complex types, use a more user-friendly message
                         if allow_none:
                             raise InstanceTypeError(
@@ -461,10 +485,10 @@ def chainable_property(
         setattr(cls, attr_name, prop)
         setattr(cls, setter_name, setter_method)
 
-        # Store metadata about serialization
-        if not hasattr(cls, "_chainable_properties"):
+        # Copy-on-write so subclasses do not mutate the parent class dict
+        if "_chainable_properties" not in cls.__dict__:
             # pylint: disable=protected-access
-            cls._chainable_properties = {}
+            cls._chainable_properties = dict(getattr(cls, "_chainable_properties", {}))
 
         # pylint: disable=protected-access
         cls._chainable_properties[attr_name] = {
@@ -638,7 +662,7 @@ def _validate_value(field_name: str, value, value_type=None, validator=None):
             # Case 2: Special handling for List[MarkerBase] and similar types
             # Markers require special validation due to their complex structure
             _validate_list_of_markers(value, field_name)
-        elif not isinstance(value, value_type):
+        elif not _matches_value_type(value, value_type):
             # Case 3: Type mismatch - raise generic type error
             raise TypeValidationError("value", "invalid type")
 
@@ -795,9 +819,9 @@ def validated_field(
         # Step 4: Replace the __post_init__ method
         cls.__post_init__ = new_post_init
 
-        # Step 5: Track which fields have validation for debugging
-        if not hasattr(cls, "_validated_fields"):
-            cls._validated_fields = []
+        # Copy-on-write so subclasses do not mutate the parent class list
+        if "_validated_fields" not in cls.__dict__:
+            cls._validated_fields = list(getattr(cls, "_validated_fields", []))
         cls._validated_fields.append(field_name)
 
         return cls

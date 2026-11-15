@@ -4,6 +4,7 @@ This module provides price line option classes for configuring
 horizontal price lines on charts.
 """
 
+import math
 from dataclasses import dataclass
 
 from lightweight_charts_pro.charts.options.base_options import Options
@@ -33,7 +34,7 @@ def _validate_hit_test_tolerance(value: float) -> float:
     """
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise TypeValidationError("hit_test_tolerance", "a number", type(value).__name__)
-    if value < 0:
+    if not math.isfinite(value) or value < 0:
         raise ValueValidationError.non_negative_value("hit_test_tolerance", value)
     return value
 

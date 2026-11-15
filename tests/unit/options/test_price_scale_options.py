@@ -568,7 +568,13 @@ class TestPriceScaleTickMarkDensity:
 
     @pytest.mark.parametrize(
         ("value", "error"),
-        [(-1, ValueValidationError), (0, ValueValidationError), (True, TypeValidationError)],
+        [
+            (-1, ValueValidationError),
+            (0, ValueValidationError),
+            (True, TypeValidationError),
+            (float("nan"), ValueValidationError),
+            (float("inf"), ValueValidationError),
+        ],
     )
     def test_constructor_rejects_invalid(self, value, error):
         """Constructor values get the same checks as the setter."""

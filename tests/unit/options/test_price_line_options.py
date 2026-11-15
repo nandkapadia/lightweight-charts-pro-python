@@ -264,7 +264,13 @@ def test_hit_test_tolerance_setter_validation():
 
 @pytest.mark.parametrize(
     ("value", "error"),
-    [(-5, ValueValidationError), (False, TypeValidationError), ("wide", TypeValidationError)],
+    [
+        (-5, ValueValidationError),
+        (False, TypeValidationError),
+        ("wide", TypeValidationError),
+        (float("nan"), ValueValidationError),
+        (float("inf"), ValueValidationError),
+    ],
 )
 def test_hit_test_tolerance_constructor_validation(value, error):
     """Constructor values get the same checks as the setter."""

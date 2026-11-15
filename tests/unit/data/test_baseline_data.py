@@ -382,16 +382,16 @@ class TestBaselineDataSerialization:
         assert result == {"time": 1640995200, "value": -50.0}
 
     def test_to_dict_with_infinity_value(self):
-        """Test to_dict with infinity value."""
+        """Infinity is coerced to 0.0 for JSON-safe serialization."""
         data = BaselineData(time=1640995200, value=float("inf"))
         result = data.asdict()
-        assert result == {"time": 1640995200, "value": float("inf")}
+        assert result == {"time": 1640995200, "value": 0.0}
 
     def test_to_dict_with_negative_infinity_value(self):
-        """Test to_dict with negative infinity value."""
+        """Negative infinity is coerced to 0.0 for JSON-safe serialization."""
         data = BaselineData(time=1640995200, value=float("-inf"))
         result = data.asdict()
-        assert result == {"time": 1640995200, "value": float("-inf")}
+        assert result == {"time": 1640995200, "value": 0.0}
 
 
 class TestBaselineDataInheritance:
