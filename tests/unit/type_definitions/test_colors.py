@@ -207,14 +207,14 @@ class TestBackgroundSolid:
         """Test to_dict method."""
         background = BackgroundSolid(color="#ff0000")
         result = background.asdict()
-        expected = {"color": "#ff0000", "style": "solid"}
+        expected = {"color": "#ff0000", "type": "solid"}
         assert result == expected
 
     def test_to_dict_with_default_values(self):
         """Test to_dict method with default values."""
         background = BackgroundSolid()
         result = background.asdict()
-        expected = {"color": "#ffffff", "style": "solid"}
+        expected = {"color": "#ffffff", "type": "solid"}
         assert result == expected
 
 
@@ -285,7 +285,7 @@ class TestBackgroundGradient:
         expected = {
             "topColor": "#ff0000",
             "bottomColor": "#00ff00",
-            "style": "gradient",
+            "type": "gradient",
         }
         assert result == expected
 
@@ -296,7 +296,7 @@ class TestBackgroundGradient:
         expected = {
             "topColor": "#ffffff",
             "bottomColor": "#000000",
-            "style": "gradient",
+            "type": "gradient",
         }
         assert result == expected
 

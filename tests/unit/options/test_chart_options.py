@@ -396,10 +396,8 @@ class TestChartOptionsIntegration:
 
         options = ChartOptions(layout=custom_layout)
         result = options.asdict()
-        # Fix: expect flattened background properties instead of nested backgroundOptions
-        assert (
-            result["layout"]["color"] == "#000000"
-        )  # Flattened from background_options
+        assert result["layout"]["background"] == {"color": "#000000", "type": "solid"}
+        assert "color" not in result["layout"]
         assert result["layout"]["textColor"] == "#ffffff"
         assert result["layout"]["fontSize"] == 14
 

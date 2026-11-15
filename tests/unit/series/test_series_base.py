@@ -985,34 +985,27 @@ class TestSeriesBaseAdvanced:
         assert result_default["options"]["priceScaleId"] == "right"
 
     def test_empty_price_scale_id_included_in_output(self):
-        """Test that empty price_scale_id is omitted from asdict output."""
+        """Test that empty price_scale_id is kept (overlay series)."""
         data = [LineData(time=1640995200, value=100)]
         series = ConcreteSeries(data=data)
 
-        # Set empty price_scale_id
         series.price_scale_id = ""
 
-        # Convert to dict
         result = series.asdict()
 
-        # API behavior: empty values are omitted to keep output clean
-        # priceScaleId should not be in options when set to empty string
-        assert "priceScaleId" not in result["options"]
+        assert result["options"]["priceScaleId"] == ""
 
     def test_empty_price_scale_id_not_in_options(self):
-        """Test that empty price_scale_id is omitted from options."""
+        """Test that empty price_scale_id stays in options as an overlay."""
         data = [LineData(time=1640995200, value=100)]
         series = ConcreteSeries(data=data)
 
-        # Set empty price_scale_id
         series.price_scale_id = ""
 
-        # Convert to dict
         result = series.asdict()
 
-        # Verify options exists but empty priceScaleId is omitted
         assert "options" in result
-        assert "priceScaleId" not in result["options"]
+        assert result["options"]["priceScaleId"] == ""
 
 
 class TestPriceScaleProperty:

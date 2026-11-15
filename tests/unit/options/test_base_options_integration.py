@@ -146,10 +146,10 @@ class TestDataclassFieldsIntegration:
 
 
 class TestBackgroundOptionsFlattening:
-    """Test background_options flattening integration."""
+    """Test background_options nesting for Lightweight Charts v5."""
 
     def test_options_with_background_options_integration(self):
-        """Test integration with background_options flattening."""
+        """Test that background_options serialize as a nested background object."""
 
         @dataclass
         class BackgroundOptions(Options):
@@ -165,10 +165,9 @@ class TestBackgroundOptionsFlattening:
         layout_opts = LayoutOptions(background_options=background_opts)
         result = layout_opts.asdict()
 
-        # background_options should be flattened
         assert "backgroundOptions" not in result
-        assert result["color"] == "#f0f0f0"
-        assert result["style"] == "gradient"
+        assert "color" not in result
+        assert result["background"] == {"color": "#f0f0f0", "type": "gradient"}
         assert result["textColor"] == "#000000"
 
     def test_options_with_multiple_options_fields(self):
@@ -193,10 +192,9 @@ class TestBackgroundOptionsFlattening:
         )
         result = complex_opts.asdict()
 
-        # background_options should be flattened
         assert "backgroundOptions" not in result
-        assert result["setting"] == "background"
-        assert result["enabled"] is False
+        assert result["background"]["setting"] == "background"
+        assert result["background"]["enabled"] is False
 
         # layout_options should be nested
         assert "layoutOptions" in result

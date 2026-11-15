@@ -82,9 +82,9 @@ class TestLayoutOptions:
         """Test basic serialization."""
         options = LayoutOptions()
         result = options.asdict()
-        assert "backgroundOptions" not in result  # Should be flattened
-        assert result["color"] == "#ffffff"  # Flattened from background_options
-        assert result["style"] == "solid"  # Flattened from background_options
+        assert "backgroundOptions" not in result
+        assert "color" not in result
+        assert result["background"] == {"color": "#ffffff", "type": "solid"}
 
     def test_to_dict_with_pane_options(self):
         """Test serialization with pane options."""
@@ -100,9 +100,11 @@ class TestLayoutOptions:
         background = BackgroundGradient(top_color="#ffffff", bottom_color="#000000")
         options = LayoutOptions(background_options=background)
         result = options.asdict()
-        assert result["topColor"] == "#ffffff"  # Flattened from background_options
-        assert result["bottomColor"] == "#000000"  # Flattened from background_options
-        assert result["style"] == "gradient"  # Flattened from background_options
+        assert "topColor" not in result
+        assert "style" not in result
+        assert result["background"]["topColor"] == "#ffffff"
+        assert result["background"]["bottomColor"] == "#000000"
+        assert result["background"]["type"] == "gradient"
 
 
 class TestGridOptions:

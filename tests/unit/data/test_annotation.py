@@ -86,11 +86,11 @@ class TestAnnotation:
         assert result["type"] == AnnotationType.TEXT.value
         assert result["position"] == AnnotationPosition.ABOVE.value
         assert result["color"] == "#FF0000"
-        assert result["font_size"] == 12
-        assert result["text_color"] == "#FFFFFF"
-        assert result["background_color"] == "#000000"
-        assert result["border_color"] == "#FF0000"
-        assert result["border_width"] == 2
+        assert result["fontSize"] == 12
+        assert result["textColor"] == "#FFFFFF"
+        assert result["backgroundColor"] == "#000000"
+        assert result["borderColor"] == "#FF0000"
+        assert result["borderWidth"] == 2
 
     def test_asdict_with_none_values(self):
         """Test asdict method handles None values correctly."""
@@ -105,11 +105,13 @@ class TestAnnotation:
         assert "type" in result  # Default value
         assert "position" in result  # Default value
         assert "color" in result  # Default value
-        assert "font_size" in result  # Default value
-        assert "text_color" in result  # Default value
-        assert "background_color" in result  # Default value
-        assert "border_color" in result  # Default value
-        assert "border_width" in result  # Default value
+        assert "fontSize" in result  # Default value
+        assert "fontWeight" in result  # Default value
+        assert "textColor" in result  # Default value
+        assert "backgroundColor" in result  # Default value
+        assert "borderColor" in result  # Default value
+        assert "borderWidth" in result  # Default value
+        assert "showTime" in result  # Default value
 
     def test_validation_required_fields(self):
         """Test validation of required fields."""

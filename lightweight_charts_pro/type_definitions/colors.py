@@ -56,6 +56,7 @@ License: MIT
 # Standard Imports
 from abc import ABC
 from dataclasses import dataclass
+from typing import Any
 
 from lightweight_charts_pro.exceptions import ColorValidationError
 from lightweight_charts_pro.type_definitions.enums import BackgroundStyle
@@ -121,6 +122,13 @@ class BackgroundSolid(Options, ABC):
             # Raise a specific validation error with the field name and invalid value
             # This provides clear feedback about what went wrong during initialization
             raise ColorValidationError("color", self.color)
+
+    def asdict(self) -> dict[str, Any]:
+        """Serialize for Lightweight Charts v5 (``style`` is emitted as ``type``)."""
+        result = super().asdict()
+        if "style" in result and "type" not in result:
+            result["type"] = result.pop("style")
+        return result
 
 
 @dataclass
@@ -189,6 +197,13 @@ class BackgroundGradient(Options, ABC):
             # Raise a specific validation error with the field name and invalid value
             # This provides clear feedback about what went wrong with the bottom color
             raise ColorValidationError("bottom_color", self.bottom_color)
+
+    def asdict(self) -> dict[str, Any]:
+        """Serialize for Lightweight Charts v5 (``style`` is emitted as ``type``)."""
+        result = super().asdict()
+        if "style" in result and "type" not in result:
+            result["type"] = result.pop("style")
+        return result
 
 
 # Union type for all background types

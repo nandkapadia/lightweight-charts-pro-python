@@ -216,6 +216,7 @@ class Annotation:
                 in a format suitable for the frontend component.
 
         """
+        # Keys match annotationSystem.ts (camelCase). time/price/text/type stay as-is.
         return {
             ColumnNames.TIME: to_timestamp(self.time),
             "price": self.price,
@@ -223,14 +224,14 @@ class Annotation:
             "type": self.annotation_type.value,
             "position": self.position.value,
             "color": self.color,
-            "background_color": self.background_color,
-            "font_size": self.font_size,
-            "font_weight": self.font_weight,
-            "text_color": self.text_color,
-            "border_color": self.border_color,
-            "border_width": self.border_width,
+            "backgroundColor": self.background_color,
+            "fontSize": self.font_size,
+            "fontWeight": self.font_weight,
+            "textColor": self.text_color,
+            "borderColor": self.border_color,
+            "borderWidth": self.border_width,
             "opacity": self.opacity,
-            "show_time": self.show_time,
+            "showTime": self.show_time,
             "tooltip": self.tooltip,
         }
 

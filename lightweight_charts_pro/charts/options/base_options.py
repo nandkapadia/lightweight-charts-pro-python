@@ -358,7 +358,7 @@ class Options(SerializableMixin, ABC):
         5. Handles lists of Options objects
         6. Recursively processes dictionaries that may contain Options objects at any level
         7. Converts field names from snake_case to camelCase
-        8. Applies special flattening logic for _options fields
+        8. Emits background_options as a nested background object
 
         Returns:
             Dict[str, Any]: Dictionary with camelCase keys ready for frontend
@@ -371,7 +371,8 @@ class Options(SerializableMixin, ABC):
             - Nested Options objects are recursively serialized
             - Lists containing Options objects are handled recursively
             - Dictionaries containing Options objects at any nesting level are processed recursively
-            - background_options fields are flattened into the parent result
+            - background_options is emitted as a nested background object
+              ({type, color, ...}) for Lightweight Charts v5
 
         """
         # Use the inherited serialization from SerializableMixin

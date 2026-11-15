@@ -76,6 +76,8 @@ logger = get_logger(__name__)
 @chainable_property("base_line_width")
 @chainable_property("base_line_style")
 @chainable_property("tooltip", allow_none=True, top_level=True)
+# Per-series key is singular "legend". ChartPrimitiveManager and
+# createSeriesWithConfig read seriesConfig.legend, not a "legends" map.
 @chainable_property("legend", allow_none=True, top_level=True)
 class Series(ABC):  # noqa: B024
     """Abstract base class for all series types in financial chart visualization.
@@ -861,6 +863,11 @@ class Series(ABC):  # noqa: B024
         Returns:
             Dict[str, Any]: Dictionary containing series configuration for the frontend.
 
+            ``priceFormat`` is nested under ``options`` (where UnifiedSeriesFactory
+            reads ``options.priceFormat``). ``priceScaleId`` stays in ``options``
+            even when it is ``""`` (Lightweight Charts overlay). ``legend`` is a
+            top-level singular key.
+
         """
         # Validate pane configuration
         self._validate_pane_config()
@@ -987,8 +994,8 @@ class Series(ABC):  # noqa: B024
                 if is_top_level:
                     # Include empty strings for top-level properties (they are valid)
                     config[key] = attr_value
-                # Skip empty strings for options (they are not meaningful)
-                elif attr_value != "":
+                # Empty priceScaleId means overlay; other empty option strings are omitted.
+                elif attr_value != "" or attr_name == "price_scale_id":
                     options[key] = attr_value
 
         # Only include options field if it's not empty

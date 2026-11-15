@@ -447,15 +447,14 @@ class TestDictSerialization:
     """Test dictionary serialization with Options objects."""
 
     def test_to_dict_background_options_flattening(self):
-        """Test that background_options are flattened into parent result."""
+        """Test that background_options become a nested background object."""
         background_opts = {"color": "#ffffff", "style": "solid"}
         options = MockOptions(background_options=background_opts)
         result = options.asdict()
 
-        # background_options should be flattened, not nested
         assert "backgroundOptions" not in result
-        assert result["color"] == "#ffffff"
-        assert result["style"] == "solid"
+        assert "color" not in result
+        assert result["background"] == {"color": "#ffffff", "type": "solid"}
 
     def test_to_dict_other_options_nested(self):
         """Test that other _options fields are kept nested."""
@@ -473,8 +472,9 @@ class TestDictSerialization:
         options = MockOptions(background_options={})
         result = options.asdict()
 
-        # background_options should be flattened, but empty
+        # Empty dicts are omitted, so neither key is present.
         assert "backgroundOptions" not in result
+        assert "background" not in result
 
     def test_to_dict_with_none_dict(self):
         """Test that None dicts are omitted."""

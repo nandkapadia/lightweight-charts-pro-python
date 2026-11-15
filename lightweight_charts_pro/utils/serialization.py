@@ -157,9 +157,10 @@ class SerializationConfig:
             to 0.0. Required for JSON compatibility as JSON doesn't support NaN.
         convert_enums (bool): If True, Enum instances are converted to their
             underlying values. JavaScript doesn't understand Python enums.
-        flatten_options_fields (bool): If True, fields ending in '_options'
-            like 'background_options' have their contents merged into the
-            parent dictionary instead of being nested.
+        flatten_options_fields (bool): If True, ``background_options`` is
+            emitted as a nested ``background`` object (``{type, color, ...}``)
+            for Lightweight Charts v5. A legacy ``style`` key is mapped to
+            ``type``. Other ``*_options`` fields stay nested.
 
     Example:
         Create custom config for strict serialization::
@@ -211,10 +212,11 @@ class SerializationConfig:
             convert_enums (bool, optional): Whether to convert Enum objects to
                 their values. Defaults to True. JavaScript can't understand
                 Python enum types directly.
-            flatten_options_fields (bool, optional): Whether to flatten fields
-                ending in '_options'. Defaults to True. When True, fields like
-                'background_options' have their dict contents merged into parent
-                instead of being nested.
+            flatten_options_fields (bool, optional): Whether to rewrite
+                ``background_options`` as a nested ``background`` object.
+                Defaults to True. When True, Lightweight Charts v5 receives
+                ``layout.background = {type, color, ...}`` and a legacy
+                ``style`` key is renamed to ``type``.
 
         Example:
             Default configuration::
@@ -442,19 +444,18 @@ class SerializableMixin:
                 field_name, config
             )
 
-            # Step 7: Handle special flattening rules
-            # Some fields like 'background_options' should have their
-            # contents merged into the parent dict instead of being nested
+            # Step 7: Lightweight Charts v5 expects layout.background = {type, color}.
+            # Do not merge background_options into the parent (that produced
+            # layout.color / layout.style, which v5 ignores).
             if (
                 config.flatten_options_fields
-                and field_name.endswith("_options")
+                and field_name == "background_options"
                 and isinstance(processed_value, dict)
-                and field_name == "background_options"  # Only flatten specific
             ):
-                # Merge flattened fields directly into result dictionary
-                # This converts {"background_options": {"color": "red"}}
-                # to {"color": "red"} in the output
-                result.update(processed_value)
+                background = dict(processed_value)
+                if "style" in background and "type" not in background:
+                    background["type"] = background.pop("style")
+                result["background"] = background
             else:
                 # Normal field: add as key-value pair in result
                 result[processed_field] = processed_value
