@@ -17,10 +17,7 @@ import pandas as pd
 import pytest
 
 from lightweight_charts_pro.data.trade import TradeData
-from lightweight_charts_pro.exceptions import (
-    ExitTimeAfterEntryTimeError,
-    ValueValidationError,
-)
+from lightweight_charts_pro.exceptions import ExitTimeAfterEntryTimeError
 
 
 class TestTradeDataConstruction:
@@ -295,16 +292,17 @@ class TestTradeDataValidation:
             )
 
     def test_exit_time_equal_to_entry_time(self):
-        """Test when exit time equals entry time (edge case)."""
-        with pytest.raises((ExitTimeAfterEntryTimeError, ValueValidationError)):
-            TradeData(
-                entry_time=1640995200,
-                entry_price=100.0,
-                exit_time=1640995200,  # Same as entry
-                exit_price=105.0,
-                is_profitable=True,
-                id="trade1",
-            )
+        """Same-bar trades are valid when exit time equals entry time."""
+        trade = TradeData(
+            entry_time=1640995200,
+            entry_price=100.0,
+            exit_time=1640995200,  # Same bar as entry
+            exit_price=105.0,
+            is_profitable=True,
+            id="trade1",
+        )
+        assert trade.entry_time == trade.exit_time
+        assert trade.pnl == 5.0
 
     def test_validation_exit_time_after_entry_time(self):
         """Test validation that exit time must be after entry time."""
@@ -518,6 +516,65 @@ class TestTradeDataPnLCalculations:
         )
         expected_percentage = (10000.01 - 10000.0) / 10000.0 * 100
         assert abs(trade.pnl_percentage - expected_percentage) < 0.001
+
+    def test_long_pnl_multiplies_by_quantity(self):
+        """Long P&L is the price increase times quantity."""
+        trade = TradeData(
+            entry_time=1640995200,
+            entry_price=100.0,
+            exit_time=1641081600,
+            exit_price=105.0,
+            is_profitable=True,
+            id="trade1",
+            additional_data={"quantity": 10, "trade_type": "long"},
+        )
+        assert trade.pnl == 50.0
+        assert trade.pnl_percentage == 50.0
+
+    def test_short_pnl_inverts_and_multiplies_by_quantity(self):
+        """Short P&L profits when price falls and scales by quantity."""
+        trade = TradeData(
+            entry_time=1640995200,
+            entry_price=100.0,
+            exit_time=1641081600,
+            exit_price=90.0,
+            is_profitable=True,
+            id="short1",
+            additional_data={"quantity": 10, "trade_type": "short"},
+        )
+        assert trade.pnl == 100.0
+        assert trade.pnl_percentage == 100.0
+
+    def test_short_loss_when_price_rises(self):
+        """A short that rallies is a loss, including a zero explicit P&L."""
+        losing_short = TradeData(
+            entry_time=1640995200,
+            entry_price=100.0,
+            exit_time=1641081600,
+            exit_price=110.0,
+            is_profitable=False,
+            id="short-loss",
+            additional_data={"quantity": 2, "trade_type": "SHORT"},
+        )
+        assert losing_short.pnl == -20.0
+        assert losing_short.pnl_percentage == -20.0
+
+        flat_short = TradeData(
+            entry_time=1640995200,
+            entry_price=100.0,
+            exit_time=1641081600,
+            exit_price=90.0,
+            is_profitable=False,
+            id="short-flat",
+            additional_data={
+                "quantity": 10,
+                "trade_type": "short",
+                "pnl": 0.0,
+                "pnl_percentage": 0.0,
+            },
+        )
+        assert flat_short.pnl == 0.0
+        assert flat_short.pnl_percentage == 0.0
 
 
 class TestTradeDataSerialization:
@@ -744,6 +801,40 @@ class TestTradeDataTooltipGeneration:
         assert "Exit: 105.00" in tooltip
         # Should not include quantity if not provided
         assert "Qty:" not in tooltip
+
+    def test_generate_tooltip_text_for_short(self):
+        """Short tooltips use short/cover labels and the directional result."""
+        winner = TradeData(
+            entry_time=1640995200,
+            entry_price=100.0,
+            exit_time=1641081600,
+            exit_price=90.0,
+            is_profitable=True,
+            id="short-win",
+            additional_data={"quantity": 2, "trade_type": "short"},
+        )
+        winner_tooltip = winner.generate_tooltip_text()
+        assert "Short: 100.00" in winner_tooltip
+        assert "Cover: 90.00" in winner_tooltip
+        assert "Entry:" not in winner_tooltip
+        assert "P&L: 20.00" in winner_tooltip
+        assert "Win" in winner_tooltip
+
+        loser = TradeData(
+            entry_time=1640995200,
+            entry_price=100.0,
+            exit_time=1641081600,
+            exit_price=110.0,
+            is_profitable=False,
+            id="short-loss",
+            additional_data={"quantity": 2, "trade_type": "short"},
+        )
+        loser_tooltip = loser.generate_tooltip_text()
+        assert "Short: 100.00" in loser_tooltip
+        assert "Cover: 110.00" in loser_tooltip
+        assert "P&L: -20.00" in loser_tooltip
+        assert "Loss" in loser_tooltip
+        assert "Win" not in loser_tooltip
 
 
 class TestTradeDataUTCConversion:

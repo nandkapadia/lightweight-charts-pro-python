@@ -92,8 +92,8 @@ class TradeData(SerializableMixin):
             This provides maximum flexibility for custom fields.
 
     Note:
-        - Exit time must be after entry time, otherwise
-          ExitTimeAfterEntryTimeError is raised
+        - Exit time must not be before entry time. Same-bar trades are
+          allowed. An earlier exit raises ExitTimeAfterEntryTimeError
         - Price values are automatically converted to appropriate numeric types
         - Time values are normalized to UNIX timestamps for consistent handling
         - All additional data (quantity, trade_type, notes, etc.) should be
@@ -123,7 +123,7 @@ class TradeData(SerializableMixin):
         3. Ensures is_profitable is a boolean
 
         Raises:
-            ExitTimeAfterEntryTimeError: If exit time is not after entry time.
+            ExitTimeAfterEntryTimeError: If exit time is before entry time.
             ValueValidationError: If time validation fails.
 
         """
@@ -134,21 +134,21 @@ class TradeData(SerializableMixin):
         # Step 2: Ensure is_profitable is a boolean for consistent logic
         self.is_profitable = bool(self.is_profitable)
 
-        # Step 3: Validate that exit time is after entry time
+        # Step 3: Reject an exit that happens before entry. Same-bar exits are valid.
         entry_timestamp = to_timestamp(self.entry_time)
         exit_timestamp = to_timestamp(self.exit_time)
 
-        # This is critical for trade logic - a trade cannot exit before it enters
+        # A trade cannot exit before it enters, but it can exit on the entry bar.
         if isinstance(entry_timestamp, (int, float)) and isinstance(
             exit_timestamp,
             (int, float),
         ):
-            if exit_timestamp <= entry_timestamp:
+            if exit_timestamp < entry_timestamp:
                 raise ExitTimeAfterEntryTimeError()
         elif (
             isinstance(entry_timestamp, str)
             and isinstance(exit_timestamp, str)
-            and exit_timestamp <= entry_timestamp
+            and exit_timestamp < entry_timestamp
         ):
             raise ValueValidationError("Exit time", "must be after entry time")
 
@@ -167,10 +167,18 @@ class TradeData(SerializableMixin):
 
         win_loss = "Win" if pnl > 0 else "Loss"
 
-        tooltip_parts = [
-            f"Entry: {self.entry_price:.2f}",
-            f"Exit: {self.exit_price:.2f}",
-        ]
+        # Shorts are sold to open and covered to close. Entry/Exit labels
+        # describe a long and mislabel that direction.
+        if self._is_short():
+            tooltip_parts = [
+                f"Short: {self.entry_price:.2f}",
+                f"Cover: {self.exit_price:.2f}",
+            ]
+        else:
+            tooltip_parts = [
+                f"Entry: {self.entry_price:.2f}",
+                f"Exit: {self.exit_price:.2f}",
+            ]
 
         if self.additional_data and "quantity" in self.additional_data:
             tooltip_parts.append(f"Qty: {self.additional_data['quantity']:.2f}")
@@ -187,9 +195,41 @@ class TradeData(SerializableMixin):
 
         return "\n".join(tooltip_parts)
 
+    def _trade_type(self) -> str:
+        """Return the normalized trade direction, defaulting to long."""
+        data = self.additional_data or {}
+        raw_trade_type = data.get("trade_type", data.get("tradeType", "long"))
+        if hasattr(raw_trade_type, "value"):
+            raw_trade_type = raw_trade_type.value
+        return str(raw_trade_type).strip().lower()
+
+    def _is_short(self) -> bool:
+        """Return True when the trade direction is short."""
+        return self._trade_type() == "short"
+
+    def _quantity(self) -> float:
+        """Return trade size used to scale P&L. Missing quantity scales by 1."""
+        data = self.additional_data or {}
+        raw_quantity = data.get("quantity", 1)
+        try:
+            return float(raw_quantity)
+        except (TypeError, ValueError):
+            return 1.0
+
+    def _directional_price_change(self) -> float:
+        """Return the per-unit price change in the direction of the trade."""
+        if self._is_short():
+            return float(self.entry_price) - float(self.exit_price)
+        return float(self.exit_price) - float(self.entry_price)
+
     @property
     def pnl(self) -> float:
-        """Get profit/loss amount from additional_data or calculate basic price difference.
+        """Return profit/loss, scaled by quantity and inverted for shorts.
+
+        An explicit ``pnl`` in ``additional_data`` is returned unchanged,
+        including zero. Otherwise the value is the directional price change
+        times quantity: long trades use exit minus entry, short trades use
+        entry minus exit. Missing quantity is treated as 1.
 
         Returns:
             float: Profit/loss amount. Positive values indicate profit,
@@ -199,11 +239,15 @@ class TradeData(SerializableMixin):
         if self.additional_data and "pnl" in self.additional_data:
             return float(self.additional_data["pnl"])
 
-        return float(self.exit_price - self.entry_price)
+        return self._directional_price_change() * self._quantity()
 
     @property
     def pnl_percentage(self) -> float:
-        """Get profit/loss percentage from additional_data or calculate basic percentage.
+        """Return profit/loss percent, inverted for shorts and scaled by quantity.
+
+        An explicit ``pnl_percentage`` in ``additional_data`` is returned
+        unchanged, including zero. Otherwise the percent is the directional
+        price change divided by the entry price, times 100, times quantity.
 
         Returns:
             float: Profit/loss percentage. Positive values indicate profit,
@@ -213,10 +257,11 @@ class TradeData(SerializableMixin):
         if self.additional_data and "pnl_percentage" in self.additional_data:
             return float(self.additional_data["pnl_percentage"])
 
-        if self.entry_price != 0:
-            return ((self.exit_price - self.entry_price) / self.entry_price) * 100
+        if self.entry_price == 0:
+            return 0.0
 
-        return 0.0
+        price_change = self._directional_price_change()
+        return (price_change / float(self.entry_price)) * 100 * self._quantity()
 
     def asdict(self) -> dict[str, Any]:
         """Serialize the trade data to a dict with camelCase keys for frontend.
