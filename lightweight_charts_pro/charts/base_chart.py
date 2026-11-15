@@ -70,14 +70,14 @@ class BaseChart:
             chart_group_id: Group ID for synchronization.
 
         """
+        # Manager is created after options so the setter can sync scales later.
+        self._price_scale_manager: PriceScaleManager | None = None
+        self._series_manager = SeriesManager()
         self.options = options or ChartOptions()
-
-        # Initialize core managers
-        self._series_manager = SeriesManager(series)
         self._price_scale_manager = PriceScaleManager(
-            left_price_scale=self.options.left_price_scale,
-            right_price_scale=self.options.right_price_scale,
-            overlay_price_scales=self.options.overlay_price_scales,
+            left_price_scale=getattr(self.options, "left_price_scale", None),
+            right_price_scale=getattr(self.options, "right_price_scale", None),
+            overlay_price_scales=getattr(self.options, "overlay_price_scales", None),
         )
         self._trade_manager = TradeManager()
 
@@ -92,6 +92,11 @@ class BaseChart:
 
         # Flag to force frontend re-initialization
         self.force_reinit: bool = False
+
+        # Route constructor series through add_series so custom price scales
+        # are created the same way as series added later.
+        for item in SeriesManager(series).series:
+            self.add_series(item)
 
         # Expose series list for backward compatibility
         self.series = self._series_manager.series
@@ -119,8 +124,34 @@ class BaseChart:
         self._series_manager.add_series(series, self._price_scale_manager)
         return self
 
+    @property
+    def options(self) -> ChartOptions:
+        """Chart options. Replacing them refreshes PriceScaleManager."""
+        return self._options
+
+    @options.setter
+    def options(self, value: ChartOptions) -> None:
+        """Store options and copy price-scale fields onto the manager."""
+        self._options = value
+        if getattr(self, "_price_scale_manager", None) is not None:
+            self._apply_price_scales_from_options()
+
+    def _apply_price_scales_from_options(self) -> None:
+        """Point PriceScaleManager at the scales on the current options."""
+        manager = self._price_scale_manager
+        options = self._options
+        if manager is None or options is None:
+            return
+        manager.left_price_scale = getattr(options, "left_price_scale", None)
+        manager.right_price_scale = getattr(options, "right_price_scale", None)
+        overlays = getattr(options, "overlay_price_scales", None)
+        manager.overlay_price_scales = {} if overlays is None else overlays
+
     def update_options(self, **kwargs) -> "BaseChart":
         """Update chart options.
+
+        Nested dictionaries are applied with ``options.update`` when that
+        method exists. Price-scale keys are copied onto PriceScaleManager.
 
         Args:
             **kwargs: Chart options to update.
@@ -129,14 +160,31 @@ class BaseChart:
             Self for method chaining.
 
         """
-        for key, value in kwargs.items():
-            if value is not None and hasattr(self.options, key):
-                current_value = getattr(self.options, key)
-                if isinstance(value, type(current_value)) or (
-                    current_value is None and value is not None
-                ):
-                    setattr(self.options, key, value)
+        if hasattr(self.options, "update"):
+            self.options.update(kwargs)
+        else:
+            for key, value in kwargs.items():
+                if value is not None and hasattr(self.options, key):
+                    current_value = getattr(self.options, key)
+                    if isinstance(value, type(current_value)) or (
+                        current_value is None and value is not None
+                    ):
+                        setattr(self.options, key, value)
+        self._sync_price_scales_if_updated(kwargs)
         return self
+
+    def _sync_price_scales_if_updated(self, updates: dict) -> None:
+        """Refresh manager scales when an update replaces scale options."""
+        scale_keys = {
+            "left_price_scale",
+            "right_price_scale",
+            "overlay_price_scales",
+            "leftPriceScale",
+            "rightPriceScale",
+            "overlayPriceScales",
+        }
+        if scale_keys.intersection(updates):
+            self._apply_price_scales_from_options()
 
     def add_annotation(
         self, annotation: Annotation, layer_name: str = "default"

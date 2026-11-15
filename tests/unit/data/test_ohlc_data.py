@@ -7,7 +7,7 @@ construction, validation, and serialization.
 import pytest
 
 from lightweight_charts_pro.data.ohlc_data import OhlcData
-from lightweight_charts_pro.exceptions import ValueValidationError
+from lightweight_charts_pro.exceptions import RequiredFieldError, ValueValidationError
 
 
 class TestOhlcData:
@@ -341,3 +341,8 @@ class TestOhlcData:
         assert data.low <= data.high
         assert data.low <= data.low
         assert data.low <= data.close
+
+    def test_none_price_rejected_before_comparison(self):
+        """None is a missing field, not a TypeError from ``None < 0``."""
+        with pytest.raises(RequiredFieldError, match="open"):
+            OhlcData(time=1640995200, open=None, high=105.0, low=95.0, close=102.0)

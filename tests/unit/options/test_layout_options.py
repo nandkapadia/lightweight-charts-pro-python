@@ -106,6 +106,15 @@ class TestLayoutOptions:
         assert result["background"]["bottomColor"] == "#000000"
         assert result["background"]["type"] == "gradient"
 
+    def test_update_background_options_from_dict(self):
+        """Nested background dicts update the background object."""
+        options = LayoutOptions()
+        options.update({"background_options": {"color": "#112233"}})
+
+        assert isinstance(options.background_options, BackgroundSolid)
+        assert options.background_options.color == "#112233"
+        assert options.asdict()["background"]["color"] == "#112233"
+
 
 class TestGridOptions:
     """Test GridOptions class."""

@@ -23,6 +23,7 @@ from lightweight_charts_pro.constants import (
     HISTOGRAM_DOWN_COLOR_DEFAULT,
     HISTOGRAM_UP_COLOR_DEFAULT,
 )
+from lightweight_charts_pro.data.line_data import LineData
 from lightweight_charts_pro.data.ohlcv_data import OhlcvData
 from lightweight_charts_pro.exceptions import (
     SeriesItemsTypeError,
@@ -227,7 +228,8 @@ class SeriesManager:
                 "high": "high", "low": "low", "close": "close", "volume": "volume"}.
                 Required keys depend on price_type:
                 - candlestick: time, open, high, low, close, volume
-                - line: time, close, volume
+                - line: time, close, volume. ``close`` is mapped to LineSeries
+                  ``value``. A list of OhlcvData is converted to LineData.
             price_type: Type of price series ('candlestick' or 'line').
             price_kwargs: Additional arguments for price series configuration.
             volume_kwargs: Additional arguments for volume series configuration.
@@ -305,9 +307,24 @@ class SeriesManager:
                 **price_kwargs,
             )
         elif price_type == "line":
+            # LineSeries stores ``value``, not OHLC ``close``.
+            if isinstance(data, pd.DataFrame):
+                line_data: pd.DataFrame | list = data
+                line_column_mapping: dict | None = {
+                    "time": column_mapping["time"],
+                    "value": column_mapping["close"],
+                }
+            else:
+                line_data = [
+                    LineData(time=item.time, value=item.close)
+                    if isinstance(item, OhlcvData)
+                    else item
+                    for item in data
+                ]
+                line_column_mapping = None
             price_series = LineSeries(
-                data=data,
-                column_mapping=column_mapping,
+                data=line_data,
+                column_mapping=line_column_mapping,
                 pane_id=pane_id,
                 price_scale_id="right",
                 **price_kwargs,

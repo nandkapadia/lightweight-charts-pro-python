@@ -7,9 +7,11 @@ gradient bounds calculation, normalization, and data handling.
 import time
 
 import pandas as pd
+import pytest
 
 from lightweight_charts_pro.charts.series.gradient_ribbon import GradientRibbonSeries
 from lightweight_charts_pro.data.gradient_ribbon import GradientRibbonData
+from lightweight_charts_pro.exceptions import ColorValidationError
 from lightweight_charts_pro.type_definitions.enums import ChartType
 
 
@@ -307,3 +309,36 @@ class TestGradientRibbonSeries:
         # Verify first and last normalized values
         assert result["data"][0]["gradient"] == 0.0
         assert result["data"][-1]["gradient"] == 1.0
+
+    def test_init_rejects_invalid_gradient_color(self):
+        """Constructor colors go through the chainable color validator."""
+        data = [GradientRibbonData("2024-01-01", upper=110, lower=100, gradient=0.5)]
+        with pytest.raises(ColorValidationError):
+            GradientRibbonSeries(data=data, gradient_start_color="not-a-color")
+
+    def test_option_and_data_changes_drop_normalized_cache(self):
+        """Mutating colors, flags, or data invalidates the serialized cache."""
+        data = [
+            GradientRibbonData("2024-01-01", upper=110, lower=100, gradient=0.0),
+            GradientRibbonData("2024-01-02", upper=112, lower=102, gradient=1.0),
+        ]
+        series = GradientRibbonSeries(data=data, normalize_gradients=True)
+        first = series.asdict()
+        assert series._normalized_cache is not None
+        assert first["options"]["gradientStartColor"] == "#4CAF50"
+
+        series.gradient_start_color = "#0000ff"
+        assert series._normalized_cache is None
+        assert series._gradient_bounds is None
+        second = series.asdict()
+        assert second["options"]["gradientStartColor"] == "#0000ff"
+
+        series.set_normalize_gradients(False)
+        assert series._normalized_cache is None
+
+        series.asdict()
+        series.data = [
+            GradientRibbonData("2024-01-03", upper=120, lower=90, gradient=0.2)
+        ]
+        assert series._normalized_cache is None
+        assert len(series.asdict()["data"]) == 1

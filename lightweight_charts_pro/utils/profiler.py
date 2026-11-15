@@ -149,14 +149,30 @@ from functools import wraps
 from pathlib import Path
 from typing import Any
 
-# Third Party Imports
-import psutil
-
 # Local Imports
 from lightweight_charts_pro.logging_config import get_logger
 
 # Initialize logger for this module
 logger = get_logger(__name__)
+
+# psutil is optional. Import it only when a profiler method needs process metrics.
+_psutil_missing_logged = False
+
+
+def _optional_psutil():
+    """Return psutil when installed, otherwise None.
+
+    Importing this module must succeed on environments that do not have psutil.
+    """
+    global _psutil_missing_logged  # pylint: disable=global-statement
+    try:
+        import psutil  # pylint: disable=import-outside-toplevel
+    except ImportError:
+        if not _psutil_missing_logged:
+            logger.debug("psutil is not installed; process metrics are disabled")
+            _psutil_missing_logged = True
+        return None
+    return psutil
 
 
 @dataclass
@@ -487,10 +503,9 @@ class PerformanceProfiler:
         # Ensures concurrent profiling doesn't corrupt data structures
         self._lock = threading.Lock()
 
-        # Start memory tracking if enabled
+        # Start memory tracking if enabled. Construction does this, not import.
         # tracemalloc tracks Python memory allocations for detailed analysis
-        if enable_memory_tracking:
-            # Start tracking memory allocations at the Python level
+        if enable_memory_tracking and not tracemalloc.is_tracing():
             tracemalloc.start()
 
     def profile_operation(self, operation_name: str, data_size: int | None = None):
@@ -601,18 +616,18 @@ class PerformanceProfiler:
             point of failure.
 
         """
-        # Get the current process for memory and CPU monitoring
-        # psutil.Process() without arguments gets the current process
-        process = psutil.Process()
+        # psutil is optional. Without it, memory and CPU metrics stay at zero.
+        psutil_mod = _optional_psutil()
+        process = psutil_mod.Process() if psutil_mod is not None else None
 
         # Record initial memory state
         # RSS (Resident Set Size) is the actual physical memory used
-        initial_memory = process.memory_info().rss
-
-        # Initialize CPU monitoring
-        # First call to cpu_percent() returns 0, subsequent calls return
-        # actual usage since last call. This primes the CPU counter.
-        process.cpu_percent()
+        if process is not None:
+            initial_memory = process.memory_info().rss
+            # First call to cpu_percent() returns 0 and primes the counter.
+            process.cpu_percent()
+        else:
+            initial_memory = 0
 
         # Take initial memory snapshot if detailed tracking is enabled
         # This provides a baseline for memory usage analysis
@@ -636,13 +651,14 @@ class PerformanceProfiler:
             end_time = time.time()
             execution_time = end_time - start_time
 
-            # Get final memory state after operation completion
-            # RSS gives us the actual physical memory used by the process
-            final_memory = process.memory_info().rss
-
-            # Get CPU utilization during the operation
-            # Returns percentage of CPU time used since last cpu_percent() call
-            final_cpu = process.cpu_percent()
+            # Get final memory state after operation completion.
+            # Without psutil these stay at zero and tracemalloc still tracks peaks.
+            if process is not None:
+                final_memory = process.memory_info().rss
+                final_cpu = process.cpu_percent()
+            else:
+                final_memory = 0
+                final_cpu = 0.0
 
             # Calculate memory delta (change in memory usage)
             # Positive values indicate memory allocation
@@ -1138,7 +1154,7 @@ class MemoryMonitor:
     Attributes:
         memory_history (List[Dict[str, float]]): Historical snapshots of
             memory usage with timestamps for trend analysis.
-        process (psutil.Process): Process handle for memory monitoring.
+        process: Process handle from psutil, or None when psutil is not installed.
 
     Example:
         Basic memory monitoring::
@@ -1181,9 +1197,18 @@ class MemoryMonitor:
         # Each entry is a dict with memory metrics and timestamp
         self.memory_history: list[dict[str, float]] = []
 
-        # Get handle to current process for memory monitoring
-        # psutil.Process() without arguments gets current process
-        self.process = psutil.Process()
+        # Process handle is created on first use so import does not require psutil.
+        self._process = None
+
+    @property
+    def process(self):
+        """Current-process handle, or None when psutil is not installed."""
+        if self._process is None:
+            psutil_mod = _optional_psutil()
+            if psutil_mod is None:
+                return None
+            self._process = psutil_mod.Process()
+        return self._process
 
     def get_memory_usage(self) -> dict[str, float]:
         """Get current memory usage information.
@@ -1212,8 +1237,11 @@ class MemoryMonitor:
             analysis.
 
         """
-        # Get memory info from process
-        memory_info = self.process.memory_info()
+        # Get memory info from process. Zeros keep callers working without psutil.
+        process = self.process
+        if process is None:
+            return {"rss": 0.0, "vms": 0.0, "percent": 0.0}
+        memory_info = process.memory_info()
 
         # Return dict with memory metrics
         return {
@@ -1222,7 +1250,7 @@ class MemoryMonitor:
             # Virtual Memory Size - total virtual memory in bytes
             "vms": float(memory_info.vms),
             # Memory usage as percentage of system total
-            "percent": self.process.memory_percent(),
+            "percent": process.memory_percent(),
         }
 
     def record_memory_snapshot(self) -> None:
@@ -1413,20 +1441,18 @@ class MemoryMonitor:
         return suggestions
 
 
-# Global profiler instance for convenient access throughout the application
-# This avoids the need to pass profiler instances around
-_global_profiler = PerformanceProfiler()
-
-# Global memory monitor instance for convenient access
-# This avoids the need to pass monitor instances around
-_memory_monitor = MemoryMonitor()
+# Globals are created on first use. Importing this module must not start
+# tracemalloc or import psutil.
+_global_profiler: PerformanceProfiler | None = None
+_memory_monitor: MemoryMonitor | None = None
 
 
 def get_profiler() -> PerformanceProfiler:
     """Get the global profiler instance.
 
     Returns the singleton global profiler instance that can be used
-    throughout the application for consistent profiling.
+    throughout the application for consistent profiling. The instance is
+    created on first use so import does not start tracemalloc.
 
     Returns:
         PerformanceProfiler: The global profiler instance.
@@ -1439,6 +1465,9 @@ def get_profiler() -> PerformanceProfiler:
             ...     perform_operation()
 
     """
+    global _global_profiler  # pylint: disable=global-statement
+    if _global_profiler is None:
+        _global_profiler = PerformanceProfiler()
     return _global_profiler
 
 
@@ -1446,7 +1475,8 @@ def get_memory_monitor() -> MemoryMonitor:
     """Get the global memory monitor instance.
 
     Returns the singleton global memory monitor instance that can be used
-    throughout the application for consistent memory tracking.
+    throughout the application for consistent memory tracking. The instance
+    is created on first use and does not require psutil at import time.
 
     Returns:
         MemoryMonitor: The global memory monitor instance.
@@ -1461,6 +1491,9 @@ def get_memory_monitor() -> MemoryMonitor:
             >>> trend = monitor.get_memory_trend()
 
     """
+    global _memory_monitor  # pylint: disable=global-statement
+    if _memory_monitor is None:
+        _memory_monitor = MemoryMonitor()
     return _memory_monitor
 
 
@@ -1485,7 +1518,7 @@ def profile_function(operation_name: str, data_size: int | None = None):
         ...     return data.apply(transformation)
 
     """
-    return _global_profiler.profile_operation(operation_name, data_size)
+    return get_profiler().profile_operation(operation_name, data_size)
 
 
 @contextmanager
@@ -1509,7 +1542,7 @@ def profile_operation(operation_name: str, data_size: int | None = None):
         ...     processed = process_data(raw_data)
 
     """
-    with _global_profiler.measure_operation(operation_name, data_size):
+    with get_profiler().measure_operation(operation_name, data_size):
         yield
 
 
@@ -1544,10 +1577,10 @@ def get_performance_summary() -> dict[str, Any]:
 
     """
     # Generate performance report from global profiler
-    report = _global_profiler.generate_report()
+    report = get_profiler().generate_report()
 
     # Get memory trend from global memory monitor
-    memory_trend = _memory_monitor.get_memory_trend()
+    memory_trend = get_memory_monitor().get_memory_trend()
 
     # Compile and return summary metrics
     return {

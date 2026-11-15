@@ -57,6 +57,17 @@ from lightweight_charts_pro.utils.serialization import SerializableMixin
 logger = get_logger(__name__)
 
 
+def _is_types_options(field_type: type) -> bool:
+    """Return True when field_type subclasses the types.options.Options base.
+
+    Chart options and ``types.options.Options`` are separate classes. Background
+    configuration used the types base, so nested ``update()`` must accept both.
+    """
+    from lightweight_charts_pro.types.options import Options as TypeOptions
+
+    return issubclass(field_type, TypeOptions)
+
+
 @dataclass
 class Options(SerializableMixin, ABC):
     """Abstract base class for all option classes in financial chart configuration.
@@ -283,8 +294,11 @@ class Options(SerializableMixin, ABC):
             - is_dict_type: True if the type is a Dict type (including Optional[Dict])
 
         """
-        # Direct Options type
-        if isinstance(field_type, type) and issubclass(field_type, Options):
+        # Direct Options type. Accept both Options bases: chart options and the
+        # duplicate types.options.Options used by older background classes.
+        if isinstance(field_type, type) and (
+            issubclass(field_type, Options) or _is_types_options(field_type)
+        ):
             return True, field_type, False
 
         # Use get_origin and get_args to handle both old and new union syntax

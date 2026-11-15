@@ -76,19 +76,32 @@ class GradientRibbonSeries(RibbonSeries):
             pane_id=pane_id,
         )
 
-        # Initialize gradient-specific properties
-        self._gradient_start_color = gradient_start_color
-        self._gradient_end_color = gradient_end_color
-        self._normalize_gradients = normalize_gradients
+        # Cache attrs exist before option assignment so setters can invalidate them.
         self._gradient_bounds: tuple[float, float] | None = None
-
-        # Performance optimization: cache normalized results
         self._normalized_cache: dict | None = None
+
+        # Property assignment runs the chainable color/bool validators.
+        self.gradient_start_color = gradient_start_color
+        self.gradient_end_color = gradient_end_color
+        self.normalize_gradients = normalize_gradients
 
     @property
     def chart_type(self) -> ChartType:
         """Get the chart type for this series."""
         return ChartType.GRADIENT_RIBBON
+
+    def __setattr__(self, name: str, value: object) -> None:
+        """Set an attribute and drop the normalized cache on data or option changes."""
+        super().__setattr__(name, value)
+        if name in ("_normalized_cache", "_gradient_bounds"):
+            return
+        if (
+            getattr(self, "_normalized_cache", None) is None
+            and getattr(self, "_gradient_bounds", None) is None
+        ):
+            return
+        super().__setattr__("_normalized_cache", None)
+        super().__setattr__("_gradient_bounds", None)
 
     def _invalidate_cache(self) -> None:
         """Invalidate the normalized data cache.

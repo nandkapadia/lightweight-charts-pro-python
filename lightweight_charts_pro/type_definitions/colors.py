@@ -58,11 +58,11 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import Any
 
+# Local Imports
+# Chart Options, not types.options.Options, so nested layout updates see it.
+from lightweight_charts_pro.charts.options.base_options import Options
 from lightweight_charts_pro.exceptions import ColorValidationError
 from lightweight_charts_pro.type_definitions.enums import BackgroundStyle
-
-# Local Imports
-from lightweight_charts_pro.types.options import Options
 from lightweight_charts_pro.utils.data_utils import is_valid_color
 
 

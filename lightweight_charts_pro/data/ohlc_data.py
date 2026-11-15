@@ -133,6 +133,19 @@ class OhlcData(Data):
         # Call parent's __post_init__ to normalize the time value to UNIX timestamp
         super().__post_init__()
 
+        # None and NaN must be rejected before any ordering comparison.
+        # ``None < 0`` raises TypeError, and NaN comparisons are always false.
+        for field_name in ("open", "high", "low", "close"):
+            value = getattr(self, field_name)
+            if isinstance(value, float) and math.isnan(value):
+                raise ValueValidationError(
+                    field_name,
+                    "NaN is not allowed. Missing OHLC data must be handled upstream "
+                    "(filter, forward-fill, or drop) before creating chart data.",
+                )
+            if value is None:
+                raise RequiredFieldError(field_name)
+
         # Validate that all OHLC values are non-negative (prices cannot be negative)
         if self.open < 0 or self.high < 0 or self.low < 0 or self.close < 0:
             raise ValueValidationError.non_negative_value("all OHLC values")
@@ -152,19 +165,3 @@ class OhlcData(Data):
             raise ValueValidationError("close", "must be less than or equal to high")
         if self.close < self.low:
             raise ValueValidationError("close", "must be greater than or equal to low")
-
-        # Validate NaN and None values in all OHLC fields
-        # NaN values are NOT allowed as they represent missing data that could corrupt
-        # backtests, PnL calculations, and create artificial limit-down bars
-        for field_name in ["open", "high", "low", "close"]:
-            value = getattr(self, field_name)
-            # Check if the value is a float and is NaN - raise error instead of coercing
-            if isinstance(value, float) and math.isnan(value):
-                raise ValueValidationError(
-                    field_name,
-                    "NaN is not allowed. Missing OHLC data must be handled upstream "
-                    "(filter, forward-fill, or drop) before creating chart data.",
-                )
-            # Validate that the field is not None - all OHLC fields are required
-            elif value is None:
-                raise RequiredFieldError(field_name)

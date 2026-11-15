@@ -7,6 +7,9 @@ Tests performance profiling utilities including:
 - MemoryMonitor capabilities
 """
 
+import os
+import subprocess
+import sys
 import time
 
 from lightweight_charts_pro.utils.profiler import (
@@ -317,3 +320,55 @@ class TestProfilerIntegration:
         assert len(monitor.memory_history) == 2
         assert isinstance(current, dict)
         assert "trend" in trend
+
+
+class TestProfilerOptionalDependencies:
+    """Import and missing-psutil behavior."""
+
+    def test_import_does_not_start_tracemalloc(self):
+        """Importing the profiler must not start tracemalloc."""
+        root = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "..")
+        )
+        env = os.environ.copy()
+        env["PYTHONPATH"] = root + os.pathsep + env.get("PYTHONPATH", "")
+        script = (
+            "import tracemalloc\n"
+            "tracemalloc.stop()\n"
+            "import lightweight_charts_pro.utils.profiler as profiler\n"
+            "assert tracemalloc.is_tracing() is False\n"
+            "assert profiler._global_profiler is None\n"
+        )
+        completed = subprocess.run(
+            [sys.executable, "-c", script],
+            check=False,
+            capture_output=True,
+            text=True,
+            env=env,
+        )
+        assert completed.returncode == 0, completed.stderr
+
+    def test_measure_operation_without_psutil(self, monkeypatch):
+        """Profiling still records timing when psutil is absent."""
+        monkeypatch.setattr(
+            "lightweight_charts_pro.utils.profiler._optional_psutil",
+            lambda: None,
+        )
+        profiler = PerformanceProfiler(enable_memory_tracking=False)
+        with profiler.measure_operation("without_psutil"):
+            pass
+
+        profile = profiler.profiles[0]
+        assert profile.operation_name == "without_psutil"
+        assert profile.cpu_percent == 0.0
+        assert profile.memory_current == 0
+
+    def test_memory_monitor_without_psutil(self, monkeypatch):
+        """Memory monitor returns zeros instead of failing without psutil."""
+        monkeypatch.setattr(
+            "lightweight_charts_pro.utils.profiler._optional_psutil",
+            lambda: None,
+        )
+        monitor = MemoryMonitor()
+        assert monitor.process is None
+        assert monitor.get_memory_usage() == {"rss": 0.0, "vms": 0.0, "percent": 0.0}
