@@ -607,3 +607,27 @@ class TestHistogramSeriesCreateVolumeSeries:
 
         # The real test is that we can create and delete the objects without errors
         # and that memory usage is reasonable
+
+    def test_create_volume_series_empty_dataframe(self):
+        """Empty dataframe does not crash and sets last_value_visible to False."""
+        empty_df = pd.DataFrame(columns=["time", "volume", "open", "close"])
+        series = HistogramSeries.create_volume_series(
+            empty_df,
+            column_mapping={"time": "time", "volume": "volume", "open": "open", "close": "close"},
+        )
+        assert len(series.data) == 0
+        assert series._last_value_visible is False
+
+    def test_create_volume_series_last_value_visible_is_false(self):
+        """Volume series created from dataframe disables last_value_visible by default."""
+        df = pd.DataFrame({
+            "time": ["2024-01-01", "2024-01-02"],
+            "volume": [1000, 2000],
+            "open": [10, 11],
+            "close": [11, 12],
+        })
+        series = HistogramSeries.create_volume_series(
+            df,
+            column_mapping={"time": "time", "volume": "volume", "open": "open", "close": "close"},
+        )
+        assert series._last_value_visible is False

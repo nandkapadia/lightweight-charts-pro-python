@@ -5,6 +5,7 @@ that display upper and lower bands with gradient fill areas based on gradient va
 """
 
 import math
+from typing import Any
 
 import pandas as pd
 
@@ -226,6 +227,58 @@ class GradientRibbonSeries(RibbonSeries):
 
         return data_dict
 
+    def add_marker(self, marker: Any) -> "GradientRibbonSeries":
+        """Add a marker and invalidate the cache.
+
+        Args:
+            marker: Marker to add.
+
+        Returns:
+            Self for method chaining.
+
+        """
+        self._invalidate_cache()
+        return super().add_marker(marker)  # type: ignore[return-value]
+
+    def add_markers(self, markers: list[Any]) -> "GradientRibbonSeries":
+        """Add markers and invalidate the cache.
+
+        Args:
+            markers: List of markers to add.
+
+        Returns:
+            Self for method chaining.
+
+        """
+        self._invalidate_cache()
+        return super().add_markers(markers)  # type: ignore[return-value]
+
+    def add_price_line(self, price_line: Any) -> "GradientRibbonSeries":
+        """Add a price line and invalidate the cache.
+
+        Args:
+            price_line: Price line to add.
+
+        Returns:
+            Self for method chaining.
+
+        """
+        self._invalidate_cache()
+        return super().add_price_line(price_line)  # type: ignore[return-value]
+
+    def add_price_lines(self, price_lines: list[Any]) -> "GradientRibbonSeries":
+        """Add price lines and invalidate the cache.
+
+        Args:
+            price_lines: List of price lines to add.
+
+        Returns:
+            Self for method chaining.
+
+        """
+        self._invalidate_cache()
+        return super().add_price_lines(price_lines)  # type: ignore[return-value]
+
     def asdict(self):
         """Override to include normalized gradients with caching for performance.
 
@@ -236,6 +289,17 @@ class GradientRibbonSeries(RibbonSeries):
             dict: The serialized dictionary with normalized gradients.
 
         """
+        # Invalidate cache if markers or price lines were modified directly
+        if self._normalized_cache is not None:
+            current_markers = getattr(self, "markers", [])
+            current_price_lines = getattr(self, "price_lines", [])
+            cached_markers = self._normalized_cache.get("markers", [])
+            cached_price_lines = self._normalized_cache.get("priceLines", [])
+            if len(cached_markers) != len(current_markers) or len(
+                cached_price_lines
+            ) != len(current_price_lines):
+                self._invalidate_cache()
+
         # Return cached result if available
         if self._normalized_cache is not None:
             return self._normalized_cache

@@ -36,6 +36,7 @@ from dataclasses import dataclass
 # Local Imports
 from lightweight_charts_pro.charts.options.base_options import Options
 from lightweight_charts_pro.utils import chainable_field
+from lightweight_charts_pro.utils.data_utils import snake_to_camel
 
 
 @dataclass
@@ -139,17 +140,21 @@ class TimeScaleOptions(Options):
     # Formatting settings
     tick_mark_formatter: Callable | None = None  # Custom formatter for tick marks
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str):
         """Get option value by key for dictionary-like access.
 
         Allows accessing option values using dictionary-style syntax, which
-        is useful for dynamic configuration and testing.
+        is useful for dynamic configuration and testing. Supports both camelCase
+        serialized keys and snake_case field names.
 
         Args:
             key (str): The option key to retrieve.
 
         Returns:
             Any: The value of the specified option key.
+
+        Raises:
+            KeyError: If neither the key nor its camelCase equivalent exists.
 
         Example:
             ```python
@@ -159,4 +164,10 @@ class TimeScaleOptions(Options):
             ```
 
         """
-        return self.asdict()[key]
+        serialized = self.asdict()
+        if key in serialized:
+            return serialized[key]
+        camel_key = snake_to_camel(key)
+        if camel_key in serialized:
+            return serialized[camel_key]
+        raise KeyError(key)

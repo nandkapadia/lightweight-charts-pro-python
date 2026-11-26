@@ -170,7 +170,7 @@ class BaseChartManager:
             Self for method chaining.
 
         """
-        if group_id:
+        if group_id is not None:
             group_key = str(group_id)
             if group_key not in self.sync_groups:
                 self.sync_groups[group_key] = SyncOptions()
@@ -191,7 +191,7 @@ class BaseChartManager:
             Self for method chaining.
 
         """
-        if group_id:
+        if group_id is not None:
             group_key = str(group_id)
             if group_key in self.sync_groups:
                 self.sync_groups[group_key].disable_crosshair()
@@ -211,7 +211,7 @@ class BaseChartManager:
             Self for method chaining.
 
         """
-        if group_id:
+        if group_id is not None:
             group_key = str(group_id)
             if group_key not in self.sync_groups:
                 self.sync_groups[group_key] = SyncOptions()
@@ -232,7 +232,7 @@ class BaseChartManager:
             Self for method chaining.
 
         """
-        if group_id:
+        if group_id is not None:
             group_key = str(group_id)
             if group_key in self.sync_groups:
                 self.sync_groups[group_key].disable_time_range()
@@ -250,7 +250,7 @@ class BaseChartManager:
             Self for method chaining.
 
         """
-        if group_id:
+        if group_id is not None:
             group_key = str(group_id)
             if group_key not in self.sync_groups:
                 self.sync_groups[group_key] = SyncOptions()
@@ -269,7 +269,7 @@ class BaseChartManager:
             Self for method chaining.
 
         """
-        if group_id:
+        if group_id is not None:
             group_key = str(group_id)
             if group_key in self.sync_groups:
                 self.sync_groups[group_key].disable_all()

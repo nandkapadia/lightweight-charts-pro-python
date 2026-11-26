@@ -14,7 +14,11 @@ import pytest
 from lightweight_charts_pro.charts.series.bar_series import BarSeries
 from lightweight_charts_pro.data.bar_data import BarData
 from lightweight_charts_pro.data.ohlc_data import OhlcData
-from lightweight_charts_pro.exceptions import ColorValidationError, ValueValidationError
+from lightweight_charts_pro.exceptions import (
+    ColorValidationError,
+    RequiredFieldError,
+    ValueValidationError,
+)
 
 
 class TestBarDataConstruction:
@@ -183,19 +187,19 @@ class TestBarDataValidation:
     def test_validation_none_values(self):
         """Test validation that OHLC values cannot be None."""
         # Invalid case: None open
-        with pytest.raises(TypeError, match="'<' not supported between instances of"):
+        with pytest.raises(RequiredFieldError):
             BarData(time=1640995200, open=None, high=110.0, low=95.0, close=105.0)
 
         # Invalid case: None high
-        with pytest.raises(TypeError, match="'<' not supported between instances of"):
+        with pytest.raises(RequiredFieldError):
             BarData(time=1640995200, open=100.0, high=None, low=95.0, close=105.0)
 
         # Invalid case: None low
-        with pytest.raises(TypeError, match="'<' not supported between instances of"):
+        with pytest.raises(RequiredFieldError):
             BarData(time=1640995200, open=100.0, high=110.0, low=None, close=105.0)
 
         # Invalid case: None close
-        with pytest.raises(TypeError, match="'<' not supported between instances of"):
+        with pytest.raises(RequiredFieldError):
             BarData(time=1640995200, open=100.0, high=110.0, low=95.0, close=None)
 
     def test_validation_color_format(self):

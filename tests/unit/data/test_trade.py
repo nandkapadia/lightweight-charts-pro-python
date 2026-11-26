@@ -518,7 +518,7 @@ class TestTradeDataPnLCalculations:
         assert abs(trade.pnl_percentage - expected_percentage) < 0.001
 
     def test_long_pnl_multiplies_by_quantity(self):
-        """Long P&L is the price increase times quantity."""
+        """Long P&L multiplies price increase by quantity; percentage stays unscaled."""
         trade = TradeData(
             entry_time=1640995200,
             entry_price=100.0,
@@ -529,10 +529,10 @@ class TestTradeDataPnLCalculations:
             additional_data={"quantity": 10, "trade_type": "long"},
         )
         assert trade.pnl == 50.0
-        assert trade.pnl_percentage == 50.0
+        assert trade.pnl_percentage == 5.0
 
     def test_short_pnl_inverts_and_multiplies_by_quantity(self):
-        """Short P&L profits when price falls and scales by quantity."""
+        """Short P&L profits when price falls and scales by quantity; percentage stays unscaled."""
         trade = TradeData(
             entry_time=1640995200,
             entry_price=100.0,
@@ -543,7 +543,7 @@ class TestTradeDataPnLCalculations:
             additional_data={"quantity": 10, "trade_type": "short"},
         )
         assert trade.pnl == 100.0
-        assert trade.pnl_percentage == 100.0
+        assert trade.pnl_percentage == 10.0
 
     def test_short_loss_when_price_rises(self):
         """A short that rallies is a loss, including a zero explicit P&L."""
@@ -557,7 +557,7 @@ class TestTradeDataPnLCalculations:
             additional_data={"quantity": 2, "trade_type": "SHORT"},
         )
         assert losing_short.pnl == -20.0
-        assert losing_short.pnl_percentage == -20.0
+        assert losing_short.pnl_percentage == -10.0
 
         flat_short = TradeData(
             entry_time=1640995200,

@@ -122,6 +122,35 @@ class TestManagerSmoke:
         names = [item["name"] for item in manager.to_frontend_configs()]
         assert names == ["missing", "explicit", "legacy"]
 
+    def test_series_manager_get_series_info_for_pane_filtering(self):
+        """get_series_info_for_pane filters by pane_id and uses display_name."""
+        pane0_series = LineSeries(data=[LineData(time=1, value=1.0)], pane_id=0)
+        pane0_series.display_name = "Primary"
+        pane1_series = LineSeries(data=[LineData(time=1, value=2.0)], pane_id=1)
+        pane1_series.display_name = "Secondary"
+
+        manager = SeriesManager([pane0_series, pane1_series])
+        info0 = manager.get_series_info_for_pane(0)
+        info1 = manager.get_series_info_for_pane(1)
+
+        assert len(info0) == 1
+        assert info0[0]["displayName"] == "Primary"
+        assert len(info1) == 1
+        assert info1[0]["displayName"] == "Secondary"
+
+    def test_base_chart_manager_sync_group_zero(self):
+        """group_id=0 targets sync_groups['0'], not default_sync."""
+        from lightweight_charts_pro.charts.base_chart_manager import BaseChartManager
+
+        manager = BaseChartManager()
+        assert manager.default_sync.crosshair is False
+        assert "0" not in manager.sync_groups
+
+        manager.enable_crosshair_sync(group_id=0)
+        assert "0" in manager.sync_groups
+        assert manager.sync_groups["0"].crosshair is True
+        assert manager.default_sync.crosshair is False
+
 
 class TestBaseChartIntegration:
     """Constructor series, options updates, and trade config shape."""

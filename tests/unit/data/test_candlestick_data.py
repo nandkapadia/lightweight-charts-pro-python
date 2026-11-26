@@ -45,7 +45,11 @@ import pytest
 # Local Imports
 from lightweight_charts_pro.data.candlestick_data import CandlestickData
 from lightweight_charts_pro.data.ohlc_data import OhlcData
-from lightweight_charts_pro.exceptions import ColorValidationError, ValueValidationError
+from lightweight_charts_pro.exceptions import (
+    ColorValidationError,
+    RequiredFieldError,
+    ValueValidationError,
+)
 
 
 class TestCandlestickDataConstruction:
@@ -196,10 +200,7 @@ class TestCandlestickDataValidation:
 
     def test_validation_none_values(self):
         """Test that None values are not allowed."""
-        with pytest.raises(
-            TypeError,
-            match="'<' not supported between instances of 'NoneType' and 'int'",
-        ):
+        with pytest.raises(RequiredFieldError):
             CandlestickData(
                 time=1640995200, open=None, high=105.0, low=98.0, close=103.0
             )

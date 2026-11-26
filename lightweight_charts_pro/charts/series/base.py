@@ -1093,8 +1093,14 @@ class Series(ABC):  # noqa: B024
         required = data_class.required_columns
         optional = data_class.optional_columns
 
+        # Accept both snake_case and camelCase keys in column_mapping
+        canonical_map = {snake_to_camel(field): field for field in required.union(optional)}
+        normalized_mapping = {
+            canonical_map.get(key, key): value for key, value in column_mapping.items()
+        }
+
         # Check required columns in column_mapping
-        missing_mapping = [col for col in required if col not in column_mapping]
+        missing_mapping = [col for col in required if col not in normalized_mapping]
         if missing_mapping:
             raise ValueValidationError(
                 "column_mapping",
@@ -1103,22 +1109,22 @@ class Series(ABC):  # noqa: B024
         # Removed print
 
         # Prepare index for all column mappings
-        data_frame, column_mapping = cls.prepare_index(dataframe, column_mapping)
+        data_frame, normalized_mapping = cls.prepare_index(dataframe, normalized_mapping)
 
         # Check required columns in DataFrame (including index) - after processing
         for key in required:
-            col = column_mapping[key]
+            col = normalized_mapping[key]
             if col not in data_frame.columns:
                 raise NotFoundError("Column", col)
             # Removed print
 
         # Build data objects
         data = []
-        for i in range(len(dataframe)):
+        for i in range(len(data_frame)):
             kwargs_data = {}
             for key in required.union(optional):
-                if key in column_mapping:
-                    col = column_mapping[key]
+                if key in normalized_mapping:
+                    col = normalized_mapping[key]
                     if col in data_frame.columns:
                         value = data_frame.iloc[i][col]
                         kwargs_data[key] = value

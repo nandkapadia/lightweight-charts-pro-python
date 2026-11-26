@@ -381,7 +381,7 @@ class SeriesManager:
         self.add_series(price_series, price_scale_manager)
         self.add_series(volume_series, price_scale_manager)
 
-    def get_series_info_for_pane(self, _pane_id: int = 0) -> list[dict]:
+    def get_series_info_for_pane(self, pane_id: int = 0) -> list[dict]:
         """Get series information for a specific pane.
 
         Args:
@@ -394,12 +394,25 @@ class SeriesManager:
         series_info = []
 
         for i, series in enumerate(self.series):
+            # Filter series by pane
+            s_pane = getattr(series, "pane_id", None)
+            if s_pane is None:
+                s_pane = getattr(series, "_pane_id", 0)
+            if s_pane is None:
+                s_pane = 0
+            if s_pane != pane_id:
+                continue
+
             # Get series ID
             series_id = getattr(series, "id", f"series_{i}")
 
             # Get display name
             display_name = series_id
-            if hasattr(series, "name") and series.name:
+            if hasattr(series, "display_name") and series.display_name:
+                display_name = series.display_name
+            elif hasattr(series, "_display_name") and series._display_name:
+                display_name = series._display_name
+            elif hasattr(series, "name") and series.name:
                 display_name = series.name
             elif hasattr(series, "title") and series.title:
                 display_name = series.title

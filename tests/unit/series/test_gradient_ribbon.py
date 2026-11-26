@@ -342,3 +342,27 @@ class TestGradientRibbonSeries:
         ]
         assert series._normalized_cache is None
         assert len(series.asdict()["data"]) == 1
+
+    def test_adding_markers_or_price_lines_invalidates_normalized_cache(self):
+        """Adding markers or price lines must invalidate the cache and be serialized."""
+        from lightweight_charts_pro.data.marker import BarMarker
+        from lightweight_charts_pro.type_definitions.enums import MarkerPosition, MarkerShape
+
+        data = [
+            GradientRibbonData("2024-01-01", upper=110, lower=100, gradient=0.5),
+        ]
+        series = GradientRibbonSeries(data=data, normalize_gradients=True)
+        cached = series.asdict()
+        assert series._normalized_cache is not None
+        assert "markers" not in cached
+
+        marker = BarMarker(
+            time="2024-01-01",
+            position=MarkerPosition.ABOVE_BAR,
+            shape=MarkerShape.CIRCLE,
+        )
+        series.add_marker(marker)
+        assert series._normalized_cache is None
+        fresh = series.asdict()
+        assert "markers" in fresh
+        assert len(fresh["markers"]) == 1

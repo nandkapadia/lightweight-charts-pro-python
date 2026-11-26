@@ -4,6 +4,8 @@ This module tests the TimeScaleOptions class functionality including
 construction, validation, and serialization.
 """
 
+import pytest
+
 from lightweight_charts_pro.charts.options.time_scale_options import TimeScaleOptions
 
 
@@ -210,3 +212,16 @@ class TestTimeScaleOptions:
         assert copied.right_bar_stays_on_scroll == original.right_bar_stays_on_scroll
         assert copied.border_visible == original.border_visible
         assert copied.border_color == original.border_color
+
+    def test_getitem_supports_snake_and_camel_case(self):
+        """Test dictionary-style access with both snake_case and camelCase keys."""
+        options = TimeScaleOptions(bar_spacing=12, time_visible=False)
+
+        assert options["bar_spacing"] == 12
+        assert options["barSpacing"] == 12
+        assert options["time_visible"] is False
+        assert options["timeVisible"] is False
+        assert options["visible"] is True
+
+        with pytest.raises(KeyError):
+            _ = options["non_existent_key"]

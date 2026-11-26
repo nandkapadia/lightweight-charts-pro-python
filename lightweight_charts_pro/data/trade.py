@@ -243,11 +243,11 @@ class TradeData(SerializableMixin):
 
     @property
     def pnl_percentage(self) -> float:
-        """Return profit/loss percent, inverted for shorts and scaled by quantity.
+        """Return profit/loss percent, inverted for shorts.
 
         An explicit ``pnl_percentage`` in ``additional_data`` is returned
         unchanged, including zero. Otherwise the percent is the directional
-        price change divided by the entry price, times 100, times quantity.
+        price change divided by the entry price, times 100.
 
         Returns:
             float: Profit/loss percentage. Positive values indicate profit,
@@ -261,7 +261,7 @@ class TradeData(SerializableMixin):
             return 0.0
 
         price_change = self._directional_price_change()
-        return (price_change / float(self.entry_price)) * 100 * self._quantity()
+        return (price_change / float(self.entry_price)) * 100
 
     def asdict(self) -> dict[str, Any]:
         """Serialize the trade data to a dict with camelCase keys for frontend.

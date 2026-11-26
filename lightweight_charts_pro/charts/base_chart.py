@@ -465,17 +465,17 @@ class BaseChart:
             raise TypeValidationError("chart_group_id", "integer")
         self._chart_group_id = group_id
 
-    def get_series_info_for_pane(self, _pane_id: int = 0) -> list[dict]:
+    def get_series_info_for_pane(self, pane_id: int = 0) -> list[dict]:
         """Get series information for the series settings dialog.
 
         Args:
-            _pane_id: The pane ID to get series info for.
+            pane_id: The pane ID to get series info for (default: 0).
 
         Returns:
             List of series information dictionaries.
 
         """
-        return self._series_manager.get_series_info_for_pane(_pane_id)
+        return self._series_manager.get_series_info_for_pane(pane_id)
 
     def to_frontend_config(self) -> dict[str, Any]:
         """Convert chart to frontend configuration dictionary.
@@ -487,6 +487,9 @@ class BaseChart:
             Complete chart configuration ready for frontend rendering.
 
         """
+        # Sync price scale manager with current options in case scales were mutated in-place
+        self._apply_price_scales_from_options()
+
         # Get series configurations
         series_configs = self._series_manager.to_frontend_configs()
 

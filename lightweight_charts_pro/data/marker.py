@@ -48,6 +48,7 @@ License: MIT
 """
 
 # Standard Imports
+import math
 from dataclasses import dataclass
 from typing import ClassVar
 
@@ -192,6 +193,8 @@ class PriceMarker(MarkerBase):
     # Define optional columns for DataFrame conversion - same as base class
     OPTIONAL_COLUMNS: ClassVar[set] = {"text", "color", "size", "id"}
 
+    # Price markers must use an at-price position
+    position: str | MarkerPosition = MarkerPosition.AT_PRICE_MIDDLE
     # Price value for exact Y-axis positioning - required for price markers
     price: float = 0.0
 
@@ -207,14 +210,19 @@ class PriceMarker(MarkerBase):
         for proper Y-axis positioning.
 
         Raises:
-            RequiredFieldError: If the price field is 0.0 or missing.
+            RequiredFieldError: If the price field is None or 0.0.
 
         """
         # Call parent's __post_init__ to normalize time and convert enums
         super().__post_init__()
 
-        # Validate that price is provided and not 0.0 (required field)
-        if self.price == 0.0:
+        # Validate that price is provided and not None, 0.0, or non-finite (required field)
+        if (
+            self.price is None
+            or self.price == 0.0
+            or not isinstance(self.price, (int, float))
+            or not math.isfinite(self.price)
+        ):
             raise RequiredFieldError("Price")
 
     def validate_position(self) -> bool:

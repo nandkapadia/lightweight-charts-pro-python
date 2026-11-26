@@ -388,6 +388,27 @@ class TestPriceMarkerConstruction:
             )
             assert marker.validate_position()
 
+    def test_default_position_for_price_marker(self):
+        """Test that PriceMarker defaults to a valid at-price position."""
+        marker = PriceMarker(time=1640995200, price=100.50)
+
+        assert marker.position == MarkerPosition.AT_PRICE_MIDDLE
+        assert marker.validate_position()
+
+    def test_none_price_raises_error(self):
+        """Test that PriceMarker with None price raises RequiredFieldError."""
+        with pytest.raises(RequiredFieldError):
+            PriceMarker(time=1640995200, price=None)
+
+    def test_nan_and_inf_price_raises_error(self):
+        """Test that PriceMarker with NaN or Inf price raises RequiredFieldError."""
+        import math
+
+        with pytest.raises(RequiredFieldError):
+            PriceMarker(time=1640995200, price=float("nan"))
+        with pytest.raises(RequiredFieldError):
+            PriceMarker(time=1640995200, price=float("inf"))
+
 
 class TestBarMarkerConstruction:
     """Test cases for BarMarker construction."""

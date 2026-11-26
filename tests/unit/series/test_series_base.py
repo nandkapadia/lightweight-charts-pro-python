@@ -1860,6 +1860,31 @@ class TestSeriesFromDataframeEdgeCases:
         assert result.visible is False
         assert result.price_scale_id == "custom_scale"
 
+    def test_from_dataframe_with_camelcase_column_mapping(self):
+        """Test from_dataframe normalizes camelCase optional column_mapping keys."""
+        from lightweight_charts_pro.charts.series import AreaSeries
+
+        df = pd.DataFrame(
+            {
+                "dt": pd.date_range("2023-01-01", periods=2),
+                "close": [100.0, 105.0],
+                "line_col": ["#112233", "#445566"],
+            }
+        )
+
+        series = AreaSeries.from_dataframe(
+            df,
+            column_mapping={
+                "time": "dt",
+                "value": "close",
+                "lineColor": "line_col",
+            },
+        )
+
+        assert len(series.data) == 2
+        assert series.data[0].line_color == "#112233"
+        assert series.data[1].line_color == "#445566"
+
 
 class TestSeriesDataClassProperty:
     """Test the data_class property."""

@@ -242,7 +242,8 @@ class HistogramSeries(Series):
                     down_color,
                 )
                 # First bar has no previous value, default to up_color
-                colors[0] = up_color
+                if len(colors) > 0:
+                    colors[0] = up_color
 
             # Add color column to DataFrame for histogram visualization
             volume_dataframe["color"] = colors
@@ -256,7 +257,11 @@ class HistogramSeries(Series):
             )
 
             # Use from_dataframe factory method to create the series
-            return cls.from_dataframe(volume_dataframe, column_mapping=updated_mapping, **kwargs)  # type: ignore[return-value]
+            volume_series = cls.from_dataframe(
+                volume_dataframe, column_mapping=updated_mapping, **kwargs
+            )  # type: ignore[return-value]
+            volume_series._last_value_visible = False
+            return volume_series
 
         # Handle sequence of OhlcvData objects (non-DataFrame input)
         if data is None:

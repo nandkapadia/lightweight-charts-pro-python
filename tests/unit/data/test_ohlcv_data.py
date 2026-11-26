@@ -164,14 +164,11 @@ class TestOhlcvData:
         assert "NaN is not allowed" in str(exc_info.value)
 
     def test_validation_none_ohlc_values(self):
-        """Test that None OHLC values raise TypeError due to comparison."""
+        """Test that None OHLC values raise RequiredFieldError."""
         timestamp = int(datetime.now().timestamp())
 
-        # The parent class validation will catch None values during comparison
-        with pytest.raises(
-            TypeError,
-            match="'<' not supported between instances of 'NoneType' and 'int'",
-        ):
+        # The parent class validation will catch None values before range comparisons
+        with pytest.raises(RequiredFieldError):
             OhlcvData(
                 time=timestamp,
                 open=None,
@@ -181,10 +178,7 @@ class TestOhlcvData:
                 volume=1000.0,
             )
 
-        with pytest.raises(
-            TypeError,
-            match="'<' not supported between instances of 'NoneType' and 'int'",
-        ):
+        with pytest.raises(RequiredFieldError):
             OhlcvData(
                 time=timestamp,
                 open=100.0,
@@ -194,10 +188,7 @@ class TestOhlcvData:
                 volume=1000.0,
             )
 
-        with pytest.raises(
-            TypeError,
-            match="'<' not supported between instances of 'NoneType' and 'int'",
-        ):
+        with pytest.raises(RequiredFieldError):
             OhlcvData(
                 time=timestamp,
                 open=100.0,
@@ -207,10 +198,7 @@ class TestOhlcvData:
                 volume=1000.0,
             )
 
-        with pytest.raises(
-            TypeError,
-            match="'<' not supported between instances of 'NoneType' and 'int'",
-        ):
+        with pytest.raises(RequiredFieldError):
             OhlcvData(
                 time=timestamp,
                 open=100.0,
