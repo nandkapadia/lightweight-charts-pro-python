@@ -366,3 +366,28 @@ class TestGradientRibbonSeries:
         fresh = series.asdict()
         assert "markers" in fresh
         assert len(fresh["markers"]) == 1
+
+    def test_inplace_marker_edit_and_asdict_copy_isolation(self):
+        """In-place marker edits drop the cache; asdict returns an isolated copy."""
+        from lightweight_charts_pro.data.marker import BarMarker
+        from lightweight_charts_pro.type_definitions.enums import MarkerPosition, MarkerShape
+
+        data = [
+            GradientRibbonData("2024-01-01", upper=110, lower=100, gradient=0.5),
+        ]
+        series = GradientRibbonSeries(data=data, normalize_gradients=True)
+        marker = BarMarker(
+            time="2024-01-01",
+            position=MarkerPosition.ABOVE_BAR,
+            shape=MarkerShape.CIRCLE,
+            text="before",
+        )
+        series.add_marker(marker)
+        first = series.asdict()
+        first["markers"].append({"mutated": True})
+        second = series.asdict()
+        assert len(second["markers"]) == 1
+
+        series.markers[0].text = "after"
+        third = series.asdict()
+        assert third["markers"][0]["text"] == "after"

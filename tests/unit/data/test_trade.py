@@ -545,6 +545,33 @@ class TestTradeDataPnLCalculations:
         assert trade.pnl == 100.0
         assert trade.pnl_percentage == 10.0
 
+    def test_sell_trade_type_uses_short_pnl(self):
+        """trade_type 'sell' is treated as a short for P&L."""
+        trade = TradeData(
+            entry_time=1640995200,
+            entry_price=100.0,
+            exit_time=1641081600,
+            exit_price=90.0,
+            is_profitable=True,
+            id="sell1",
+            additional_data={"quantity": 5, "trade_type": "sell"},
+        )
+        assert trade.pnl == 50.0
+
+    def test_invalid_quantity_raises(self):
+        """Non-numeric quantity must not silently fall back to 1."""
+        trade = TradeData(
+            entry_time=1640995200,
+            entry_price=100.0,
+            exit_time=1641081600,
+            exit_price=110.0,
+            is_profitable=True,
+            id="bad-qty",
+            additional_data={"quantity": "lots", "trade_type": "long"},
+        )
+        with pytest.raises(ValueError, match="Invalid trade quantity"):
+            _ = trade.pnl
+
     def test_short_loss_when_price_rises(self):
         """A short that rallies is a loss, including a zero explicit P&L."""
         losing_short = TradeData(

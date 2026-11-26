@@ -204,17 +204,22 @@ class TradeData(SerializableMixin):
         return str(raw_trade_type).strip().lower()
 
     def _is_short(self) -> bool:
-        """Return True when the trade direction is short."""
-        return self._trade_type() == "short"
+        """Return True when the trade direction is short or sell."""
+        return self._trade_type() in {"short", "sell"}
 
     def _quantity(self) -> float:
         """Return trade size used to scale P&L. Missing quantity scales by 1."""
         data = self.additional_data or {}
-        raw_quantity = data.get("quantity", 1)
-        try:
-            return float(raw_quantity)
-        except (TypeError, ValueError):
+        if "quantity" not in data:
             return 1.0
+        raw_quantity = data["quantity"]
+        try:
+            quantity = float(raw_quantity)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"Invalid trade quantity: {raw_quantity!r}") from exc
+        if quantity != quantity:  # NaN
+            raise ValueError(f"Invalid trade quantity: {raw_quantity!r}")
+        return quantity
 
     def _directional_price_change(self) -> float:
         """Return the per-unit price change in the direction of the trade."""

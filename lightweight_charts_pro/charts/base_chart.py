@@ -145,7 +145,9 @@ class BaseChart:
         manager.left_price_scale = getattr(options, "left_price_scale", None)
         manager.right_price_scale = getattr(options, "right_price_scale", None)
         overlays = getattr(options, "overlay_price_scales", None)
-        manager.overlay_price_scales = {} if overlays is None else overlays
+        # Keep auto-created overlay scales when options leave overlays unset.
+        if overlays is not None:
+            manager.overlay_price_scales = overlays
 
     def update_options(self, **kwargs) -> "BaseChart":
         """Update chart options.

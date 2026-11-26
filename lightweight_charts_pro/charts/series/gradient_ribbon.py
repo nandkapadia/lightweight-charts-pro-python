@@ -279,31 +279,65 @@ class GradientRibbonSeries(RibbonSeries):
         self._invalidate_cache()
         return super().add_price_lines(price_lines)  # type: ignore[return-value]
 
+    @staticmethod
+    def _overlay_fingerprint(items: list | None) -> tuple:
+        """Build a cheap content fingerprint for markers or price lines.
+
+        Detects in-place list edits that would not go through ``__setattr__``.
+        """
+        if not items:
+            return ()
+        fingerprint: list = []
+        for item in items:
+            if isinstance(item, dict):
+                fingerprint.append(tuple(sorted(item.items())))
+                continue
+            if hasattr(item, "asdict") and callable(item.asdict):
+                try:
+                    data = item.asdict()
+                    fingerprint.append(
+                        tuple(sorted(data.items())) if isinstance(data, dict) else repr(data)
+                    )
+                    continue
+                except (TypeError, ValueError, AttributeError):
+                    pass
+            fingerprint.append(repr(item))
+        return tuple(fingerprint)
+
+    def _cache_copy(self) -> dict:
+        """Return a shallow copy of the normalized cache with copied lists."""
+        assert self._normalized_cache is not None
+        return {
+            key: (list(value) if isinstance(value, list) else value)
+            for key, value in self._normalized_cache.items()
+        }
+
     def asdict(self):
         """Override to include normalized gradients with caching for performance.
 
         Returns cached normalized results if available, otherwise computes and caches them.
         This optimization prevents O(2n) iterations on every serialization call.
 
+        Returns a shallow copy so callers cannot mutate the live cache.
+
         Returns:
             dict: The serialized dictionary with normalized gradients.
 
         """
-        # Invalidate cache if markers or price lines were modified directly
         if self._normalized_cache is not None:
-            current_markers = getattr(self, "markers", [])
-            current_price_lines = getattr(self, "price_lines", [])
+            current_markers = getattr(self, "markers", []) or []
+            current_price_lines = getattr(self, "price_lines", []) or []
             cached_markers = self._normalized_cache.get("markers", [])
             cached_price_lines = self._normalized_cache.get("priceLines", [])
-            if len(cached_markers) != len(current_markers) or len(
-                cached_price_lines
-            ) != len(current_price_lines):
+            if (
+                self._overlay_fingerprint(current_markers)
+                != self._overlay_fingerprint(cached_markers)
+                or self._overlay_fingerprint(current_price_lines)
+                != self._overlay_fingerprint(cached_price_lines)
+            ):
                 self._invalidate_cache()
+            else:
+                return self._cache_copy()
 
-        # Return cached result if available
-        if self._normalized_cache is not None:
-            return self._normalized_cache
-
-        # Compute and cache the result
         self._normalized_cache = self._compute_normalized_dict()
-        return self._normalized_cache
+        return self._cache_copy()
